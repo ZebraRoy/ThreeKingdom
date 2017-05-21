@@ -1,0 +1,16 @@
+{
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": "6"
+  },
+  "globals": {
+    "PIXI": true,
+    "Redux": true
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  }
+}

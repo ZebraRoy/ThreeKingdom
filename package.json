@@ -1,0 +1,36 @@
+{
+  "name": "three-kingdom",
+  "version": "1.0.0",
+  "description": "The ThreeKingdom game using Helium.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "babel-node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZebraRoy/ThreeKingdom.git"
+  },
+  "keywords": [
+    "Web",
+    "Flux",
+    "2D",
+    "game"
+  ],
+  "author": "Roy Ng, Cathy Chan",
+  "license": "MIT",
+  "homepage": "https://github.com/ZebraRoy/ThreeKingdom",
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-es2015-rollup": "^3.0.0",
+    "eslint": "^3.19.0",
+    "express": "^4.15.3",
+    "faucet": "0.0.1",
+    "rollup": "^0.41.6",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-uglify": "^2.0.0",
+    "socket.io": "^2.0.1",
+    "tape": "^4.6.3"
+  }
+}
