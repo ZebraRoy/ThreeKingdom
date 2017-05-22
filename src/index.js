@@ -1,4 +1,7 @@
 // Setup basic express server
+import {
+  game
+} from './game/index';
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
@@ -11,3 +14,5 @@ server.listen(port, function () {
 
 // Routing
 app.use(express.static(__dirname + '\\..\\public'));
+
+game(io);

@@ -1,6 +1,13 @@
 import {
   Actions
 } from '../actions';
+import {
+  FullDeck
+} from '../card/deck';
+
+const DefaultDeck = FullDeck.map(function mapId ({ id }) {
+  return id;
+});
 
 function shuffle (array) {
   let counter = array.length;
@@ -21,30 +28,17 @@ function shuffle (array) {
   return array;
 }
 
-export function deck (state, action) {
+export function deck (
+  state = {
+    remainingDeck: shuffle(DefaultDeck),
+    playersHand: [],
+    playersToken: [],
+    discardPool: [],
+    removed: []
+  },
+  action
+) {
   switch (action.type) {
-    case Actions.Shuffle: {
-      const newState = JSON.parse(JSON.stringify(state));
-      shuffle(newState);
-      return newState;
-    }
-    case Actions.DiscardCardOnDeck:
-    case Actions.DrawCard: {
-      const newState = JSON.parse(JSON.stringify(state));
-      newState.splice(0, action.drawAmount);
-      return newState;
-    }
-    case Actions.PlaceCardOnDeck: {
-      const newState = JSON.parse(JSON.stringify(state));
-      newState.splice(0, action.drawAmount);
-      for (let len = action.heads, i = len - 1; i >= 0; i--) {
-        newState.unshift(action.heads[i]);
-      }
-      for (let len = action.tails, i = 0; i < len; i++) {
-        newState.push(action.tails[i]);
-      }
-      return newState;
-    }
     default:
       return state;
   }
