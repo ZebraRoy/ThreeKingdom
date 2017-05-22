@@ -7,11 +7,20 @@
   <title>三國殺國戰</title>
 </head>
 <body>
+  <div>
+    <button id="createGame">Create Game</button>
+    <button id="joinGame">Join Game</button>
+  </div>
   <script src="/socket.io/socket.io.js"></script>
   <script>
     var socket = io();
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.2/pixi.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.6.0/redux.min.js"></script>
+  <script>
+    document.getElementById('createGame').addEventListener('click', function () {
+      socket.emit('createGame', 'Roy', 8);
+    });
+  </script>
 </body>
 </html>

@@ -7,9 +7,16 @@ import {
 import {
   users
 } from './users';
+import {
+  gameSetting
+} from './game-setting';
+import {
+  combineReducers
+} from 'redux';
 
-export default Redux.combineReducers({
+export default combineReducers({
   deck,
   players,
-  users
+  users,
+  gameSetting
 });

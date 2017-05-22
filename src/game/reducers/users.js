@@ -7,6 +7,7 @@ export function users (
   action
 ) {
   switch (action.type) {
+    case Actions.CreateGame:
     case Actions.AddPlayer: {
       const newState = state.slice();
       newState.push(action.playerName);
