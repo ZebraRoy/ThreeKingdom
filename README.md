@@ -61,7 +61,7 @@ socket.on(
 ```
 
 # Store
-Whatever the store update, it should push the data into client with filters
+Whatever the store update, it should push the data into client with filters.
 Current data structure of the store should contains following items.
 ```
 {
