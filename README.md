@@ -23,9 +23,7 @@ socket.on(
   "joinGame",
   function (userName, gameId) {
     // add the user to the room and notify the game change to the user. Also, bind the userName to this socket
-    // expected response:
-    // messageName: "joinGameReply"
-    // param: isSuccess ("boolean")
+    // expected response: no response
   }
 );
 ```
@@ -61,8 +59,7 @@ socket.on(
 ```
 
 # Store
-Whatever the store update, it should push the data into client with filters.
-Current data structure of the store should contains following items.
+Whatever the store update, it should push the data into client with filters. Current data structure of the store should contains following items. The message name is "gameUpdate"
 ```
 {
   "users": [
@@ -97,6 +94,18 @@ Current data structure of the store should contains following items.
       ] 
     ]
   },
+  "players": [ // the player of the game. Storing the game related data of the user
+    [
+      {
+        hp: 3, // the hp of the player
+        skills: [], // the skill
+        generals: [], // generals
+        gender: 'M', // gender: M, F, U
+        maxHp: 3, // max hp
+        region: -1 // enums of the region
+      }
+    ]
+  ],
   "gameState": 0, // the game state. WaitingPlayer -> StartGame -> Prepare -> Gaming -> EndGame
   "gameSetting": {
     "maxPlayer": 10, // the maximum number of player. May be able to modify by player in the future
