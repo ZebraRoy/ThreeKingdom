@@ -4,7 +4,8 @@
   "description": "The ThreeKingdom game using Helium.",
   "main": "src/index.js",
   "scripts": {
-    "start": "babel-node src/index.js"
+    "start": "babel-node src/index.js",
+    "dev": "babel-node scripts/dev-server.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,8 @@
     "eslint": "^3.19.0",
     "express": "^4.15.3",
     "faucet": "0.0.1",
+    "node-watch": "^0.5.4",
+    "opener": "^1.4.3",
     "redux": "^3.6.0",
     "rollup": "^0.41.6",
     "rollup-plugin-babel": "^2.7.1",
