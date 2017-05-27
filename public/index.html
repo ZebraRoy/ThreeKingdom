@@ -10,18 +10,46 @@
   <link rel="manifest" href="assets/manifest.json">
   <style>
     html,
-    body {
+    body,
+    #infernoStage,
+    #heliumStage {
       width: 100%;
       height: 100%;
       margin: 0;
       overflow: hidden;
     }
+
+    #infernoStage {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+    }
+
+    #heliumStage {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    .infernoForm {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   </style>
 </head>
 <body>
+  <div id="infernoStage">
+  </div>
+  <div id="heliumStage">
+  </div>
   <script src="/socket.io/socket.io.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.2/pixi.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.6.0/redux.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.2/pixi.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.6.0/redux.js"></script>
   <script src="dist/bundle.js"></script>
 </body>
 </html>

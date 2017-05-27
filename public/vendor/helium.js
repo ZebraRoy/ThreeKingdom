@@ -44,6 +44,48 @@ var createClass = function () {
   };
 }();
 
+
+
+
+
+
+
+
+
+var inherits = function (subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+};
+
+
+
+
+
+
+
+
+
+
+
+var possibleConstructorReturn = function (self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return call && (typeof call === "object" || typeof call === "function") ? call : self;
+};
+
 /* eslint-disable no-console */
 var NO_OP = '$NO_OP';
 var ERROR_MSG = 'a runtime error occured! Use Helium in development enviroment to find the error.';
@@ -2415,6 +2457,515 @@ function importPixiBaseView() {
   registerBaseView('Text', Text$1);
 }
 
+var HELIUM_STATICS = {
+  childContextTypes: true,
+  contextTypes: true,
+  defaultProps: true,
+  displayName: true,
+  getDefaultProps: true,
+  propTypes: true,
+  type: true
+};
+
+var KNOWN_STATICS = {
+  name: true,
+  length: true,
+  prototype: true,
+  caller: true,
+  arguments: true,
+  arity: true
+};
+
+var isGetOwnPropertySymbolsAvailable = typeof Object.getOwnPropertySymbols === 'function';
+
+function hoistNonReactStatics(targetComponent, sourceComponent, customStatics) {
+  if (typeof sourceComponent !== 'string') {
+    // don't hoist over string (html) components
+    var keys = Object.getOwnPropertyNames(sourceComponent);
+
+    /* istanbul ignore else */
+    if (isGetOwnPropertySymbolsAvailable) {
+      keys = keys.concat(Object.getOwnPropertySymbols(sourceComponent));
+    }
+
+    for (var i = 0; i < keys.length; ++i) {
+      if (!HELIUM_STATICS[keys[i]] && !KNOWN_STATICS[keys[i]] && (!customStatics || !customStatics[keys[i]])) {
+        try {
+          targetComponent[keys[i]] = sourceComponent[keys[i]];
+        } catch (error) {
+          console.error(error); // eslint-disable-line
+        }
+      }
+    }
+  }
+
+  return targetComponent;
+}
+
+// From https://github.com/lodash/lodash/blob/es
+function overArg(func, transform) {
+	return function (arg) {
+		return func(transform(arg));
+	};
+}
+
+var getPrototype = overArg(Object.getPrototypeOf, Object);
+
+function isObjectLike(value) {
+	return value != null && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object';
+}
+
+var objectTag = '[object Object]';
+var funcProto = Function.prototype;
+var objectProto = Object.prototype;
+
+var funcToString = funcProto.toString;
+var hasOwnProperty = objectProto.hasOwnProperty;
+var objectCtorString = funcToString.call(Object);
+var objectToString = objectProto.toString;
+
+function isPlainObject(value) {
+	if (!isObjectLike(value) || objectToString.call(value) !== objectTag) {
+		return false;
+	}
+	var proto = getPrototype(value);
+	if (proto === null) {
+		return true;
+	}
+	var Ctor = hasOwnProperty.call(proto, 'constructor') && proto.constructor;
+	return typeof Ctor === 'function' && Ctor instanceof Ctor && funcToString.call(Ctor) === objectCtorString;
+}
+
+var bindActionCreators = Redux.bindActionCreators;
+
+/**
+ * Prints a warning in the console if it exists.
+ *
+ * @param {String} message The warning message.
+ * @returns {void}
+ */
+function warning$1(message) {
+	/* eslint-disable no-console */
+	if (typeof console !== 'undefined' && typeof console.error === 'function') {
+		// tslint:disable-next-line:no-console
+		console.error(message);
+	}
+
+	try {
+		// This error was thrown as a convenience so that if you enable
+		// "break on all exceptions" in your console,
+		// it would pause the execution at this line.
+		throw new Error(message);
+
+		// tslint:disable-next-line:no-empty
+	} catch (e) {} // eslint-disable-line
+}
+
+function shallowEqual(objA, objB) {
+	if (objA === objB) {
+		return true;
+	}
+	var keysA = Object.keys(objA);
+	var keysB = Object.keys(objB);
+
+	if (keysA.length !== keysB.length) {
+		return false;
+	}
+	// Test for A's keys different from B.
+	var hasOwn = Object.prototype.hasOwnProperty;
+	for (var i = 0, len = keysA.length; i < len; i++) {
+		var key = keysA[i];
+
+		if (!hasOwn.call(objB, key) || objA[key] !== objB[key]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+function wrapActionCreators(actionCreators) {
+	return function (dispatch) {
+		return bindActionCreators(actionCreators, dispatch);
+	};
+}
+
+var errorObject = { value: null };
+var defaultMapStateToProps = function defaultMapStateToProps(state) {
+	return {};
+}; // eslint-disable-line no-unused-vars
+var defaultMapDispatchToProps = function defaultMapDispatchToProps(dispatch) {
+	return { dispatch: dispatch };
+};
+var defaultMergeProps = function defaultMergeProps(stateProps, dispatchProps, parentProps) {
+	var obj = {};
+
+	if (parentProps) {
+		for (var key in parentProps) {
+			obj[key] = parentProps[key];
+		}
+	}
+
+	if (stateProps) {
+		for (var _key in stateProps) {
+			obj[_key] = stateProps[_key];
+		}
+	}
+
+	if (dispatchProps) {
+		for (var _key2 in dispatchProps) {
+			obj[_key2] = dispatchProps[_key2];
+		}
+	}
+
+	return obj;
+};
+
+function tryCatch(fn, ctx) {
+	try {
+		return fn.apply(ctx);
+	} catch (e) {
+		errorObject.value = e;
+		return errorObject;
+	}
+}
+
+function getDisplayName(WrappedComponent) {
+	return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+}
+
+// Helps track hot reloading.
+var nextVersion = 0;
+
+function connect(mapStateToProps, mapDispatchToProps, mergeProps) {
+	var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+	var shouldSubscribe = Boolean(mapStateToProps);
+	var mapState = mapStateToProps || defaultMapStateToProps;
+	var mapDispatch = void 0;
+
+	if (isFunction(mapDispatchToProps)) {
+		mapDispatch = mapDispatchToProps;
+	} else if (!mapDispatchToProps) {
+		mapDispatch = defaultMapDispatchToProps;
+	} else {
+		mapDispatch = wrapActionCreators(mapDispatchToProps);
+	}
+	var finalMergeProps = mergeProps || defaultMergeProps;
+	var _options$pure = options.pure,
+	    pure = _options$pure === undefined ? true : _options$pure,
+	    _options$withRef = options.withRef,
+	    withRef = _options$withRef === undefined ? false : _options$withRef;
+
+	var checkMergedEquals = pure && finalMergeProps !== defaultMergeProps;
+	// Helps track hot reloading.
+	var version = nextVersion++;
+
+	return function wrapWithConnect(WrappedComponent) {
+		var connectDisplayName = 'Connect(' + getDisplayName(WrappedComponent) + ')';
+
+		function checkStateShape(props, methodName) {
+			if (!isPlainObject(props)) {
+				warning$1(methodName + '() in ' + connectDisplayName + ' must return a plain object. ' + ('Instead received ' + props + '.'));
+			}
+		}
+
+		function computeMergedProps(stateProps, dispatchProps, parentProps) {
+			var mergedProps = finalMergeProps(stateProps, dispatchProps, parentProps);
+			if (process.env.NODE_ENV !== 'production') {
+				checkStateShape(mergedProps, 'mergeProps');
+			}
+			return mergedProps;
+		}
+
+		var Connect = function (_Component) {
+			inherits(Connect, _Component);
+
+			function Connect(props, context) {
+				classCallCheck(this, Connect);
+
+				var _this = possibleConstructorReturn(this, (Connect.__proto__ || Object.getPrototypeOf(Connect)).call(this, props, context));
+
+				_this.version = version;
+				_this.wrappedInstance = null;
+				_this.store = props && props.store || context && context.store;
+
+				if (!_this.store) {
+					throwError('Could not find "store" in either the context or ' + ('props of "' + connectDisplayName + '". ') + 'Either wrap the root component in a <Provider>, ' + ('or explicitly pass "store" as a prop to "' + connectDisplayName + '".'));
+				}
+
+				var storeState = _this.store.getState();
+				_this.state = { storeState: storeState };
+				_this.clearCache();
+				return _this;
+			}
+
+			createClass(Connect, [{
+				key: 'componentDidMount',
+				value: function componentDidMount() {
+					this.trySubscribe();
+				}
+			}, {
+				key: 'shouldComponentUpdate',
+				value: function shouldComponentUpdate() {
+					return !pure || this.haveOwnPropsChanged || this.hasStoreStateChanged;
+				}
+			}, {
+				key: 'computeStateProps',
+				value: function computeStateProps(store, props) {
+					if (!this.finalMapStateToProps) {
+						return this.configureFinalMapState(store, props);
+					}
+					var state = store.getState();
+					var stateProps = this.doStatePropsDependOnOwnProps ? this.finalMapStateToProps(state, props) : this.finalMapStateToProps(state);
+
+					return stateProps;
+				}
+			}, {
+				key: 'configureFinalMapState',
+				value: function configureFinalMapState(store, props) {
+					var mappedState = mapState(store.getState(), props);
+					var isFactory = isFunction(mappedState);
+
+					this.finalMapStateToProps = isFactory ? mappedState : mapState;
+					this.doStatePropsDependOnOwnProps = this.finalMapStateToProps.length !== 1;
+					if (isFactory) {
+						return this.computeStateProps(store, props);
+					}
+					return mappedState;
+				}
+			}, {
+				key: 'computeDispatchProps',
+				value: function computeDispatchProps(store, props) {
+					if (!this.finalMapDispatchToProps) {
+						return this.configureFinalMapDispatch(store, props);
+					}
+					var dispatch = store.dispatch;
+
+					return this.doDispatchPropsDependOnOwnProps ? this.finalMapDispatchToProps(dispatch, props) : this.finalMapDispatchToProps(dispatch);
+				}
+			}, {
+				key: 'configureFinalMapDispatch',
+				value: function configureFinalMapDispatch(store, props) {
+					var mappedDispatch = mapDispatch(store.dispatch, props);
+					var isFactory = isFunction(mappedDispatch);
+
+					this.finalMapDispatchToProps = isFactory ? mappedDispatch : mapDispatch;
+					this.doDispatchPropsDependOnOwnProps = this.finalMapDispatchToProps.length !== 1;
+
+					if (isFactory) {
+						return this.computeDispatchProps(store, props);
+					}
+					return mappedDispatch;
+				}
+			}, {
+				key: 'updateStatePropsIfNeeded',
+				value: function updateStatePropsIfNeeded() {
+					var nextStateProps = this.computeStateProps(this.store, this.props);
+
+					if (this.stateProps && shallowEqual(nextStateProps, this.stateProps)) {
+						return false;
+					}
+					this.stateProps = nextStateProps;
+					return true;
+				}
+			}, {
+				key: 'updateDispatchPropsIfNeeded',
+				value: function updateDispatchPropsIfNeeded() {
+					var nextDispatchProps = this.computeDispatchProps(this.store, this.props);
+
+					if (this.dispatchProps && shallowEqual(nextDispatchProps, this.dispatchProps)) {
+						return false;
+					}
+					this.dispatchProps = nextDispatchProps;
+					return true;
+				}
+			}, {
+				key: 'updateMergedPropsIfNeeded',
+				value: function updateMergedPropsIfNeeded() {
+					var nextMergedProps = computeMergedProps(this.stateProps, this.dispatchProps, this.props);
+
+					if (this.mergedProps && checkMergedEquals && shallowEqual(nextMergedProps, this.mergedProps)) {
+						return false;
+					}
+					this.mergedProps = nextMergedProps;
+					return true;
+				}
+			}, {
+				key: 'isSubscribed',
+				value: function isSubscribed() {
+					return isFunction(this.unsubscribe);
+				}
+			}, {
+				key: 'trySubscribe',
+				value: function trySubscribe() {
+					if (shouldSubscribe && !this.unsubscribe) {
+						this.unsubscribe = this.store.subscribe(this.handleChange.bind(this));
+						this.handleChange();
+					}
+				}
+			}, {
+				key: 'tryUnsubscribe',
+				value: function tryUnsubscribe() {
+					if (this.unsubscribe) {
+						this.unsubscribe();
+						this.unsubscribe = null;
+					}
+				}
+			}, {
+				key: 'componentWillReceiveProps',
+				value: function componentWillReceiveProps(nextProps) {
+					if (!pure || !shallowEqual(nextProps, this.props)) {
+						this.haveOwnPropsChanged = true;
+					}
+				}
+			}, {
+				key: 'componentWillUnmount',
+				value: function componentWillUnmount() {
+					this.tryUnsubscribe();
+					this.clearCache();
+				}
+			}, {
+				key: 'clearCache',
+				value: function clearCache() {
+					this.dispatchProps = null;
+					this.stateProps = null;
+					this.mergedProps = null;
+					this.haveOwnPropsChanged = true;
+					this.hasStoreStateChanged = true;
+					this.haveStatePropsBeenPrecalculated = false;
+					this.statePropsPrecalculationError = null;
+					this.renderedElement = null;
+					this.finalMapDispatchToProps = null;
+					this.finalMapStateToProps = null;
+				}
+			}, {
+				key: 'handleChange',
+				value: function handleChange() {
+					if (!this.unsubscribe) {
+						return;
+					}
+					var storeState = this.store.getState();
+					var prevStoreState = this.state.storeState;
+
+					if (pure && prevStoreState === storeState) {
+						return;
+					}
+					if (pure && !this.doStatePropsDependOnOwnProps) {
+						var haveStatePropsChanged = tryCatch(this.updateStatePropsIfNeeded, this);
+						if (!haveStatePropsChanged) {
+							return;
+						}
+						if (haveStatePropsChanged === errorObject) {
+							this.statePropsPrecalculationError = errorObject.value;
+						}
+						this.haveStatePropsBeenPrecalculated = true;
+					}
+					this.hasStoreStateChanged = true;
+					this.setState({ storeState: storeState });
+				}
+			}, {
+				key: 'getWrappedInstance',
+				value: function getWrappedInstance() {
+					return this.wrappedInstance;
+				}
+			}, {
+				key: 'render',
+				value: function render() {
+					var _this2 = this;
+
+					var haveOwnPropsChanged = this.haveOwnPropsChanged,
+					    hasStoreStateChanged = this.hasStoreStateChanged,
+					    haveStatePropsBeenPrecalculated = this.haveStatePropsBeenPrecalculated,
+					    statePropsPrecalculationError = this.statePropsPrecalculationError,
+					    renderedElement = this.renderedElement;
+
+
+					this.haveOwnPropsChanged = false;
+					this.hasStoreStateChanged = false;
+					this.haveStatePropsBeenPrecalculated = false;
+					this.statePropsPrecalculationError = null;
+
+					if (statePropsPrecalculationError) {
+						throw statePropsPrecalculationError;
+					}
+					var shouldUpdateStateProps = true;
+					var shouldUpdateDispatchProps = true;
+
+					if (pure && renderedElement) {
+						shouldUpdateStateProps = hasStoreStateChanged || haveOwnPropsChanged && this.doStatePropsDependOnOwnProps;
+						shouldUpdateDispatchProps = haveOwnPropsChanged && this.doDispatchPropsDependOnOwnProps;
+					}
+					var haveStatePropsChanged = false;
+					var haveDispatchPropsChanged = false;
+
+					if (haveStatePropsBeenPrecalculated) {
+						haveStatePropsChanged = true;
+					} else if (shouldUpdateStateProps) {
+						haveStatePropsChanged = this.updateStatePropsIfNeeded();
+					}
+					if (shouldUpdateDispatchProps) {
+						haveDispatchPropsChanged = this.updateDispatchPropsIfNeeded();
+					}
+					var haveMergedPropsChanged = true;
+
+					if (haveStatePropsChanged || haveDispatchPropsChanged || haveOwnPropsChanged) {
+						haveMergedPropsChanged = this.updateMergedPropsIfNeeded();
+					} else {
+						haveMergedPropsChanged = false;
+					}
+
+					if (!haveMergedPropsChanged && renderedElement) {
+						return renderedElement;
+					}
+					if (withRef) {
+						this.renderedElement = createElement(WrappedComponent, combineFrom(this.mergedProps, { ref: function ref(instance) {
+								return _this2.wrappedInstance = instance;
+							} }));
+					} else {
+						this.renderedElement = createElement(WrappedComponent, this.mergedProps);
+					}
+					return this.renderedElement;
+				}
+			}]);
+			return Connect;
+		}(Component);
+
+		Connect.displayName = connectDisplayName;
+		Connect.WrappedComponent = WrappedComponent;
+		return hoistNonReactStatics(Connect, WrappedComponent);
+	};
+}
+
+var Provider = function (_Component) {
+	inherits(Provider, _Component);
+
+	function Provider(props, context) {
+		classCallCheck(this, Provider);
+
+		var _this = possibleConstructorReturn(this, (Provider.__proto__ || Object.getPrototypeOf(Provider)).call(this, props, context));
+
+		_this.store = props.store;
+		return _this;
+	}
+
+	createClass(Provider, [{
+		key: 'getChildContext',
+		value: function getChildContext() {
+			return { store: this.store };
+		}
+	}, {
+		key: 'render',
+		value: function render(props) {
+			if (isNullOrUndef(this.props.children) || toArray$$1(this.props.children).length !== 1) {
+				throw Error('Inferno Error: Only one child is allowed within the `Provider` component');
+			}
+
+			return props.children;
+		}
+	}]);
+	return Provider;
+}(Component);
+
 exports.VNodeFlags = VNodeFlags;
 exports.createElement = createElement;
 exports.Component = Component;
@@ -2449,6 +3000,8 @@ exports.ANIMATION_KEY = ANIMATION_KEY;
 exports.registerAnimationDOM = registerAnimationDOM;
 exports.removeAnimationDOM = removeAnimationDOM;
 exports.patchAnimation = patchAnimation;
+exports.Provider = Provider;
+exports.connect = connect;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

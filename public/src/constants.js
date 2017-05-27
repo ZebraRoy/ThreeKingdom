@@ -1,7 +1,8 @@
 export const GameScene = {
-  Init: 0,
-  CreatingGame: 1,
-  JoiningGame: 2,
-  Lobby: 3,
-  Gaming: 4
+  Naming: 0,
+  ChoosingAction: 1,
+  CreatingGame: 2,
+  JoiningGame: 3,
+  Lobby: 4,
+  Gaming: 5
 };

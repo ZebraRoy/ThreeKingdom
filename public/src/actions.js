@@ -1,5 +1,6 @@
 export const Actions = {
   Resize: 'Resize',
   CreateGame: 'CreateGame',
-  JoinGame: 'JoinGame'
+  JoinGame: 'JoinGame',
+  ConfirmName: 'ConfirmName'
 };
