@@ -27,26 +27,6 @@ socket.on(
   }
 );
 ```
-Ready
-```
-socket.on(
-  "ready",
-  function (gameId) {
-    // set the ready state of the user to be true
-    // expected response: no response
-  }
-);
-```
-Cancel ready
-```
-socket.on(
-  "cancelReady",
-  function (gameId) {
-    // set the ready state of the user to be false
-    // expected response: no response
-  }
-);
-```
 Start the game
 ```
 socket.on(

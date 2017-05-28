@@ -12,8 +12,7 @@ export function users (
       const newState = JSON.parse(JSON.stringify(state));
       newState.push({
         name: hostName,
-        isHost: true,
-        isReady: false
+        isHost: true
       });
       return newState;
     }
@@ -26,8 +25,7 @@ export function users (
       const newState = JSON.parse(JSON.stringify(state));
       newState.push({
         name: playerName,
-        isHost: false,
-        isReady: false
+        isHost: false
       });
       return newState;
     }

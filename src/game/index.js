@@ -5,10 +5,16 @@ import {
 import {
   createStore
 } from 'redux';
+import {
+  GameState
+} from './constants';
+import {
+  shuffle
+} from './helper';
 
 export class Game {
 
-  constructor (hostName, socket) {
+  constructor (hostName, socket, gameId) {
     const store = createStore(reducer);
     const socketMap = [];
     socketMap.push({
@@ -29,7 +35,8 @@ export class Game {
     });
     store.dispatch({
       type: Actions.CreateGame,
-      playerName: hostName
+      playerName: hostName,
+      gameId: gameId
     });
   }
 
@@ -37,18 +44,43 @@ export class Game {
     const socketMap = this.socketMap;
     const me = socketMap.find((user) => (user.name === playerName));
     const store = this.store;
+    const state = store.getState();
+    let isJoinSuccess = false;
     if (me) {
       me.socket = socket;
-    } else {
+      isJoinSuccess = true;
+    } else if (state.users.length < state.gameSetting.maxPlayer) {
       socketMap.push({
         name: playerName,
         socket
       });
     }
-    store.dispatch({
-      type: Actions.JoinGame,
-      playerName
-    });
+    if (isJoinSuccess) {
+      store.dispatch({
+        type: Actions.JoinGame,
+        playerName
+      });
+    }
+  }
+
+  startGame (socket) {
+    const socketMap = this.socketMap;
+    const me = socketMap.find((user) => (user.socket === socket));
+    const store = this.store;
+    if (me) {
+      const userName = me.name;
+      const state = store.getState();
+      const users = state.users;
+      const host = users.find((user) => (user.isHost));
+      const readyUser = users.filter((user) => (user.isReady));
+      if (state.gameState === GameState.WaitingPlayer && host.name === userName && readyUser.length > 1 && readyUser.length === users.length) {
+        const playerOrder = shuffle(users.map((user) => (user.name)));
+        store.dispatch({
+          type: Actions.StartGame,
+          playerOrder
+        });
+      }
+    }
   }
 
   socketDisconnect (socket) {

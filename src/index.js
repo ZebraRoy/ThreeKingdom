@@ -38,17 +38,10 @@ io.on('connection', function onSocketConnected (socket) {
     }
   });
 
-  socket.on('ready', function onReadyGame (gameId) {
+  socket.on('startGame', function onStartGame (gameId) {
     const game = gameMap[gameId];
     if (game) {
-      game.ready(socket);
-    }
-  });
-
-  socket.on('cancelReady', function onGameAction (gameId) {
-    const game = gameMap[gameId];
-    if (game) {
-      game.cancelReady(socket);
+      game.startGame(socket);
     }
   });
 

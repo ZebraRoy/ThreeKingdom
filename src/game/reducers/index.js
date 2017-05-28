@@ -14,6 +14,12 @@ import {
   gameState
 } from './game-state';
 import {
+  gameId
+} from './game-id';
+import {
+  generalDeck
+} from './general-deck';
+import {
   combineReducers
 } from 'redux';
 
@@ -22,5 +28,7 @@ export default combineReducers({
   players,
   users,
   gameSetting,
-  gameState
+  gameState,
+  gameId,
+  generalDeck
 });

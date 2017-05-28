@@ -784,7 +784,7 @@ export const PotentialExpansionDeck = [
     value: 1,
     type: CardType.Functional,
     effectType: FunctionalType.OneMoreRound,
-    isGiveable: false
+    isGiveable: true
   },
   {
     suit: Suit.Spade,
@@ -798,7 +798,7 @@ export const PotentialExpansionDeck = [
     value: 3,
     type: CardType.Functional,
     effectType: FunctionalType.BlazeTogether,
-    isGiveable: false
+    isGiveable: true
   },
   {
     suit: Suit.Spade,
@@ -819,7 +819,7 @@ export const PotentialExpansionDeck = [
     value: 6,
     type: CardType.Basic,
     effectType: BasicType.Wine,
-    isGiveable: false
+    isGiveable: true
   },
   {
     suit: Suit.Spade,
@@ -854,7 +854,7 @@ export const PotentialExpansionDeck = [
     value: 11,
     type: CardType.Basic,
     effectType: BasicType.LightningAttack,
-    isGiveable: false
+    isGiveable: true
   },
   {
     suit: Suit.Spade,
@@ -889,7 +889,7 @@ export const PotentialExpansionDeck = [
     value: 3,
     type: CardType.Equipment,
     effectType: EquipmentType.OffenseHorse,
-    isGiveable: false
+    isGiveable: true
   },
   {
     suit: Suit.Heart,
@@ -952,7 +952,7 @@ export const PotentialExpansionDeck = [
     value: 12,
     type: CardType.Functional,
     effectType: FunctionalType.BlazeTogether,
-    isGiveable: false
+    isGiveable: true
   },
   {
     suit: Suit.Heart,
@@ -973,7 +973,7 @@ export const PotentialExpansionDeck = [
     value: 2,
     type: CardType.Equipment,
     effectType: EquipmentType.HeartShield,
-    isGiveable: false
+    isGiveable: true
   },
   {
     suit: Suit.Club,
@@ -994,7 +994,7 @@ export const PotentialExpansionDeck = [
     value: 5,
     type: CardType.Basic,
     effectType: BasicType.LightningAttack,
-    isGiveable: false
+    isGiveable: true
   },
   {
     suit: Suit.Club,
@@ -1036,7 +1036,7 @@ export const PotentialExpansionDeck = [
     value: 11,
     type: CardType.Functional,
     effectType: FunctionalType.BlazeTogether,
-    isGiveable: false
+    isGiveable: true
   },
   {
     suit: Suit.Club,
@@ -1057,7 +1057,7 @@ export const PotentialExpansionDeck = [
     value: 1,
     type: CardType.Functional,
     effectType: FunctionalType.OneMoreRound,
-    isGiveable: false
+    isGiveable: true
   },
   {
     suit: Suit.Diamond,
@@ -1071,14 +1071,14 @@ export const PotentialExpansionDeck = [
     value: 3,
     type: CardType.Basic,
     effectType: BasicType.Peach,
-    isGiveable: false
+    isGiveable: true
   },
   {
     suit: Suit.Diamond,
     value: 4,
     type: CardType.Functional,
     effectType: FunctionalType.OneMoreRound,
-    isGiveable: false
+    isGiveable: true
   },
   {
     suit: Suit.Diamond,
@@ -1120,7 +1120,7 @@ export const PotentialExpansionDeck = [
     value: 10,
     type: CardType.Functional,
     effectType: FunctionalType.Exile,
-    isGiveable: false
+    isGiveable: true
   },
   {
     suit: Suit.Diamond,
