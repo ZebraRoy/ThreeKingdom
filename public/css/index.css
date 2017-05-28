@@ -8,13 +8,6 @@ body,
   overflow: hidden;
 }
 
-#inferno-stage {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 2;
-}
-
 #helium-stage {
   position: absolute;
   top: 0;

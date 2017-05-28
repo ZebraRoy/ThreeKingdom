@@ -5,8 +5,20 @@ import {
 import {
   GameScene
 } from '../constants';
+import {
+  ConnectLobbyScene
+} from './lobby-scene';
 
 export function MainScene ({ width = 0, height = 0, resolution = 1, gameScene = GameScene.Naming }) {
+  let child;
+  switch (gameScene) {
+    case GameScene.Room:
+      child = createElement(ConnectLobbyScene, {
+        width,
+        height
+      });
+      break;
+  }
   return createElement(
     'Container',
     {
@@ -14,7 +26,8 @@ export function MainScene ({ width = 0, height = 0, resolution = 1, gameScene = 
         x: 1 / resolution,
         y: 1 / resolution
       }
-    }
+    },
+    child
   );
 }
 

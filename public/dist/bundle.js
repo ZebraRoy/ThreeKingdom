@@ -70,7 +70,7 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(52);
+module.exports = __webpack_require__(54);
 module.exports.default = module.exports;
 
 
@@ -282,7 +282,8 @@ var Actions = exports.Actions = {
   ConfirmName: 'ConfirmName',
   SendedConfirmName: 'SendedConfirmName',
   UpdateGameList: 'UpdateGameList',
-  UpdateGame: 'UpdateGame'
+  UpdateGame: 'UpdateGame',
+  StartGame: 'StartGame'
 };
 
 /***/ }),
@@ -297,7 +298,7 @@ var options_1 = __webpack_require__(4);
 var VNodes_1 = __webpack_require__(5);
 var constants_1 = __webpack_require__(11);
 var mounting_1 = __webpack_require__(12);
-var unmounting_1 = __webpack_require__(13);
+var unmounting_1 = __webpack_require__(14);
 // We need EMPTY_OBJ defined in one place.
 // Its used for comparison so we cant inline it into shared
 exports.EMPTY_OBJ = {};
@@ -729,12 +730,12 @@ var inferno_shared_1 = __webpack_require__(0);
 var options_1 = __webpack_require__(4);
 var VNodes_1 = __webpack_require__(5);
 var constants_1 = __webpack_require__(11);
-var delegation_1 = __webpack_require__(53);
+var delegation_1 = __webpack_require__(55);
 var mounting_1 = __webpack_require__(12);
 var rendering_1 = __webpack_require__(8);
-var unmounting_1 = __webpack_require__(13);
+var unmounting_1 = __webpack_require__(14);
 var utils_1 = __webpack_require__(3);
-var processElement_1 = __webpack_require__(14);
+var processElement_1 = __webpack_require__(15);
 function patch(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling) {
     if (lastVNode !== nextVNode) {
         var lastFlags = lastVNode.flags;
@@ -1552,7 +1553,7 @@ function removeProp(prop, lastValue, dom) {
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(47).default;
+module.exports = __webpack_require__(49).default;
 module.exports.default = module.exports;
 
 
@@ -1567,10 +1568,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
 var options_1 = __webpack_require__(4);
 var VNodes_1 = __webpack_require__(5);
-var hydration_1 = __webpack_require__(55);
+var hydration_1 = __webpack_require__(57);
 var mounting_1 = __webpack_require__(12);
 var patching_1 = __webpack_require__(6);
-var unmounting_1 = __webpack_require__(13);
+var unmounting_1 = __webpack_require__(14);
 var utils_1 = __webpack_require__(3);
 // rather than use a Map, like we did before, we can use an array here
 // given there shouldn't be THAT many roots on the page, the difference
@@ -1712,7 +1713,7 @@ var GameScene = exports.GameScene = {
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(51).default;
+module.exports = __webpack_require__(53).default;
 module.exports.default = module.exports;
 
 
@@ -1830,7 +1831,7 @@ var patching_1 = __webpack_require__(6);
 var recycling_1 = __webpack_require__(19);
 var rendering_1 = __webpack_require__(8);
 var utils_1 = __webpack_require__(3);
-var processElement_1 = __webpack_require__(14);
+var processElement_1 = __webpack_require__(15);
 function mount(vNode, parentDom, lifecycle, context, isSVG) {
     var flags = vNode.flags;
     if (flags & 3970 /* Element */) {
@@ -2056,186 +2057,6 @@ exports.mountRef = mountRef;
 
 /***/ }),
 /* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
-Object.defineProperty(exports, "__esModule", { value: true });
-var inferno_shared_1 = __webpack_require__(0);
-var options_1 = __webpack_require__(4);
-var patching_1 = __webpack_require__(6);
-var recycling_1 = __webpack_require__(19);
-var rendering_1 = __webpack_require__(8);
-var utils_1 = __webpack_require__(3);
-function unmount(vNode, parentDom, lifecycle, canRecycle, isRecycling) {
-    var flags = vNode.flags;
-    if (flags & 28 /* Component */) {
-        unmountComponent(vNode, parentDom, lifecycle, canRecycle, isRecycling);
-    }
-    else if (flags & 3970 /* Element */) {
-        unmountElement(vNode, parentDom, lifecycle, canRecycle, isRecycling);
-    }
-    else if (flags & (1 /* Text */ | 4096 /* Void */)) {
-        unmountVoidOrText(vNode, parentDom);
-    }
-}
-exports.unmount = unmount;
-function unmountVoidOrText(vNode, parentDom) {
-    if (!inferno_shared_1.isNull(parentDom)) {
-        utils_1.removeChild(parentDom, vNode.dom);
-    }
-}
-function unmountComponent(vNode, parentDom, lifecycle, canRecycle, isRecycling) {
-    var instance = vNode.children;
-    var flags = vNode.flags;
-    var isStatefulComponent = flags & 4 /* ComponentClass */;
-    var ref = vNode.ref;
-    var dom = vNode.dom;
-    if (!isRecycling) {
-        if (isStatefulComponent) {
-            if (!instance._unmounted) {
-                instance._blockSetState = true;
-                if (!inferno_shared_1.isNull(options_1.options.beforeUnmount)) {
-                    options_1.options.beforeUnmount(vNode);
-                }
-                if (!inferno_shared_1.isUndefined(instance.componentWillUnmount)) {
-                    instance.componentWillUnmount();
-                }
-                if (ref && !isRecycling) {
-                    ref(null);
-                }
-                instance._unmounted = true;
-                if (options_1.options.findDOMNodeEnabled) {
-                    rendering_1.componentToDOMNodeMap.delete(instance);
-                }
-                unmount(instance._lastInput, null, instance._lifecycle, false, isRecycling);
-            }
-        }
-        else {
-            if (!inferno_shared_1.isNullOrUndef(ref)) {
-                if (!inferno_shared_1.isNullOrUndef(ref.onComponentWillUnmount)) {
-                    ref.onComponentWillUnmount(dom);
-                }
-            }
-            unmount(instance, null, lifecycle, false, isRecycling);
-        }
-    }
-    if (parentDom) {
-        var lastInput = instance._lastInput;
-        if (inferno_shared_1.isNullOrUndef(lastInput)) {
-            lastInput = instance;
-        }
-        utils_1.removeChild(parentDom, dom);
-    }
-    if (options_1.options.recyclingEnabled && !isStatefulComponent && (parentDom || canRecycle)) {
-        recycling_1.poolComponent(vNode);
-    }
-}
-exports.unmountComponent = unmountComponent;
-function unmountElement(vNode, parentDom, lifecycle, canRecycle, isRecycling) {
-    var dom = vNode.dom;
-    var ref = vNode.ref;
-    var props = vNode.props;
-    if (ref && !isRecycling) {
-        unmountRef(ref);
-    }
-    var children = vNode.children;
-    if (!inferno_shared_1.isNullOrUndef(children)) {
-        unmountChildren(children, lifecycle, isRecycling);
-    }
-    if (!inferno_shared_1.isNull(props)) {
-        for (var name_1 in props) {
-            // do not add a hasOwnProperty check here, it affects performance
-            if (props[name_1] !== null && patching_1.isAttrAnEvent(name_1)) {
-                patching_1.patchEvent(name_1, props[name_1], null, dom);
-                // We need to set this null, because same props otherwise come back if SCU returns false and we are recyling
-                props[name_1] = null;
-            }
-        }
-    }
-    if (!inferno_shared_1.isNull(parentDom)) {
-        utils_1.removeChild(parentDom, dom);
-    }
-    if (options_1.options.recyclingEnabled && (parentDom || canRecycle)) {
-        recycling_1.poolElement(vNode);
-    }
-}
-exports.unmountElement = unmountElement;
-function unmountChildren(children, lifecycle, isRecycling) {
-    if (inferno_shared_1.isArray(children)) {
-        for (var i = 0, len = children.length; i < len; i++) {
-            var child = children[i];
-            if (!inferno_shared_1.isInvalid(child) && inferno_shared_1.isObject(child)) {
-                unmount(child, null, lifecycle, false, isRecycling);
-            }
-        }
-    }
-    else if (inferno_shared_1.isObject(children)) {
-        unmount(children, null, lifecycle, false, isRecycling);
-    }
-}
-function unmountRef(ref) {
-    if (inferno_shared_1.isFunction(ref)) {
-        ref(null);
-    }
-    else {
-        if (inferno_shared_1.isInvalid(ref)) {
-            return;
-        }
-        if (process.env.NODE_ENV !== 'production') {
-            inferno_shared_1.throwError('string "refs" are not supported in Inferno 1.0. Use callback "refs" instead.');
-        }
-        inferno_shared_1.throwError();
-    }
-}
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var inferno_shared_1 = __webpack_require__(0);
-var InputWrapper_1 = __webpack_require__(56);
-var SelectWrapper_1 = __webpack_require__(57);
-var TextareaWrapper_1 = __webpack_require__(58);
-/**
- * There is currently no support for switching same input between controlled and nonControlled
- * If that ever becomes a real issue, then re design controlled elements
- * Currently user must choose either controlled or non-controlled and stick with that
- */
-function processElement(flags, vNode, dom, nextPropsOrEmpty, mounting, isControlled) {
-    if (flags & 512 /* InputElement */) {
-        InputWrapper_1.processInput(vNode, dom, nextPropsOrEmpty, mounting, isControlled);
-    }
-    if (flags & 2048 /* SelectElement */) {
-        SelectWrapper_1.processSelect(vNode, dom, nextPropsOrEmpty, mounting, isControlled);
-    }
-    if (flags & 1024 /* TextareaElement */) {
-        TextareaWrapper_1.processTextarea(vNode, dom, nextPropsOrEmpty, mounting, isControlled);
-    }
-}
-exports.processElement = processElement;
-function isControlledFormElement(nextPropsOrEmpty) {
-    return (nextPropsOrEmpty.type && InputWrapper_1.isCheckedType(nextPropsOrEmpty.type)) ? !inferno_shared_1.isNullOrUndef(nextPropsOrEmpty.checked) : !inferno_shared_1.isNullOrUndef(nextPropsOrEmpty.value);
-}
-exports.isControlledFormElement = isControlledFormElement;
-
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(59).default;
-module.exports.default = module.exports;
-
-
-
-/***/ }),
-/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5225,10 +5046,190 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+Object.defineProperty(exports, "__esModule", { value: true });
+var inferno_shared_1 = __webpack_require__(0);
+var options_1 = __webpack_require__(4);
+var patching_1 = __webpack_require__(6);
+var recycling_1 = __webpack_require__(19);
+var rendering_1 = __webpack_require__(8);
+var utils_1 = __webpack_require__(3);
+function unmount(vNode, parentDom, lifecycle, canRecycle, isRecycling) {
+    var flags = vNode.flags;
+    if (flags & 28 /* Component */) {
+        unmountComponent(vNode, parentDom, lifecycle, canRecycle, isRecycling);
+    }
+    else if (flags & 3970 /* Element */) {
+        unmountElement(vNode, parentDom, lifecycle, canRecycle, isRecycling);
+    }
+    else if (flags & (1 /* Text */ | 4096 /* Void */)) {
+        unmountVoidOrText(vNode, parentDom);
+    }
+}
+exports.unmount = unmount;
+function unmountVoidOrText(vNode, parentDom) {
+    if (!inferno_shared_1.isNull(parentDom)) {
+        utils_1.removeChild(parentDom, vNode.dom);
+    }
+}
+function unmountComponent(vNode, parentDom, lifecycle, canRecycle, isRecycling) {
+    var instance = vNode.children;
+    var flags = vNode.flags;
+    var isStatefulComponent = flags & 4 /* ComponentClass */;
+    var ref = vNode.ref;
+    var dom = vNode.dom;
+    if (!isRecycling) {
+        if (isStatefulComponent) {
+            if (!instance._unmounted) {
+                instance._blockSetState = true;
+                if (!inferno_shared_1.isNull(options_1.options.beforeUnmount)) {
+                    options_1.options.beforeUnmount(vNode);
+                }
+                if (!inferno_shared_1.isUndefined(instance.componentWillUnmount)) {
+                    instance.componentWillUnmount();
+                }
+                if (ref && !isRecycling) {
+                    ref(null);
+                }
+                instance._unmounted = true;
+                if (options_1.options.findDOMNodeEnabled) {
+                    rendering_1.componentToDOMNodeMap.delete(instance);
+                }
+                unmount(instance._lastInput, null, instance._lifecycle, false, isRecycling);
+            }
+        }
+        else {
+            if (!inferno_shared_1.isNullOrUndef(ref)) {
+                if (!inferno_shared_1.isNullOrUndef(ref.onComponentWillUnmount)) {
+                    ref.onComponentWillUnmount(dom);
+                }
+            }
+            unmount(instance, null, lifecycle, false, isRecycling);
+        }
+    }
+    if (parentDom) {
+        var lastInput = instance._lastInput;
+        if (inferno_shared_1.isNullOrUndef(lastInput)) {
+            lastInput = instance;
+        }
+        utils_1.removeChild(parentDom, dom);
+    }
+    if (options_1.options.recyclingEnabled && !isStatefulComponent && (parentDom || canRecycle)) {
+        recycling_1.poolComponent(vNode);
+    }
+}
+exports.unmountComponent = unmountComponent;
+function unmountElement(vNode, parentDom, lifecycle, canRecycle, isRecycling) {
+    var dom = vNode.dom;
+    var ref = vNode.ref;
+    var props = vNode.props;
+    if (ref && !isRecycling) {
+        unmountRef(ref);
+    }
+    var children = vNode.children;
+    if (!inferno_shared_1.isNullOrUndef(children)) {
+        unmountChildren(children, lifecycle, isRecycling);
+    }
+    if (!inferno_shared_1.isNull(props)) {
+        for (var name_1 in props) {
+            // do not add a hasOwnProperty check here, it affects performance
+            if (props[name_1] !== null && patching_1.isAttrAnEvent(name_1)) {
+                patching_1.patchEvent(name_1, props[name_1], null, dom);
+                // We need to set this null, because same props otherwise come back if SCU returns false and we are recyling
+                props[name_1] = null;
+            }
+        }
+    }
+    if (!inferno_shared_1.isNull(parentDom)) {
+        utils_1.removeChild(parentDom, dom);
+    }
+    if (options_1.options.recyclingEnabled && (parentDom || canRecycle)) {
+        recycling_1.poolElement(vNode);
+    }
+}
+exports.unmountElement = unmountElement;
+function unmountChildren(children, lifecycle, isRecycling) {
+    if (inferno_shared_1.isArray(children)) {
+        for (var i = 0, len = children.length; i < len; i++) {
+            var child = children[i];
+            if (!inferno_shared_1.isInvalid(child) && inferno_shared_1.isObject(child)) {
+                unmount(child, null, lifecycle, false, isRecycling);
+            }
+        }
+    }
+    else if (inferno_shared_1.isObject(children)) {
+        unmount(children, null, lifecycle, false, isRecycling);
+    }
+}
+function unmountRef(ref) {
+    if (inferno_shared_1.isFunction(ref)) {
+        ref(null);
+    }
+    else {
+        if (inferno_shared_1.isInvalid(ref)) {
+            return;
+        }
+        if (process.env.NODE_ENV !== 'production') {
+            inferno_shared_1.throwError('string "refs" are not supported in Inferno 1.0. Use callback "refs" instead.');
+        }
+        inferno_shared_1.throwError();
+    }
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var inferno_shared_1 = __webpack_require__(0);
+var InputWrapper_1 = __webpack_require__(58);
+var SelectWrapper_1 = __webpack_require__(59);
+var TextareaWrapper_1 = __webpack_require__(60);
+/**
+ * There is currently no support for switching same input between controlled and nonControlled
+ * If that ever becomes a real issue, then re design controlled elements
+ * Currently user must choose either controlled or non-controlled and stick with that
+ */
+function processElement(flags, vNode, dom, nextPropsOrEmpty, mounting, isControlled) {
+    if (flags & 512 /* InputElement */) {
+        InputWrapper_1.processInput(vNode, dom, nextPropsOrEmpty, mounting, isControlled);
+    }
+    if (flags & 2048 /* SelectElement */) {
+        SelectWrapper_1.processSelect(vNode, dom, nextPropsOrEmpty, mounting, isControlled);
+    }
+    if (flags & 1024 /* TextareaElement */) {
+        TextareaWrapper_1.processTextarea(vNode, dom, nextPropsOrEmpty, mounting, isControlled);
+    }
+}
+exports.processElement = processElement;
+function isControlledFormElement(nextPropsOrEmpty) {
+    return (nextPropsOrEmpty.type && InputWrapper_1.isCheckedType(nextPropsOrEmpty.type)) ? !inferno_shared_1.isNullOrUndef(nextPropsOrEmpty.checked) : !inferno_shared_1.isNullOrUndef(nextPropsOrEmpty.value);
+}
+exports.isControlledFormElement = isControlledFormElement;
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(61).default;
+module.exports.default = module.exports;
+
+
+
+/***/ }),
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(46).default;
+module.exports = __webpack_require__(48).default;
 module.exports.default = module.exports;
 
 
@@ -5240,7 +5241,7 @@ module.exports.default = module.exports;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var redux_1 = __webpack_require__(71);
+var redux_1 = __webpack_require__(73);
 /**
  * Prints a warning in the console if it exists.
  *
@@ -5602,7 +5603,7 @@ exports.normalize = normalize;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__root_js__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__root_js__ = __webpack_require__(68);
 
 
 /** Built-in value references. */
@@ -5616,9 +5617,9 @@ var Symbol = __WEBPACK_IMPORTED_MODULE_0__root_js__["a" /* default */].Symbol;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__baseGetTag_js__ = __webpack_require__(60);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getPrototype_js__ = __webpack_require__(62);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__isObjectLike_js__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__baseGetTag_js__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getPrototype_js__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__isObjectLike_js__ = __webpack_require__(69);
 
 
 
@@ -5732,7 +5733,7 @@ function compose() {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ActionTypes; });
 /* harmony export (immutable) */ __webpack_exports__["a"] = createStore;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_es_isPlainObject__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_symbol_observable__ = __webpack_require__(72);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_symbol_observable__ = __webpack_require__(74);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_symbol_observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_symbol_observable__);
 
 
@@ -6060,15 +6061,15 @@ var _rendererController = __webpack_require__(29);
 
 var _socketController = __webpack_require__(30);
 
-var _helium = __webpack_require__(16);
+var _helium = __webpack_require__(13);
 
 var _textField = __webpack_require__(28);
 
-var _mainScene = __webpack_require__(43);
+var _mainScene = __webpack_require__(45);
 
-var _infernoMainScene = __webpack_require__(42);
+var _infernoMainScene = __webpack_require__(43);
 
-var _inferno = __webpack_require__(15);
+var _inferno = __webpack_require__(16);
 
 var _infernoCreateElement = __webpack_require__(7);
 
@@ -6517,7 +6518,7 @@ exports.game = undefined;
 
 var _gameScene = __webpack_require__(35);
 
-var _viewport = __webpack_require__(40);
+var _viewport = __webpack_require__(41);
 
 var _name = __webpack_require__(39);
 
@@ -6529,6 +6530,8 @@ var _isHost = __webpack_require__(38);
 
 var _gameList = __webpack_require__(34);
 
+var _users = __webpack_require__(40);
+
 var game = Redux.combineReducers({
   gameScene: _gameScene.gameScene,
   viewport: _viewport.viewport,
@@ -6536,7 +6539,8 @@ var game = Redux.combineReducers({
   isEnteredRoom: _isEnteredRoom.isEnteredRoom,
   gameId: _gameId.gameId,
   isHost: _isHost.isHost,
-  gameList: _gameList.gameList
+  gameList: _gameList.gameList,
+  users: _users.users
 });
 
 exports.game = game;
@@ -6588,7 +6592,7 @@ function isHost() {
   switch (action.type) {
     case _actions.Actions.CreateGame:
       return true;
-    case _actions.Actions.GameUpdate:
+    case _actions.Actions.UpdateGame:
       {
         var gameInstance = action.gameInstance;
         var users = gameInstance.users;
@@ -6642,6 +6646,35 @@ function name() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.users = users;
+
+var _actions = __webpack_require__(2);
+
+function users() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var action = arguments[1];
+
+  switch (action.type) {
+    case _actions.Actions.UpdateGame:
+      {
+        var gameInstance = action.gameInstance;
+        return gameInstance.users;
+      }
+    default:
+      return state;
+  }
+}
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.viewport = viewport;
 
 var _actions = __webpack_require__(2);
@@ -6676,7 +6709,7 @@ function viewport() {
 }
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6762,7 +6795,7 @@ var ConnectChoosingActionScene = (0, _infernoRedux.connect)(function mapStateToP
 exports.ConnectChoosingActionScene = ConnectChoosingActionScene;
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6782,9 +6815,9 @@ var _infernoCreateElement2 = _interopRequireDefault(_infernoCreateElement);
 
 var _constants = __webpack_require__(9);
 
-var _namingScene = __webpack_require__(44);
+var _namingScene = __webpack_require__(46);
 
-var _choosingActionScene = __webpack_require__(41);
+var _choosingActionScene = __webpack_require__(42);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6793,18 +6826,26 @@ function InfernoMainScene(_ref) {
       gameScene = _ref$gameScene === undefined ? _constants.GameScene.Naming : _ref$gameScene;
 
   var child = void 0;
+  var display = 'none';
   switch (gameScene) {
     case _constants.GameScene.Naming:
       child = (0, _infernoCreateElement2.default)(_namingScene.ConnectNamingScene);
+      display = 'block';
       break;
     case _constants.GameScene.ChoosingAction:
       child = (0, _infernoCreateElement2.default)(_choosingActionScene.ConnectChoosingActionScene);
+      display = 'block';
       break;
   }
   return (0, _infernoCreateElement2.default)('div', {
     style: {
       width: '100%',
-      height: '100%'
+      height: '100%',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      zIndex: 2,
+      display: display
     }
   }, child);
 }
@@ -6818,7 +6859,61 @@ var ConnectInfernoMainScene = (0, _infernoRedux.connect)(function mapStateToProp
 exports.ConnectInfernoMainScene = ConnectInfernoMainScene;
 
 /***/ }),
-/* 43 */
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ConnectLobbyScene = undefined;
+exports.LobbyScene = LobbyScene;
+
+var _helium = __webpack_require__(13);
+
+var _actions = __webpack_require__(2);
+
+function LobbyScene(_ref) {
+  var width = _ref.width,
+      height = _ref.height,
+      users = _ref.users,
+      isHost = _ref.isHost,
+      onStartGame = _ref.onStartGame;
+
+  var children = users.map(function (user, index) {
+    return (0, _helium.createElement)('Text', {
+      text: user.name,
+      style: {
+        fill: 'white',
+        fontSize: '16px'
+      },
+      y: 20 * index
+    });
+  });
+  return (0, _helium.createElement)('Container', null, children);
+}
+
+var ConnectLobbyScene = (0, _helium.connect)(function mapStateToProps(state) {
+  return {
+    isHost: state.isHost,
+    users: state.users
+  };
+}, function mapDispatchToProp(dispatch) {
+  return {
+    onStartGame: function onStartGame() {
+      dispatch({
+        type: _actions.Actions.StartGame
+      });
+    }
+  };
+})(LobbyScene);
+
+exports.ConnectLobbyScene = ConnectLobbyScene;
+
+/***/ }),
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6830,9 +6925,11 @@ Object.defineProperty(exports, "__esModule", {
 exports.ConnectMainScene = undefined;
 exports.MainScene = MainScene;
 
-var _helium = __webpack_require__(16);
+var _helium = __webpack_require__(13);
 
 var _constants = __webpack_require__(9);
+
+var _lobbyScene = __webpack_require__(44);
 
 function MainScene(_ref) {
   var _ref$width = _ref.width,
@@ -6844,12 +6941,21 @@ function MainScene(_ref) {
       _ref$gameScene = _ref.gameScene,
       gameScene = _ref$gameScene === undefined ? _constants.GameScene.Naming : _ref$gameScene;
 
+  var child = void 0;
+  switch (gameScene) {
+    case _constants.GameScene.Room:
+      child = (0, _helium.createElement)(_lobbyScene.ConnectLobbyScene, {
+        width: width,
+        height: height
+      });
+      break;
+  }
   return (0, _helium.createElement)('Container', {
     scale: {
       x: 1 / resolution,
       y: 1 / resolution
     }
-  });
+  }, child);
 }
 
 var ConnectMainScene = (0, _helium.connect)(function mapStateToProps(state) {
@@ -6872,7 +6978,7 @@ var ConnectMainScene = (0, _helium.connect)(function mapStateToProps(state) {
 exports.ConnectMainScene = ConnectMainScene;
 
 /***/ }),
-/* 44 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6936,7 +7042,7 @@ var ConnectNamingScene = (0, _infernoRedux.connect)(function mapStateToProps(sta
 exports.ConnectNamingScene = ConnectNamingScene;
 
 /***/ }),
-/* 45 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6991,14 +7097,14 @@ module.exports.default = module.exports;
 
 
 /***/ }),
-/* 46 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // Make sure u use EMPTY_OBJ from 'inferno', otherwise it'll be a different reference
-var inferno_1 = __webpack_require__(15);
+var inferno_1 = __webpack_require__(16);
 var inferno_shared_1 = __webpack_require__(0);
 var noOp = inferno_shared_1.ERROR_MSG;
 if (process.env.NODE_ENV !== 'production') {
@@ -7262,13 +7368,13 @@ exports.default = Component;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 47 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var inferno_1 = __webpack_require__(15);
+var inferno_1 = __webpack_require__(16);
 var inferno_shared_1 = __webpack_require__(0);
 var componentHooks = new Set();
 componentHooks.add('onComponentWillMount');
@@ -7362,7 +7468,7 @@ exports.default = createElement;
 
 
 /***/ }),
-/* 48 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7421,7 +7527,7 @@ if (process.env.NODE_ENV !== 'production') {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 49 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7437,11 +7543,11 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var hoist_non_inferno_statics_1 = __webpack_require__(45);
+var hoist_non_inferno_statics_1 = __webpack_require__(47);
 var inferno_component_1 = __webpack_require__(17);
 var inferno_create_element_1 = __webpack_require__(7);
 var inferno_shared_1 = __webpack_require__(0);
-var helpers_1 = __webpack_require__(50);
+var helpers_1 = __webpack_require__(52);
 var utils_1 = __webpack_require__(18);
 var errorObject = { value: null };
 var defaultMapStateToProps = function (state) { return ({}); }; // eslint-disable-line no-unused-vars
@@ -7732,7 +7838,7 @@ exports.default = connect;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 50 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7771,15 +7877,15 @@ exports.isPlainObject = isPlainObject;
 
 
 /***/ }),
-/* 51 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var connect_1 = __webpack_require__(49);
+var connect_1 = __webpack_require__(51);
 exports.connect = connect_1.default;
-var Provider_1 = __webpack_require__(48);
+var Provider_1 = __webpack_require__(50);
 exports.Provider = Provider_1.default;
 exports.default = {
     Provider: Provider_1.default,
@@ -7788,7 +7894,7 @@ exports.default = {
 
 
 /***/ }),
-/* 52 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7895,7 +8001,7 @@ Lifecycle.prototype.trigger = function trigger() {
 
 
 /***/ }),
-/* 53 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8006,7 +8112,7 @@ function trapClickOnNonInteractiveElement(dom) {
 
 
 /***/ }),
-/* 54 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8029,7 +8135,7 @@ exports.linkEvent = linkEvent;
 
 
 /***/ }),
-/* 55 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8042,7 +8148,7 @@ var mounting_1 = __webpack_require__(12);
 var patching_1 = __webpack_require__(6);
 var rendering_1 = __webpack_require__(8);
 var utils_1 = __webpack_require__(3);
-var processElement_1 = __webpack_require__(14);
+var processElement_1 = __webpack_require__(15);
 function normalizeChildNodes(parentDom) {
     var dom = parentDom.firstChild;
     while (dom) {
@@ -8234,7 +8340,7 @@ exports.hydrateRoot = hydrateRoot;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 56 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8369,7 +8475,7 @@ exports.applyValue = applyValue;
 
 
 /***/ }),
-/* 57 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8469,7 +8575,7 @@ exports.applyValue = applyValue;
 
 
 /***/ }),
-/* 58 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8555,7 +8661,7 @@ exports.applyValue = applyValue;
 
 
 /***/ }),
-/* 59 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8574,7 +8680,7 @@ exports.cloneVNode = VNodes_1.cloneVNode;
 exports.createVNode = VNodes_1.createVNode;
 var constants_1 = __webpack_require__(11);
 exports.internal_isUnitlessNumber = constants_1.isUnitlessNumber;
-var linkEvent_1 = __webpack_require__(54);
+var linkEvent_1 = __webpack_require__(56);
 exports.linkEvent = linkEvent_1.linkEvent;
 var patching_1 = __webpack_require__(6);
 exports.internal_patch = patching_1.patch;
@@ -8619,13 +8725,13 @@ exports.default = {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 60 */
+/* 62 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Symbol_js__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getRawTag_js__ = __webpack_require__(63);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__objectToString_js__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getRawTag_js__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__objectToString_js__ = __webpack_require__(66);
 
 
 
@@ -8657,7 +8763,7 @@ function baseGetTag(value) {
 
 
 /***/ }),
-/* 61 */
+/* 63 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8669,11 +8775,11 @@ var freeGlobal = typeof global == 'object' && global && global.Object === Object
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(26)))
 
 /***/ }),
-/* 62 */
+/* 64 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__overArg_js__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__overArg_js__ = __webpack_require__(67);
 
 
 /** Built-in value references. */
@@ -8683,7 +8789,7 @@ var getPrototype = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__overArg_js
 
 
 /***/ }),
-/* 63 */
+/* 65 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8737,7 +8843,7 @@ function getRawTag(value) {
 
 
 /***/ }),
-/* 64 */
+/* 66 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8766,7 +8872,7 @@ function objectToString(value) {
 
 
 /***/ }),
-/* 65 */
+/* 67 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8788,11 +8894,11 @@ function overArg(func, transform) {
 
 
 /***/ }),
-/* 66 */
+/* 68 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__freeGlobal_js__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__freeGlobal_js__ = __webpack_require__(63);
 
 
 /** Detect free variable `self`. */
@@ -8805,7 +8911,7 @@ var root = __WEBPACK_IMPORTED_MODULE_0__freeGlobal_js__["a" /* default */] || fr
 
 
 /***/ }),
-/* 67 */
+/* 69 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8841,7 +8947,7 @@ function isObjectLike(value) {
 
 
 /***/ }),
-/* 68 */
+/* 70 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8897,7 +9003,7 @@ function applyMiddleware() {
 }
 
 /***/ }),
-/* 69 */
+/* 71 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8951,7 +9057,7 @@ function bindActionCreators(actionCreators, dispatch) {
 }
 
 /***/ }),
-/* 70 */
+/* 72 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9091,15 +9197,15 @@ function combineReducers(reducers) {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
 
 /***/ }),
-/* 71 */
+/* 73 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createStore__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__combineReducers__ = __webpack_require__(70);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bindActionCreators__ = __webpack_require__(69);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__applyMiddleware__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__combineReducers__ = __webpack_require__(72);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bindActionCreators__ = __webpack_require__(71);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__applyMiddleware__ = __webpack_require__(70);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__compose__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_warning__ = __webpack_require__(25);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "createStore", function() { return __WEBPACK_IMPORTED_MODULE_0__createStore__["a"]; });
@@ -9128,14 +9234,14 @@ if (process.env.NODE_ENV !== 'production' && typeof isCrushed.name === 'string' 
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
 
 /***/ }),
-/* 72 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(73);
+module.exports = __webpack_require__(75);
 
 
 /***/ }),
-/* 73 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9145,7 +9251,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _ponyfill = __webpack_require__(74);
+var _ponyfill = __webpack_require__(76);
 
 var _ponyfill2 = _interopRequireDefault(_ponyfill);
 
@@ -9168,10 +9274,10 @@ if (typeof self !== 'undefined') {
 
 var result = (0, _ponyfill2['default'])(root);
 exports['default'] = result;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26), __webpack_require__(75)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26), __webpack_require__(77)(module)))
 
 /***/ }),
-/* 74 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9200,7 +9306,7 @@ function symbolObservablePonyfill(root) {
 };
 
 /***/ }),
-/* 75 */
+/* 77 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {

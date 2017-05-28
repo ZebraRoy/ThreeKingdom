@@ -14,12 +14,15 @@ import {
 
 export function InfernoMainScene ({ gameScene = GameScene.Naming }) {
   let child;
+  let display = 'none';
   switch (gameScene) {
     case GameScene.Naming:
       child = createElement(ConnectNamingScene);
+      display = 'block';
       break;
     case GameScene.ChoosingAction:
       child = createElement(ConnectChoosingActionScene);
+      display = 'block';
       break;
   }
   return createElement(
@@ -27,7 +30,12 @@ export function InfernoMainScene ({ gameScene = GameScene.Naming }) {
     {
       style: {
         width: '100%',
-        height: '100%'
+        height: '100%',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        zIndex: 2,
+        display
       }
     },
     child

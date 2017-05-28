@@ -54,6 +54,7 @@ export class Game {
         name: playerName,
         socket
       });
+      isJoinSuccess = true;
     }
     if (isJoinSuccess) {
       store.dispatch({

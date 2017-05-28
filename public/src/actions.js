@@ -5,5 +5,6 @@ export const Actions = {
   ConfirmName: 'ConfirmName',
   SendedConfirmName: 'SendedConfirmName',
   UpdateGameList: 'UpdateGameList',
-  UpdateGame: 'UpdateGame'
+  UpdateGame: 'UpdateGame',
+  StartGame: 'StartGame'
 };
