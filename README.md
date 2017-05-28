@@ -44,7 +44,7 @@ socket.on(
   function (gameId) {
     // set the ready state of the user to be false
     // expected response: no response
-  } 
+  }
 );
 ```
 Start the game
@@ -54,7 +54,7 @@ socket.on(
   function (gameId) {
     // Check the player is the host and change the game state
     // expected response: no response
-  } 
+  }
 );
 ```
 
@@ -87,11 +87,11 @@ Whatever the store update, it should push the data into client with filters. Cur
     "playerCardToken": // player token
     [
       [ // player 1 tokens
-        { 
+        {
           type: Token.Type.Farmland, // token type
           card: 13 // card enum
         }
-      ] 
+      ]
     ]
   },
   "players": [ // the player of the game. Storing the game related data of the user
@@ -112,4 +112,8 @@ Whatever the store update, it should push the data into client with filters. Cur
     "isMute": false // the game is allow talking or not. May be able to modify by player in the future
   }
 }
+```
+Whatever a new room connected or new user connected. Send the game list for that user. The event name is "gameList"
+```
+[id, id, id, id];
 ```

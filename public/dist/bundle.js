@@ -63,14 +63,14 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 31);
+/******/ 	return __webpack_require__(__webpack_require__.s = 32);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(48);
+module.exports = __webpack_require__(52);
 module.exports.default = module.exports;
 
 
@@ -270,13 +270,33 @@ process.umask = function() { return 0; };
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var Actions = exports.Actions = {
+  Resize: 'Resize',
+  CreateGame: 'CreateGame',
+  JoinGame: 'JoinGame',
+  ConfirmName: 'ConfirmName',
+  SendedConfirmName: 'SendedConfirmName',
+  UpdateGameList: 'UpdateGameList',
+  UpdateGame: 'UpdateGame'
+};
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var options_1 = __webpack_require__(3);
+var options_1 = __webpack_require__(4);
 var VNodes_1 = __webpack_require__(5);
-var constants_1 = __webpack_require__(10);
-var mounting_1 = __webpack_require__(11);
+var constants_1 = __webpack_require__(11);
+var mounting_1 = __webpack_require__(12);
 var unmounting_1 = __webpack_require__(13);
 // We need EMPTY_OBJ defined in one place.
 // Its used for comparison so we cant inline it into shared
@@ -467,7 +487,7 @@ exports.isKeyed = isKeyed;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -487,23 +507,6 @@ exports.options = {
 
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var Actions = exports.Actions = {
-  Resize: 'Resize',
-  CreateGame: 'CreateGame',
-  JoinGame: 'JoinGame',
-  ConfirmName: 'ConfirmName'
-};
-
-/***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -511,9 +514,9 @@ var Actions = exports.Actions = {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var utils_1 = __webpack_require__(2);
+var utils_1 = __webpack_require__(3);
 var normalization_1 = __webpack_require__(20);
-var options_1 = __webpack_require__(3);
+var options_1 = __webpack_require__(4);
 function VNode(children, className, flags, key, props, ref, type) {
     this.children = children;
     this.className = className;
@@ -723,14 +726,14 @@ exports.isVNode = isVNode;
 /* WEBPACK VAR INJECTION */(function(process) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var options_1 = __webpack_require__(3);
+var options_1 = __webpack_require__(4);
 var VNodes_1 = __webpack_require__(5);
-var constants_1 = __webpack_require__(10);
-var delegation_1 = __webpack_require__(49);
-var mounting_1 = __webpack_require__(11);
+var constants_1 = __webpack_require__(11);
+var delegation_1 = __webpack_require__(53);
+var mounting_1 = __webpack_require__(12);
 var rendering_1 = __webpack_require__(8);
 var unmounting_1 = __webpack_require__(13);
-var utils_1 = __webpack_require__(2);
+var utils_1 = __webpack_require__(3);
 var processElement_1 = __webpack_require__(14);
 function patch(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling) {
     if (lastVNode !== nextVNode) {
@@ -1549,7 +1552,7 @@ function removeProp(prop, lastValue, dom) {
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(43).default;
+module.exports = __webpack_require__(47).default;
 module.exports.default = module.exports;
 
 
@@ -1562,13 +1565,13 @@ module.exports.default = module.exports;
 /* WEBPACK VAR INJECTION */(function(process) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var options_1 = __webpack_require__(3);
+var options_1 = __webpack_require__(4);
 var VNodes_1 = __webpack_require__(5);
-var hydration_1 = __webpack_require__(51);
-var mounting_1 = __webpack_require__(11);
+var hydration_1 = __webpack_require__(55);
+var mounting_1 = __webpack_require__(12);
 var patching_1 = __webpack_require__(6);
 var unmounting_1 = __webpack_require__(13);
-var utils_1 = __webpack_require__(2);
+var utils_1 = __webpack_require__(3);
 // rather than use a Map, like we did before, we can use an array here
 // given there shouldn't be THAT many roots on the page, the difference
 // in performance is huge: https://esbench.com/bench/5802a691330ab09900a1a2da
@@ -1692,13 +1695,30 @@ exports.createRenderer = createRenderer;
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(47).default;
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var GameScene = exports.GameScene = {
+  Naming: 0,
+  ChoosingAction: 1,
+  Room: 2,
+  Gaming: 3
+};
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(51).default;
 module.exports.default = module.exports;
 
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1797,19 +1817,19 @@ exports.delegatedEvents.add('onKeyPress');
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var options_1 = __webpack_require__(3);
+var options_1 = __webpack_require__(4);
 var VNodes_1 = __webpack_require__(5);
 var patching_1 = __webpack_require__(6);
 var recycling_1 = __webpack_require__(19);
 var rendering_1 = __webpack_require__(8);
-var utils_1 = __webpack_require__(2);
+var utils_1 = __webpack_require__(3);
 var processElement_1 = __webpack_require__(14);
 function mount(vNode, parentDom, lifecycle, context, isSVG) {
     var flags = vNode.flags;
@@ -2035,25 +2055,6 @@ exports.mountRef = mountRef;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var GameScene = exports.GameScene = {
-  Naming: 0,
-  ChoosingAction: 1,
-  CreatingGame: 2,
-  JoiningGame: 3,
-  Lobby: 4,
-  Gaming: 5
-};
-
-/***/ }),
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2061,11 +2062,11 @@ var GameScene = exports.GameScene = {
 /* WEBPACK VAR INJECTION */(function(process) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var options_1 = __webpack_require__(3);
+var options_1 = __webpack_require__(4);
 var patching_1 = __webpack_require__(6);
 var recycling_1 = __webpack_require__(19);
 var rendering_1 = __webpack_require__(8);
-var utils_1 = __webpack_require__(2);
+var utils_1 = __webpack_require__(3);
 function unmount(vNode, parentDom, lifecycle, canRecycle, isRecycling) {
     var flags = vNode.flags;
     if (flags & 28 /* Component */) {
@@ -2198,9 +2199,9 @@ function unmountRef(ref) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var InputWrapper_1 = __webpack_require__(52);
-var SelectWrapper_1 = __webpack_require__(53);
-var TextareaWrapper_1 = __webpack_require__(54);
+var InputWrapper_1 = __webpack_require__(56);
+var SelectWrapper_1 = __webpack_require__(57);
+var TextareaWrapper_1 = __webpack_require__(58);
 /**
  * There is currently no support for switching same input between controlled and nonControlled
  * If that ever becomes a real issue, then re design controlled elements
@@ -2228,7 +2229,7 @@ exports.isControlledFormElement = isControlledFormElement;
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(55).default;
+module.exports = __webpack_require__(59).default;
 module.exports.default = module.exports;
 
 
@@ -5227,7 +5228,7 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(42).default;
+module.exports = __webpack_require__(46).default;
 module.exports.default = module.exports;
 
 
@@ -5239,7 +5240,7 @@ module.exports.default = module.exports;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var redux_1 = __webpack_require__(67);
+var redux_1 = __webpack_require__(71);
 /**
  * Prints a warning in the console if it exists.
  *
@@ -5601,7 +5602,7 @@ exports.normalize = normalize;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__root_js__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__root_js__ = __webpack_require__(66);
 
 
 /** Built-in value references. */
@@ -5615,9 +5616,9 @@ var Symbol = __WEBPACK_IMPORTED_MODULE_0__root_js__["a" /* default */].Symbol;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__baseGetTag_js__ = __webpack_require__(56);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getPrototype_js__ = __webpack_require__(58);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__isObjectLike_js__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__baseGetTag_js__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getPrototype_js__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__isObjectLike_js__ = __webpack_require__(67);
 
 
 
@@ -5731,7 +5732,7 @@ function compose() {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ActionTypes; });
 /* harmony export (immutable) */ __webpack_exports__["a"] = createStore;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_es_isPlainObject__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_symbol_observable__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_symbol_observable__ = __webpack_require__(72);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_symbol_observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_symbol_observable__);
 
 
@@ -6051,19 +6052,21 @@ exports.Game = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _index = __webpack_require__(33);
+var _index = __webpack_require__(36);
 
-var _viewportController = __webpack_require__(30);
+var _viewportController = __webpack_require__(31);
 
 var _rendererController = __webpack_require__(29);
+
+var _socketController = __webpack_require__(30);
 
 var _helium = __webpack_require__(16);
 
 var _textField = __webpack_require__(28);
 
-var _mainScene = __webpack_require__(39);
+var _mainScene = __webpack_require__(43);
 
-var _infernoMainScene = __webpack_require__(38);
+var _infernoMainScene = __webpack_require__(42);
 
 var _inferno = __webpack_require__(15);
 
@@ -6071,7 +6074,7 @@ var _infernoCreateElement = __webpack_require__(7);
 
 var _infernoCreateElement2 = _interopRequireDefault(_infernoCreateElement);
 
-var _infernoRedux = __webpack_require__(9);
+var _infernoRedux = __webpack_require__(10);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6098,8 +6101,8 @@ var Game = exports.Game = function () {
       viewportController.start(); // ensure the viewport has been initialize
       var state = store.getState();
       var viewport = state.viewport;
-      var infernoStage = document.getElementById('infernoStage');
-      var heliumStage = document.getElementById('heliumStage');
+      var infernoStage = document.getElementById('inferno-stage');
+      var heliumStage = document.getElementById('helium-stage');
       var width = viewport.width,
           height = viewport.height,
           resolution = viewport.resolution;
@@ -6110,6 +6113,7 @@ var Game = exports.Game = function () {
       });
       heliumStage.appendChild(renderer.view);
       var rendererController = (0, _rendererController.RendererController)(store, renderer);
+      var socketController = (0, _socketController.SocketController)(store);
       rendererController.start();
       var input = (0, _helium.createElement)(_helium.Provider, {
         store: store
@@ -6125,6 +6129,7 @@ var Game = exports.Game = function () {
         store: store
       }, (0, _helium.createElement)(_infernoMainScene.ConnectInfernoMainScene)), infernoStage);
       draw();
+      socketController.start();
       this.renderer = renderer;
     }
   }]);
@@ -6277,9 +6282,80 @@ function RendererController(store, renderer) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.SocketController = SocketController;
+
+var _constants = __webpack_require__(9);
+
+var _actions = __webpack_require__(2);
+
+function SocketController(store) {
+
+  var socket = window.io();
+  var unsubscribe = void 0;
+
+  socket.on('gameList', function onGameListUpdate(gameList) {
+    store.dispatch({
+      type: _actions.Actions.UpdateGameList,
+      gameList: gameList
+    });
+  });
+
+  socket.on('gameUpdate', function onGameUpdate(gameInstance) {
+    var state = store.getState();
+    store.dispatch({
+      type: _actions.Actions.UpdateGame,
+      name: state.name,
+      gameInstance: gameInstance
+    });
+  });
+
+  function enterRoomMessage(state) {
+    if (!state.isEnteredRoom && state.gameScene !== _constants.GameScene.Naming && state.gameScene !== _constants.GameScene.ChoosingAction) {
+      if (state.isHost) {
+        socket.emit('createGame', state.name);
+      } else {
+        socket.emit('JoinGame', state.gameId);
+      }
+      store.dispatch({
+        type: _actions.Actions.SendedConfirmName
+      });
+    }
+  }
+
+  function fireMessage() {
+    var state = store.getState();
+    enterRoomMessage(state);
+  }
+
+  return {
+    start: function start() {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+      unsubscribe = store.subscribe(fireMessage);
+    },
+    stop: function stop() {
+      if (unsubscribe) {
+        unsubscribe();
+        unsubscribe = null;
+      }
+    }
+  };
+}
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.ViewportController = ViewportController;
 
-var _actions = __webpack_require__(4);
+var _actions = __webpack_require__(2);
 
 function ViewportController(store) {
   var interval = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 200;
@@ -6326,7 +6402,7 @@ function ViewportController(store) {
 }
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6338,39 +6414,6 @@ var game = new _game.Game();
 game.start();
 
 /***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.gameScene = gameScene;
-
-var _constants = __webpack_require__(12);
-
-var _actions = __webpack_require__(4);
-
-function gameScene() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _constants.GameScene.Naming;
-  var action = arguments[1];
-
-  switch (action.type) {
-    case _actions.Actions.ConfirmName:
-      if (state === _constants.GameScene.Naming) {
-        return _constants.GameScene.ChoosingAction;
-      }
-      return state;
-    case _actions.Actions.CreateGame:
-      return _constants.GameScene.CreatingGame;
-    default:
-      return state;
-  }
-}
-
-/***/ }),
 /* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6380,24 +6423,21 @@ function gameScene() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.game = undefined;
+exports.gameId = gameId;
 
-var _gameScene = __webpack_require__(32);
+var _actions = __webpack_require__(2);
 
-var _viewport = __webpack_require__(36);
+function gameId() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : -1;
+  var action = arguments[1];
 
-var _name = __webpack_require__(35);
-
-var _isNameConfirmed = __webpack_require__(34);
-
-var game = Redux.combineReducers({
-  gameScene: _gameScene.gameScene,
-  viewport: _viewport.viewport,
-  name: _name.name,
-  isNameConfirmed: _isNameConfirmed.isNameConfirmed
-});
-
-exports.game = game;
+  switch (action.type) {
+    case _actions.Actions.JoinGame:
+      return action.gameId;
+    default:
+      return state;
+  }
+}
 
 /***/ }),
 /* 34 */
@@ -6409,17 +6449,17 @@ exports.game = game;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.isNameConfirmed = isNameConfirmed;
+exports.gameList = gameList;
 
-var _actions = __webpack_require__(4);
+var _actions = __webpack_require__(2);
 
-function isNameConfirmed() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+function gameList() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
   var action = arguments[1];
 
   switch (action.type) {
-    case _actions.Actions.ConfirmName:
-      return true;
+    case _actions.Actions.UpdateGameList:
+      return action.gameList;
     default:
       return state;
   }
@@ -6435,17 +6475,25 @@ function isNameConfirmed() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.name = name;
+exports.gameScene = gameScene;
 
-var _actions = __webpack_require__(4);
+var _constants = __webpack_require__(9);
 
-function name() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+var _actions = __webpack_require__(2);
+
+function gameScene() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _constants.GameScene.Naming;
   var action = arguments[1];
 
   switch (action.type) {
     case _actions.Actions.ConfirmName:
-      return action.name;
+      if (state === _constants.GameScene.Naming) {
+        return _constants.GameScene.ChoosingAction;
+      }
+      return state;
+    case _actions.Actions.JoinGame:
+    case _actions.Actions.CreateGame:
+      return _constants.GameScene.Room;
     default:
       return state;
   }
@@ -6461,9 +6509,138 @@ function name() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.game = undefined;
+
+var _gameScene = __webpack_require__(35);
+
+var _viewport = __webpack_require__(40);
+
+var _name = __webpack_require__(39);
+
+var _isEnteredRoom = __webpack_require__(37);
+
+var _gameId = __webpack_require__(33);
+
+var _isHost = __webpack_require__(38);
+
+var _gameList = __webpack_require__(34);
+
+var game = Redux.combineReducers({
+  gameScene: _gameScene.gameScene,
+  viewport: _viewport.viewport,
+  name: _name.name,
+  isEnteredRoom: _isEnteredRoom.isEnteredRoom,
+  gameId: _gameId.gameId,
+  isHost: _isHost.isHost,
+  gameList: _gameList.gameList
+});
+
+exports.game = game;
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.isEnteredRoom = isEnteredRoom;
+
+var _actions = __webpack_require__(2);
+
+function isEnteredRoom() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  var action = arguments[1];
+
+  switch (action.type) {
+    case _actions.Actions.SendedConfirmName:
+      return true;
+    default:
+      return state;
+  }
+}
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.isHost = isHost;
+
+var _actions = __webpack_require__(2);
+
+function isHost() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  var action = arguments[1];
+
+  switch (action.type) {
+    case _actions.Actions.CreateGame:
+      return true;
+    case _actions.Actions.GameUpdate:
+      {
+        var gameInstance = action.gameInstance;
+        var users = gameInstance.users;
+        var name = action.name;
+        var me = users.find(function (user) {
+          return user.name === name;
+        });
+        if (me) {
+          return me.isHost;
+        }
+        return state;
+      }
+    default:
+      return state;
+  }
+}
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.name = name;
+
+var _actions = __webpack_require__(2);
+
+function name() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  var action = arguments[1];
+
+  switch (action.type) {
+    case _actions.Actions.ConfirmName:
+      return action.name;
+    default:
+      return state;
+  }
+}
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.viewport = viewport;
 
-var _actions = __webpack_require__(4);
+var _actions = __webpack_require__(2);
 
 function viewport() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
@@ -6495,7 +6672,7 @@ function viewport() {
 }
 
 /***/ }),
-/* 37 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6507,46 +6684,68 @@ Object.defineProperty(exports, "__esModule", {
 exports.ConnectChoosingActionScene = undefined;
 exports.ChoosingActionScene = ChoosingActionScene;
 
-var _infernoRedux = __webpack_require__(9);
+var _infernoRedux = __webpack_require__(10);
 
 var _infernoCreateElement = __webpack_require__(7);
 
 var _infernoCreateElement2 = _interopRequireDefault(_infernoCreateElement);
 
-var _actions = __webpack_require__(4);
+var _actions = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ChoosingActionScene(_ref) {
-  var onCreateGame = _ref.onCreateGame,
+  var gameList = _ref.gameList,
+      onCreateGame = _ref.onCreateGame,
       onJoinGame = _ref.onJoinGame;
 
   return (0, _infernoCreateElement2.default)('div', {
-    className: 'infernoForm'
+    className: 'inferno-form'
+  }, (0, _infernoCreateElement2.default)('form', {
+    name: 'joinGame',
+    onSubmit: function onSubmit(e) {
+      e.preventDefault();
+      if (gameList.indexOf(document.forms.joinGame.gameId.value) !== -1) {
+        onJoinGame(e);
+      }
+      return false;
+    }
   }, (0, _infernoCreateElement2.default)('button', {
-    onClick: onCreateGame
-  }, 'Create Game'), (0, _infernoCreateElement2.default)('form', {
-    id: 'joinGame',
-    onSubmit: onJoinGame
-  }, (0, _infernoCreateElement2.default)('input', {
+    onClick: onCreateGame,
+    className: 'helium-button',
+    type: 'button'
+  }, 'Create Game'), (0, _infernoCreateElement2.default)('div', {
+    className: 'split-line-container'
+  }, (0, _infernoCreateElement2.default)('span', {
+    className: 'split-line'
+  }), (0, _infernoCreateElement2.default)('span', {
+    className: 'or'
+  }, 'OR'), (0, _infernoCreateElement2.default)('span', {
+    className: 'split-line'
+  })), (0, _infernoCreateElement2.default)('input', {
     type: 'text',
-    name: 'gamId',
-    placeholder: 'Game ID',
-    defaultValue: name
+    name: 'gameId',
+    placeholder: 'Join Game ID',
+    defaultValue: name,
+    className: 'helium-input'
   }), (0, _infernoCreateElement2.default)('button', {
-    type: 'submit'
+    type: 'submit',
+    className: 'helium-button'
   }, 'Confirm')));
 }
 
-var ConnectChoosingActionScene = (0, _infernoRedux.connect)(null, function mapDispatchToProps(dispatch) {
+var ConnectChoosingActionScene = (0, _infernoRedux.connect)(function mapStateToProps(state) {
+  return {
+    gameList: state.gameList
+  };
+}, function mapDispatchToProps(dispatch) {
   return {
     onCreateGame: function onCreateGame() {
       dispatch({
         type: _actions.Actions.CreateGame
       });
     },
-    onJoinGame: function onJoinGame(e) {
-      e.preventDefault();
+    onJoinGame: function onJoinGame() {
       dispatch({
         type: _actions.Actions.JoinGame,
         gameId: document.forms.joinGame.gameId.value
@@ -6559,7 +6758,7 @@ var ConnectChoosingActionScene = (0, _infernoRedux.connect)(null, function mapDi
 exports.ConnectChoosingActionScene = ConnectChoosingActionScene;
 
 /***/ }),
-/* 38 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6571,17 +6770,17 @@ Object.defineProperty(exports, "__esModule", {
 exports.ConnectInfernoMainScene = undefined;
 exports.InfernoMainScene = InfernoMainScene;
 
-var _infernoRedux = __webpack_require__(9);
+var _infernoRedux = __webpack_require__(10);
 
 var _infernoCreateElement = __webpack_require__(7);
 
 var _infernoCreateElement2 = _interopRequireDefault(_infernoCreateElement);
 
-var _constants = __webpack_require__(12);
+var _constants = __webpack_require__(9);
 
-var _namingScene = __webpack_require__(40);
+var _namingScene = __webpack_require__(44);
 
-var _choosingActionScene = __webpack_require__(37);
+var _choosingActionScene = __webpack_require__(41);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6615,7 +6814,7 @@ var ConnectInfernoMainScene = (0, _infernoRedux.connect)(function mapStateToProp
 exports.ConnectInfernoMainScene = ConnectInfernoMainScene;
 
 /***/ }),
-/* 39 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6629,7 +6828,7 @@ exports.MainScene = MainScene;
 
 var _helium = __webpack_require__(16);
 
-var _constants = __webpack_require__(12);
+var _constants = __webpack_require__(9);
 
 function MainScene(_ref) {
   var _ref$width = _ref.width,
@@ -6669,7 +6868,7 @@ var ConnectMainScene = (0, _helium.connect)(function mapStateToProps(state) {
 exports.ConnectMainScene = ConnectMainScene;
 
 /***/ }),
-/* 40 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6681,13 +6880,13 @@ Object.defineProperty(exports, "__esModule", {
 exports.ConnectNamingScene = undefined;
 exports.NamingScene = NamingScene;
 
-var _infernoRedux = __webpack_require__(9);
+var _infernoRedux = __webpack_require__(10);
 
 var _infernoCreateElement = __webpack_require__(7);
 
 var _infernoCreateElement2 = _interopRequireDefault(_infernoCreateElement);
 
-var _actions = __webpack_require__(4);
+var _actions = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6696,18 +6895,20 @@ function NamingScene(_ref) {
       onSubmit = _ref.onSubmit;
 
   return (0, _infernoCreateElement2.default)('div', {
-    className: 'infernoForm'
+    className: 'inferno-form'
   }, (0, _infernoCreateElement2.default)('form', {
-    id: 'naming',
+    name: 'naming',
     onSubmit: onSubmit
   }, (0, _infernoCreateElement2.default)('input', {
     type: 'text',
     name: 'name',
+    className: 'helium-input',
     required: 'required',
     placeholder: 'Name',
     defaultValue: name
   }), (0, _infernoCreateElement2.default)('button', {
-    type: 'submit'
+    type: 'submit',
+    className: 'helium-button'
   }, 'Confirm')));
 }
 
@@ -6731,7 +6932,7 @@ var ConnectNamingScene = (0, _infernoRedux.connect)(function mapStateToProps(sta
 exports.ConnectNamingScene = ConnectNamingScene;
 
 /***/ }),
-/* 41 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6786,7 +6987,7 @@ module.exports.default = module.exports;
 
 
 /***/ }),
-/* 42 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7057,7 +7258,7 @@ exports.default = Component;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 43 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7157,7 +7358,7 @@ exports.default = createElement;
 
 
 /***/ }),
-/* 44 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7216,7 +7417,7 @@ if (process.env.NODE_ENV !== 'production') {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 45 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7232,11 +7433,11 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var hoist_non_inferno_statics_1 = __webpack_require__(41);
+var hoist_non_inferno_statics_1 = __webpack_require__(45);
 var inferno_component_1 = __webpack_require__(17);
 var inferno_create_element_1 = __webpack_require__(7);
 var inferno_shared_1 = __webpack_require__(0);
-var helpers_1 = __webpack_require__(46);
+var helpers_1 = __webpack_require__(50);
 var utils_1 = __webpack_require__(18);
 var errorObject = { value: null };
 var defaultMapStateToProps = function (state) { return ({}); }; // eslint-disable-line no-unused-vars
@@ -7527,7 +7728,7 @@ exports.default = connect;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 46 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7566,15 +7767,15 @@ exports.isPlainObject = isPlainObject;
 
 
 /***/ }),
-/* 47 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var connect_1 = __webpack_require__(45);
+var connect_1 = __webpack_require__(49);
 exports.connect = connect_1.default;
-var Provider_1 = __webpack_require__(44);
+var Provider_1 = __webpack_require__(48);
 exports.Provider = Provider_1.default;
 exports.default = {
     Provider: Provider_1.default,
@@ -7583,7 +7784,7 @@ exports.default = {
 
 
 /***/ }),
-/* 48 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7690,7 +7891,7 @@ Lifecycle.prototype.trigger = function trigger() {
 
 
 /***/ }),
-/* 49 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7801,7 +8002,7 @@ function trapClickOnNonInteractiveElement(dom) {
 
 
 /***/ }),
-/* 50 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7824,19 +8025,19 @@ exports.linkEvent = linkEvent;
 
 
 /***/ }),
-/* 51 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var options_1 = __webpack_require__(3);
-var constants_1 = __webpack_require__(10);
-var mounting_1 = __webpack_require__(11);
+var options_1 = __webpack_require__(4);
+var constants_1 = __webpack_require__(11);
+var mounting_1 = __webpack_require__(12);
 var patching_1 = __webpack_require__(6);
 var rendering_1 = __webpack_require__(8);
-var utils_1 = __webpack_require__(2);
+var utils_1 = __webpack_require__(3);
 var processElement_1 = __webpack_require__(14);
 function normalizeChildNodes(parentDom) {
     var dom = parentDom.firstChild;
@@ -8029,14 +8230,14 @@ exports.hydrateRoot = hydrateRoot;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 52 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var utils_1 = __webpack_require__(2);
+var utils_1 = __webpack_require__(3);
 function isCheckedType(type) {
     return type === 'checkbox' || type === 'radio';
 }
@@ -8164,7 +8365,7 @@ exports.applyValue = applyValue;
 
 
 /***/ }),
-/* 53 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8172,7 +8373,7 @@ exports.applyValue = applyValue;
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
 var VNodes_1 = __webpack_require__(5);
-var utils_1 = __webpack_require__(2);
+var utils_1 = __webpack_require__(3);
 function updateChildOptionGroup(vNode, value) {
     var type = vNode.type;
     if (type === 'optgroup') {
@@ -8264,14 +8465,14 @@ exports.applyValue = applyValue;
 
 
 /***/ }),
-/* 54 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var utils_1 = __webpack_require__(2);
+var utils_1 = __webpack_require__(3);
 function wrappedOnChange(e) {
     var props = this.vNode.props || utils_1.EMPTY_OBJ;
     var event = props.onChange;
@@ -8350,7 +8551,7 @@ exports.applyValue = applyValue;
 
 
 /***/ }),
-/* 55 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8362,14 +8563,14 @@ exports.NO_OP = inferno_shared_1.NO_OP;
 var normalization_1 = __webpack_require__(20);
 exports.getFlagsForElementVnode = normalization_1.getFlagsForElementVnode;
 exports.internal_normalize = normalization_1.normalize;
-var options_1 = __webpack_require__(3);
+var options_1 = __webpack_require__(4);
 exports.options = options_1.options;
 var VNodes_1 = __webpack_require__(5);
 exports.cloneVNode = VNodes_1.cloneVNode;
 exports.createVNode = VNodes_1.createVNode;
-var constants_1 = __webpack_require__(10);
+var constants_1 = __webpack_require__(11);
 exports.internal_isUnitlessNumber = constants_1.isUnitlessNumber;
-var linkEvent_1 = __webpack_require__(50);
+var linkEvent_1 = __webpack_require__(54);
 exports.linkEvent = linkEvent_1.linkEvent;
 var patching_1 = __webpack_require__(6);
 exports.internal_patch = patching_1.patch;
@@ -8378,7 +8579,7 @@ exports.internal_DOMNodeMap = rendering_1.componentToDOMNodeMap;
 exports.createRenderer = rendering_1.createRenderer;
 exports.findDOMNode = rendering_1.findDOMNode;
 exports.render = rendering_1.render;
-var utils_1 = __webpack_require__(2);
+var utils_1 = __webpack_require__(3);
 exports.EMPTY_OBJ = utils_1.EMPTY_OBJ;
 if (process.env.NODE_ENV !== 'production') {
     /* tslint:disable-next-line:no-empty */
@@ -8414,13 +8615,13 @@ exports.default = {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 56 */
+/* 60 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Symbol_js__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getRawTag_js__ = __webpack_require__(59);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__objectToString_js__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getRawTag_js__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__objectToString_js__ = __webpack_require__(64);
 
 
 
@@ -8452,7 +8653,7 @@ function baseGetTag(value) {
 
 
 /***/ }),
-/* 57 */
+/* 61 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8464,11 +8665,11 @@ var freeGlobal = typeof global == 'object' && global && global.Object === Object
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(26)))
 
 /***/ }),
-/* 58 */
+/* 62 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__overArg_js__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__overArg_js__ = __webpack_require__(65);
 
 
 /** Built-in value references. */
@@ -8478,7 +8679,7 @@ var getPrototype = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__overArg_js
 
 
 /***/ }),
-/* 59 */
+/* 63 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8532,7 +8733,7 @@ function getRawTag(value) {
 
 
 /***/ }),
-/* 60 */
+/* 64 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8561,7 +8762,7 @@ function objectToString(value) {
 
 
 /***/ }),
-/* 61 */
+/* 65 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8583,11 +8784,11 @@ function overArg(func, transform) {
 
 
 /***/ }),
-/* 62 */
+/* 66 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__freeGlobal_js__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__freeGlobal_js__ = __webpack_require__(61);
 
 
 /** Detect free variable `self`. */
@@ -8600,7 +8801,7 @@ var root = __WEBPACK_IMPORTED_MODULE_0__freeGlobal_js__["a" /* default */] || fr
 
 
 /***/ }),
-/* 63 */
+/* 67 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8636,7 +8837,7 @@ function isObjectLike(value) {
 
 
 /***/ }),
-/* 64 */
+/* 68 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8692,7 +8893,7 @@ function applyMiddleware() {
 }
 
 /***/ }),
-/* 65 */
+/* 69 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8746,7 +8947,7 @@ function bindActionCreators(actionCreators, dispatch) {
 }
 
 /***/ }),
-/* 66 */
+/* 70 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8886,15 +9087,15 @@ function combineReducers(reducers) {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
 
 /***/ }),
-/* 67 */
+/* 71 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createStore__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__combineReducers__ = __webpack_require__(66);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bindActionCreators__ = __webpack_require__(65);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__applyMiddleware__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__combineReducers__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bindActionCreators__ = __webpack_require__(69);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__applyMiddleware__ = __webpack_require__(68);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__compose__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_warning__ = __webpack_require__(25);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "createStore", function() { return __WEBPACK_IMPORTED_MODULE_0__createStore__["a"]; });
@@ -8923,14 +9124,14 @@ if (process.env.NODE_ENV !== 'production' && typeof isCrushed.name === 'string' 
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
 
 /***/ }),
-/* 68 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(69);
+module.exports = __webpack_require__(73);
 
 
 /***/ }),
-/* 69 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8940,7 +9141,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _ponyfill = __webpack_require__(70);
+var _ponyfill = __webpack_require__(74);
 
 var _ponyfill2 = _interopRequireDefault(_ponyfill);
 
@@ -8963,10 +9164,10 @@ if (typeof self !== 'undefined') {
 
 var result = (0, _ponyfill2['default'])(root);
 exports['default'] = result;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26), __webpack_require__(71)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26), __webpack_require__(75)(module)))
 
 /***/ }),
-/* 70 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8995,7 +9196,7 @@ function symbolObservablePonyfill(root) {
 };
 
 /***/ }),
-/* 71 */
+/* 75 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {

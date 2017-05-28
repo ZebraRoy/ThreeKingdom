@@ -12,8 +12,9 @@ export function gameScene (state = GameScene.Naming, action) {
         return GameScene.ChoosingAction;
       }
       return state;
+    case Actions.JoinGame:
     case Actions.CreateGame:
-      return GameScene.CreatingGame;
+      return GameScene.Room;
     default:
       return state;
   }

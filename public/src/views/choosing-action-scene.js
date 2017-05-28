@@ -6,38 +6,73 @@ import {
   Actions
 } from '../actions';
 
-export function ChoosingActionScene ({ onCreateGame, onJoinGame }) {
+export function ChoosingActionScene ({ gameList, onCreateGame, onJoinGame }) {
   return createElement(
     'div',
     {
-      className: 'infernoForm'
+      className: 'inferno-form'
     },
-    createElement(
-      'button',
-      {
-        onClick: onCreateGame
-      },
-      'Create Game'
-    ),
     createElement(
       'form',
       {
-        id: 'joinGame',
-        onSubmit: onJoinGame
+        name: 'joinGame',
+        onSubmit: (e) => {
+          e.preventDefault();
+          if (gameList.indexOf(document.forms.joinGame.gameId.value) !== -1) {
+            onJoinGame(e);
+          }
+          return false;
+        }
       },
+      createElement(
+        'button',
+        {
+          onClick: onCreateGame,
+          className: 'helium-button',
+          type: 'button'
+        },
+        'Create Game'
+      ),
+      createElement(
+        'div',
+        {
+          className: 'split-line-container'
+        },
+        createElement(
+          'span',
+          {
+            className: 'split-line'
+          }
+        ),
+        createElement(
+          'span',
+          {
+            className: 'or'
+          },
+          'OR'
+        ),
+        createElement(
+          'span',
+          {
+            className: 'split-line'
+          }
+        )
+      ),
       createElement(
         'input',
         {
           type: 'text',
-          name: 'gamId',
-          placeholder: 'Game ID',
-          defaultValue: name
+          name: 'gameId',
+          placeholder: 'Join Game ID',
+          defaultValue: name,
+          className: 'helium-input'
         }
       ),
       createElement(
         'button',
         {
-          type: 'submit'
+          type: 'submit',
+          className: 'helium-button'
         },
         'Confirm'
       )
@@ -45,15 +80,18 @@ export function ChoosingActionScene ({ onCreateGame, onJoinGame }) {
   );
 }
 
-const ConnectChoosingActionScene = connect(null, function mapDispatchToProps (dispatch) {
+const ConnectChoosingActionScene = connect(function mapStateToProps (state) {
+  return {
+    gameList: state.gameList
+  };
+}, function mapDispatchToProps (dispatch) {
   return {
     onCreateGame: () => {
       dispatch({
         type: Actions.CreateGame
       });
     },
-    onJoinGame: (e) => {
-      e.preventDefault();
+    onJoinGame: () => {
       dispatch({
         type: Actions.JoinGame,
         gameId: document.forms.joinGame.gameId.value

@@ -8,6 +8,9 @@ import {
   RendererController
 } from './controller/renderer-controller';
 import {
+  SocketController
+} from './controller/socket-controller';
+import {
   importPixiBaseView,
   registerBaseView,
   Provider,
@@ -50,8 +53,8 @@ export class Game {
     viewportController.start(); // ensure the viewport has been initialize
     const state = store.getState();
     const viewport = state.viewport;
-    const infernoStage = document.getElementById('infernoStage');
-    const heliumStage = document.getElementById('heliumStage');
+    const infernoStage = document.getElementById('inferno-stage');
+    const heliumStage = document.getElementById('helium-stage');
     const {
       width,
       height,
@@ -63,6 +66,7 @@ export class Game {
     });
     heliumStage.appendChild(renderer.view);
     const rendererController = RendererController(store, renderer);
+    const socketController = SocketController(store);
     rendererController.start();
     const input = createElement(
       Provider,
@@ -88,6 +92,7 @@ export class Game {
       createElement(ConnectInfernoMainScene)
     ), infernoStage);
     draw();
+    socketController.start();
     this.renderer = renderer;
   }
 }

@@ -8,14 +8,26 @@ import {
   name
 } from './name';
 import {
-  isNameConfirmed
-} from './is-name-confirmed';
+  isEnteredRoom
+} from './is-entered-room';
+import {
+  gameId
+} from './game-id';
+import {
+  isHost
+} from './is-host';
+import {
+  gameList
+} from './game-list';
 
 const game = Redux.combineReducers({
   gameScene,
   viewport,
   name,
-  isNameConfirmed
+  isEnteredRoom,
+  gameId,
+  isHost,
+  gameList
 });
 
 export {

@@ -10,12 +10,12 @@ export function NamingScene ({ name, onSubmit }) {
   return createElement(
     'div',
     {
-      className: 'infernoForm'
+      className: 'inferno-form'
     },
     createElement(
       'form',
       {
-        id: 'naming',
+        name: 'naming',
         onSubmit
       },
       createElement(
@@ -23,6 +23,7 @@ export function NamingScene ({ name, onSubmit }) {
         {
           type: 'text',
           name: 'name',
+          className: 'helium-input',
           required: 'required',
           placeholder: 'Name',
           defaultValue: name
@@ -31,7 +32,8 @@ export function NamingScene ({ name, onSubmit }) {
       createElement(
         'button',
         {
-          type: 'submit'
+          type: 'submit',
+          className: 'helium-button'
         },
         'Confirm'
       )
