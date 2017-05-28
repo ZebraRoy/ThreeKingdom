@@ -106,7 +106,7 @@ Whatever the store update, it should push the data into client with filters. Cur
       }
     ]
   ],
-  "gameState": 0, // the game state. WaitingPlayer -> StartGame -> Prepare -> Gaming -> EndGame
+  "gameState": 0, // the game state. WaitingPlayer -> Prepare -> Gaming -> EndGame
   "gameSetting": {
     "maxPlayer": 10, // the maximum number of player. May be able to modify by player in the future
     "isMute": false // the game is allow talking or not. May be able to modify by player in the future

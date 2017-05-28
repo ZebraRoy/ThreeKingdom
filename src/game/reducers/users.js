@@ -7,10 +7,28 @@ export function users (
   action
 ) {
   switch (action.type) {
-    case Actions.CreateGame:
-    case Actions.AddPlayer: {
-      const newState = state.slice();
-      newState.push(action.playerName);
+    case Actions.CreateGame: {
+      const hostName = action.playerName;
+      const newState = JSON.parse(JSON.stringify(state));
+      newState.push({
+        name: hostName,
+        isHost: true,
+        isReady: false
+      });
+      return newState;
+    }
+    case Actions.JoinGame: {
+      const playerName = action.playerName;
+      const me = state.find((user) => (user.name === playerName));
+      if (me) {
+        return state;
+      }
+      const newState = JSON.parse(JSON.stringify(state));
+      newState.push({
+        name: playerName,
+        isHost: false,
+        isReady: false
+      });
       return newState;
     }
     default:

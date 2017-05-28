@@ -6085,10 +6085,8 @@ var Game = exports.Game = function () {
     _classCallCheck(this, Game);
 
     var store = Redux.createStore(_index.game);
-    var socket = window.io();
 
     this.store = store;
-    this.socket = socket;
   }
 
   _createClass(Game, [{
@@ -6293,6 +6291,12 @@ function SocketController(store) {
   var socket = window.io();
   var unsubscribe = void 0;
 
+  socket.on('connect', function onConnect() {
+    setTimeout(function () {
+      socket.emit('syncGameList');
+    }, 1000);
+  });
+
   socket.on('gameList', function onGameListUpdate(gameList) {
     store.dispatch({
       type: _actions.Actions.UpdateGameList,
@@ -6314,7 +6318,7 @@ function SocketController(store) {
       if (state.isHost) {
         socket.emit('createGame', state.name);
       } else {
-        socket.emit('JoinGame', state.gameId);
+        socket.emit('joinGame', state.name, state.gameId);
       }
       store.dispatch({
         type: _actions.Actions.SendedConfirmName

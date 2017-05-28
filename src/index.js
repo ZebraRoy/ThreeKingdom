@@ -8,7 +8,7 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const port = process.env.PORT || 3000;
 let gameId = 0;
-const gameMap = new Map();
+const gameMap = {};
 
 server.listen(port, function () {
   console.log('Server listening at port %d', port); // eslint-disable-line
@@ -18,24 +18,47 @@ server.listen(port, function () {
 app.use(express.static(__dirname + '\\..\\public'));
 
 io.on('connection', function onSocketConnected (socket) {
-  socket.on('createGame', function (playerName, userCount) {
-    const newGameId = gameId;
-    const game = new Game(playerName, userCount);
-    gameMap.set(newGameId, game);
-    gameId++;
+
+  socket.on('syncGameList', function onSyncGameList () {
+    socket.emit('gameList', Object.keys(gameMap));
   });
 
-  socket.on('joinGame', function onJoinGame (gameId, playerName) {
-    const game = gameMap.get(gameId);
+  socket.on('createGame', function (playerName) {
+    const newGameId = gameId;
+    const game = new Game(playerName, socket, newGameId);
+    gameMap[newGameId] = game;
+    gameId++;
+    io.emit('gameList', Object.keys(gameMap));
+  });
+
+  socket.on('joinGame', function onJoinGame (playerName, gameId) {
+    const game = gameMap[gameId];
     if (game) {
-      game.joinGame(playerName);
+      game.joinGame(playerName, socket);
     }
   });
 
-  socket.on('clientAction', function onGameAction (gameId, playerName, actionName, param) {
-    const game = gameMap.get(gameId);
+  socket.on('ready', function onReadyGame (gameId) {
+    const game = gameMap[gameId];
     if (game) {
-      game.clientAction(playerName, actionName, param);
+      game.ready(socket);
+    }
+  });
+
+  socket.on('cancelReady', function onGameAction (gameId) {
+    const game = gameMap[gameId];
+    if (game) {
+      game.cancelReady(socket);
+    }
+  });
+
+  socket.on('disconnect', function onDisconnect () {
+    const keys = Object.keys(gameMap);
+    for (let i = 0, len = keys.length; i < len; i++) {
+      const game = gameMap[keys[i]];
+      if (game) {
+        game.socketDisconnect(socket);
+      }
     }
   });
 });

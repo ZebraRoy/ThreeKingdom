@@ -39,10 +39,8 @@ import {
 export class Game {
   constructor () {
     const store = Redux.createStore(game);
-    const socket = window.io();
 
     this.store = store;
-    this.socket = socket;
   }
 
   start () {

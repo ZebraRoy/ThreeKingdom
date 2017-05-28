@@ -30,11 +30,12 @@ function shuffle (array) {
 
 export function deck (
   state = {
-    remainingDeck: shuffle(DefaultDeck),
-    playersHand: [],
-    playersToken: [],
+    remainingDeck: [],
     discardPool: [],
-    removed: []
+    playerHand: [],
+    playerJudge: [],
+    playerEquipment: [],
+    playerCardToken: []
   },
   action
 ) {

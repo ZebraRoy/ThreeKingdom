@@ -1,4 +1,7 @@
 export const Actions = {
   CreateGame: 'CreateGame',
-  AddPlayer: 'AddPlayer'
+  JoinGame: 'JoinGame',
+  Ready: 'Ready',
+  CancelReady: 'CancelReady',
+  StartGame: 'StartGame'
 };

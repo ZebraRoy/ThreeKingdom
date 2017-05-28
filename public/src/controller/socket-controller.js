@@ -10,6 +10,12 @@ export function SocketController (store) {
   const socket = window.io();
   let unsubscribe;
 
+  socket.on('connect', function onConnect () {
+    setTimeout(() => {
+      socket.emit('syncGameList');
+    }, 1000);
+  });
+
   socket.on('gameList', function onGameListUpdate (gameList) {
     store.dispatch({
       type: Actions.UpdateGameList,
@@ -31,7 +37,7 @@ export function SocketController (store) {
       if (state.isHost) {
         socket.emit('createGame', state.name);
       } else {
-        socket.emit('JoinGame', state.gameId);
+        socket.emit('joinGame', state.name, state.gameId);
       }
       store.dispatch({
         type: Actions.SendedConfirmName
