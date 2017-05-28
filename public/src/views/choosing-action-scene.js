@@ -65,6 +65,7 @@ export function ChoosingActionScene ({ gameList, onCreateGame, onJoinGame }) {
           name: 'gameId',
           placeholder: 'Join Game ID',
           defaultValue: name,
+          required: 'required',
           className: 'helium-input'
         }
       ),
@@ -74,7 +75,7 @@ export function ChoosingActionScene ({ gameList, onCreateGame, onJoinGame }) {
           type: 'submit',
           className: 'helium-button'
         },
-        'Confirm'
+        'Join Game'
       )
     )
   );

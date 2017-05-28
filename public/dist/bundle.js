@@ -6764,11 +6764,12 @@ function ChoosingActionScene(_ref) {
     name: 'gameId',
     placeholder: 'Join Game ID',
     defaultValue: name,
+    required: 'required',
     className: 'helium-input'
   }), (0, _infernoCreateElement2.default)('button', {
     type: 'submit',
     className: 'helium-button'
-  }, 'Confirm')));
+  }, 'Join Game')));
 }
 
 var ConnectChoosingActionScene = (0, _infernoRedux.connect)(function mapStateToProps(state) {
