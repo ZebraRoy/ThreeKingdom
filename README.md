@@ -45,7 +45,6 @@ Whatever the store update, it should push the data into client with filters. Cur
   "users": [
     {
       "name": "Roy", // the unique identify of the player. Used for any reconnection
-      "isReady": false, // the user is ready or not. Has no effect on host
       "isHost": true // The user is host or not. Only useful for start game
     }
   ],
@@ -86,13 +85,38 @@ Whatever the store update, it should push the data into client with filters. Cur
       }
     ]
   ],
-  // the current turn status related to game information
-  "gameStatus":{
-    "turnState": 0, // the current turn state, 0:pre-processing -> 1:processing -> 2:post-processing
-    "turnPlayer": "bob", // player id of current player turn
-    "decisionPlayer": "vincent" // player id of current player making decision
+  "roundState": {
+    "hardIndex": 0, // the current round index. Will not affected by any skills, shou from 0 to 7
+    "softIndex": -1, // -1 if it is using hard index not soft index. Use for one more round functional card or similar skills
+    "nextRoundIndex": 1, // the next round index. Will be used when current round end. Should be set when each round start
+    "isNextRoundSoft": false // Use for indicate the next round is soft round or hard round. It is affected by one more round functional card or similar skills
   },
-  "gameState": 0, // the game state. Waiting, TurnStarting -> Preparing -> Determining -> Drawing -> Dealing -> Folding -> Ending -> TurnEnding
+  "flowState": {
+    "currentState": "Drawing:start", // Starting -> Preparing -> Judging -> Drawing -> Dealing -> Folding -> Ending. Depend on the skills player owned, may added sub-state, such as Starting:end, Preparing:start
+    "nextState": "Drawing", // next state. May be affected by some functional card or general skills, ex: acedia functional card
+    "decisionQueue": [ // decision queue stack, when whole queue is completed, step to next state
+      { // a simple decision model demo
+        playerIndex: 0, // the decision is waiting which index player
+        isCompleted: false, // this decision is completed or not
+        event: 'Drawing:start', // what is the decision event
+        waiting: [ // this event is waiting for which event complete. This event will be completed only when this waiting list completed
+          {
+            playerIndex: 2,
+            isCompleted: false,
+            event: 'Skills:SpringDrawCard',
+            waiting: []
+          }
+        ]
+      },
+      {
+        playerIndex: 1,
+        isCompleted: false,
+        event: 'Drawing:start',
+        waiting: []
+      }
+    ]
+  },
+  "gameState": 0, // the whole game state, such as waiting player or ended game. WaitingPlayer -> Prepare -> Gaming -> EndGame
   "gameSetting": {
     "maxPlayer": 10, // the maximum number of player. May be able to modify by player in the future
     "isMute": false // the game is allow talking or not. May be able to modify by player in the future
