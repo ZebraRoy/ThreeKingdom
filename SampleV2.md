@@ -98,7 +98,7 @@ Below is the sample for the flow state:
     ]
 }
 
-// player 2 try to using skill 要咩冇咩, pick player 1 card 1. The showing part edited a showingCard area in "deck"
+// player 2 try to using skill 要咩冇咩, pick player 1 card 3. The showing part edited a showingCard area in "deck"
 "flowState": {
     "currentState": "Dealing",
     "nextState": "Folding",
@@ -110,8 +110,30 @@ Below is the sample for the flow state:
            "reply": ["skills:要咩冇咩", 1, 3], // pick player 1 card 3
             "nextEvent": [
                 {
-                    "playerIndex": 1,
-                    "event": "Show card [3]", // give card 3 to player 1 
+                    "playerIndex": 2,
+                    "event": "skills:要咩冇咩",
+                    "eventParam": [1,3],
+                    "reply": []
+                }
+            ]
+        }
+    ]
+}
+
+//The card 3 from player 1 can be used by player 2 
+"flowState": {
+    "currentState": "Dealing",
+    "nextState": "Folding",
+    "event": [
+        {
+           "playerIndex": 2,
+           "event": "skills:要咩冇咩",
+           "eventParam": [1,3],
+           "reply": [used]
+            "nextEvent": [
+                {
+                    "playerIndex": 2,
+                    "event": ["skills:屯田"], // give card 3 to player 1 
                     "eventParam": [1],
                     "reply": []
                 }
@@ -120,5 +142,48 @@ Below is the sample for the flow state:
     ]
 }
 
+//Player 2 use the skill 屯田
+"flowState": {
+    "currentState": "Dealing",
+    "nextState": "Folding",
+    "event": [
+        {
+           "playerIndex": 2,
+           "event": ["skills:屯田"], // give card 3 to player 1 
+           "eventParam": [1],
+           "reply": [used]
+            "nextEvent": [
+                {
+                    "playerIndex": 1,
+                    "event": "judge:屯田", // judge the card from the deck, the status about the deck will be defined later  
+                    "eventParam": [], //judge one card only 
+                    "reply": []
+                }
+            ]
+        }
+    ]
+}
+
+//The result of 屯田 is shown
+"flowState": {
+    "currentState": "Dealing",
+    "nextState": "Folding",
+    "event": [
+        {
+           "playerIndex": 2,
+           "event": "judge:屯田", // give card 3 to player 1 
+           "eventParam": [1],
+           "reply": [13] //card index of one card
+           "nextEvent": [
+                {
+                    "playerIndex": 3,
+                    "event": "skills:鬼道",   
+                    "eventParam": [], 
+                    "reply": []
+                }
+            ]
+        }
+    ]
+}
 
 ```
