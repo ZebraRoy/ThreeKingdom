@@ -86,7 +86,13 @@ Whatever the store update, it should push the data into client with filters. Cur
       }
     ]
   ],
-  "gameState": 0, // the game state. WaitingPlayer -> Prepare -> Gaming -> EndGame
+  // the current turn status related to game information
+  "gameStatus":{
+    "turnState": 0, // the current turn state, 0:pre-processing -> 1:processing -> 2:post-processing
+    "turnPlayer": "bob", // player id of current player turn
+    "decisionPlayer": "vincent" // player id of current player making decision
+  },
+  "gameState": 0, // the game state. Waiting, TurnStarting -> Preparing -> Determining -> Drawing -> Dealing -> Folding -> Ending -> TurnEnding
   "gameSetting": {
     "maxPlayer": 10, // the maximum number of player. May be able to modify by player in the future
     "isMute": false // the game is allow talking or not. May be able to modify by player in the future
