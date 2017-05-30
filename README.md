@@ -97,7 +97,7 @@ Whatever the store update, it should push the data into client with filters. Cur
     "decisionQueue": [ // decision queue stack, when whole queue is completed, step to next state
       { // a simple decision model demo
         playerIndex: 0, // the decision is waiting which index player
-        isCompleted: false, // this decision is completed or not
+        isCompleted: true, // this decision is completed or not. The whole event is completed when this attribute is completed and waiting is completed
         event: 'Drawing:start', // what is the decision event
         waiting: [ // this event is waiting for which event complete. This event will be completed only when this waiting list completed
           {
