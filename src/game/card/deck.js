@@ -422,14 +422,14 @@ export const BasicDeck = [
   {
     suit: Suit.Club,
     value: 2,
-    type: CardType.EquipmentType,
+    type: CardType.Equipment,
     effectType: EquipmentType.RattanArmour,
     isGiveable: false
   },
   {
     suit: Suit.Club,
     value: 2,
-    type: CardType.EquipmentType,
+    type: CardType.Equipment,
     effectType: EquipmentType.RenWangShield,
     isGiveable: false
   },

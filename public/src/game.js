@@ -60,6 +60,7 @@ export class Game {
     } = viewport;
     const renderer = PIXI.autoDetectRenderer(width / resolution, height / resolution, {
       autoResize: true,
+      transparent: true,
       resolution
     });
     heliumStage.appendChild(renderer.view);

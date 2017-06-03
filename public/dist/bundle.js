@@ -63,20 +63,41 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 32);
+/******/ 	return __webpack_require__(__webpack_require__.s = 35);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(54);
+module.exports = __webpack_require__(63);
 module.exports.default = module.exports;
 
 
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var Actions = exports.Actions = {
+  Resize: 'Resize',
+  CreateGame: 'CreateGame',
+  JoinGame: 'JoinGame',
+  ConfirmName: 'ConfirmName',
+  SendedConfirmName: 'SendedConfirmName',
+  UpdateGameList: 'UpdateGameList',
+  UpdateGame: 'UpdateGame',
+  StartGame: 'StartGame'
+};
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -266,27 +287,6 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var Actions = exports.Actions = {
-  Resize: 'Resize',
-  CreateGame: 'CreateGame',
-  JoinGame: 'JoinGame',
-  ConfirmName: 'ConfirmName',
-  SendedConfirmName: 'SendedConfirmName',
-  UpdateGameList: 'UpdateGameList',
-  UpdateGame: 'UpdateGame',
-  StartGame: 'StartGame'
-};
-
-/***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -295,10 +295,10 @@ var Actions = exports.Actions = {
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
 var options_1 = __webpack_require__(4);
-var VNodes_1 = __webpack_require__(5);
-var constants_1 = __webpack_require__(11);
-var mounting_1 = __webpack_require__(12);
-var unmounting_1 = __webpack_require__(14);
+var VNodes_1 = __webpack_require__(6);
+var constants_1 = __webpack_require__(14);
+var mounting_1 = __webpack_require__(15);
+var unmounting_1 = __webpack_require__(16);
 // We need EMPTY_OBJ defined in one place.
 // Its used for comparison so we cant inline it into shared
 exports.EMPTY_OBJ = {};
@@ -485,7 +485,7 @@ function isKeyed(lastChildren, nextChildren) {
 }
 exports.isKeyed = isKeyed;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
 /* 4 */
@@ -509,1554 +509,6 @@ exports.options = {
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var inferno_shared_1 = __webpack_require__(0);
-var utils_1 = __webpack_require__(3);
-var normalization_1 = __webpack_require__(20);
-var options_1 = __webpack_require__(4);
-function VNode(children, className, flags, key, props, ref, type) {
-    this.children = children;
-    this.className = className;
-    this.dom = null;
-    this.flags = flags;
-    this.key = key;
-    this.props = props;
-    this.ref = ref;
-    this.type = type;
-}
-/**
- * Creates virtual node
- * @param {number} flags
- * @param {string|Function|null} type
- * @param {string|null=} className
- * @param {object=} children
- * @param {object=} props
- * @param {*=} key
- * @param {object|Function=} ref
- * @param {boolean=} noNormalise
- * @returns {VNode} returns new virtual node
- */
-function createVNode(flags, type, className, children, props, key, ref, noNormalise) {
-    if (flags & 16 /* ComponentUnknown */) {
-        flags = inferno_shared_1.isStatefulComponent(type) ? 4 /* ComponentClass */ : 8 /* ComponentFunction */;
-    }
-    var vNode = new VNode(children === void 0 ? null : children, className === void 0 ? null : className, flags, key === void 0 ? null : key, props === void 0 ? null : props, ref === void 0 ? null : ref, type);
-    if (noNormalise !== true) {
-        normalization_1.normalize(vNode);
-    }
-    if (options_1.options.createVNode !== null) {
-        options_1.options.createVNode(vNode);
-    }
-    return vNode;
-}
-exports.createVNode = createVNode;
-function directClone(vNodeToClone) {
-    var newVNode;
-    var flags = vNodeToClone.flags;
-    if (flags & 28 /* Component */) {
-        var props = void 0;
-        var propsToClone = vNodeToClone.props;
-        if (inferno_shared_1.isNull(propsToClone)) {
-            props = utils_1.EMPTY_OBJ;
-        }
-        else {
-            props = {};
-            for (var key in propsToClone) {
-                props[key] = propsToClone[key];
-            }
-        }
-        newVNode = createVNode(flags, vNodeToClone.type, null, null, props, vNodeToClone.key, vNodeToClone.ref, true);
-        var newProps = newVNode.props;
-        var newChildren = newProps.children;
-        // we need to also clone component children that are in props
-        // as the children may also have been hoisted
-        if (newChildren) {
-            if (inferno_shared_1.isArray(newChildren)) {
-                var len = newChildren.length;
-                if (len > 0) {
-                    var tmpArray = [];
-                    for (var i = 0; i < len; i++) {
-                        var child = newChildren[i];
-                        if (inferno_shared_1.isStringOrNumber(child)) {
-                            tmpArray.push(child);
-                        }
-                        else if (!inferno_shared_1.isInvalid(child) && isVNode(child)) {
-                            tmpArray.push(directClone(child));
-                        }
-                    }
-                    newProps.children = tmpArray;
-                }
-            }
-            else if (isVNode(newChildren)) {
-                newProps.children = directClone(newChildren);
-            }
-        }
-        newVNode.children = null;
-    }
-    else if (flags & 3970 /* Element */) {
-        var children = vNodeToClone.children;
-        var props = void 0;
-        var propsToClone = vNodeToClone.props;
-        if (propsToClone === null) {
-            props = utils_1.EMPTY_OBJ;
-        }
-        else {
-            props = {};
-            for (var key in propsToClone) {
-                props[key] = propsToClone[key];
-            }
-        }
-        newVNode = createVNode(flags, vNodeToClone.type, vNodeToClone.className, children, props, vNodeToClone.key, vNodeToClone.ref, !children);
-    }
-    else if (flags & 1 /* Text */) {
-        newVNode = createTextVNode(vNodeToClone.children, vNodeToClone.key);
-    }
-    return newVNode;
-}
-exports.directClone = directClone;
-/*
- directClone is preferred over cloneVNode and used internally also.
- This function makes Inferno backwards compatible.
- And can be tree-shaked by modern bundlers
-
- Would be nice to combine this with directClone but could not do it without breaking change
- */
-/**
- * Clones given virtual node by creating new instance of it
- * @param {VNode} vNodeToClone virtual node to be cloned
- * @param {Props=} props additional props for new virtual node
- * @param {...*} _children new children for new virtual node
- * @returns {VNode} new virtual node
- */
-function cloneVNode(vNodeToClone, props) {
-    var _children = [];
-    for (var _i = 2; _i < arguments.length; _i++) {
-        _children[_i - 2] = arguments[_i];
-    }
-    var children = _children;
-    var childrenLen = _children.length;
-    if (childrenLen > 0 && !inferno_shared_1.isUndefined(_children[0])) {
-        if (!props) {
-            props = {};
-        }
-        if (childrenLen === 1) {
-            children = _children[0];
-        }
-        if (!inferno_shared_1.isUndefined(children)) {
-            props.children = children;
-        }
-    }
-    var newVNode;
-    if (inferno_shared_1.isArray(vNodeToClone)) {
-        var tmpArray = [];
-        for (var i = 0, len = vNodeToClone.length; i < len; i++) {
-            tmpArray.push(directClone(vNodeToClone[i]));
-        }
-        newVNode = tmpArray;
-    }
-    else {
-        var flags = vNodeToClone.flags;
-        var className = vNodeToClone.className || (props && props.className);
-        var key = !inferno_shared_1.isNullOrUndef(vNodeToClone.key) ? vNodeToClone.key : (props ? props.key : null);
-        var ref = vNodeToClone.ref || (props ? props.ref : null);
-        if (flags & 28 /* Component */) {
-            newVNode = createVNode(flags, vNodeToClone.type, className, null, (!vNodeToClone.props && !props) ? utils_1.EMPTY_OBJ : inferno_shared_1.combineFrom(vNodeToClone.props, props), key, ref, true);
-            var newProps = newVNode.props;
-            if (newProps) {
-                var newChildren = newProps.children;
-                // we need to also clone component children that are in props
-                // as the children may also have been hoisted
-                if (newChildren) {
-                    if (inferno_shared_1.isArray(newChildren)) {
-                        var len = newChildren.length;
-                        if (len > 0) {
-                            var tmpArray = [];
-                            for (var i = 0; i < len; i++) {
-                                var child = newChildren[i];
-                                if (inferno_shared_1.isStringOrNumber(child)) {
-                                    tmpArray.push(child);
-                                }
-                                else if (!inferno_shared_1.isInvalid(child) && isVNode(child)) {
-                                    tmpArray.push(directClone(child));
-                                }
-                            }
-                            newProps.children = tmpArray;
-                        }
-                    }
-                    else if (isVNode(newChildren)) {
-                        newProps.children = directClone(newChildren);
-                    }
-                }
-            }
-            newVNode.children = null;
-        }
-        else if (flags & 3970 /* Element */) {
-            children = (props && !inferno_shared_1.isUndefined(props.children)) ? props.children : vNodeToClone.children;
-            newVNode = createVNode(flags, vNodeToClone.type, className, children, (!vNodeToClone.props && !props) ? utils_1.EMPTY_OBJ : inferno_shared_1.combineFrom(vNodeToClone.props, props), key, ref, !children);
-        }
-        else if (flags & 1 /* Text */) {
-            newVNode = createTextVNode(vNodeToClone.children, key);
-        }
-    }
-    return newVNode;
-}
-exports.cloneVNode = cloneVNode;
-function createVoidVNode() {
-    return createVNode(4096 /* Void */, null);
-}
-exports.createVoidVNode = createVoidVNode;
-function createTextVNode(text, key) {
-    return createVNode(1 /* Text */, null, null, text, null, key);
-}
-exports.createTextVNode = createTextVNode;
-function isVNode(o) {
-    return !!o.flags;
-}
-exports.isVNode = isVNode;
-
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
-Object.defineProperty(exports, "__esModule", { value: true });
-var inferno_shared_1 = __webpack_require__(0);
-var options_1 = __webpack_require__(4);
-var VNodes_1 = __webpack_require__(5);
-var constants_1 = __webpack_require__(11);
-var delegation_1 = __webpack_require__(55);
-var mounting_1 = __webpack_require__(12);
-var rendering_1 = __webpack_require__(8);
-var unmounting_1 = __webpack_require__(14);
-var utils_1 = __webpack_require__(3);
-var processElement_1 = __webpack_require__(15);
-function patch(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling) {
-    if (lastVNode !== nextVNode) {
-        var lastFlags = lastVNode.flags;
-        var nextFlags = nextVNode.flags;
-        if (nextFlags & 28 /* Component */) {
-            var isClass = (nextFlags & 4 /* ComponentClass */) > 0;
-            if (lastFlags & 28 /* Component */) {
-                patchComponent(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isClass, isRecycling);
-            }
-            else {
-                utils_1.replaceVNode(parentDom, mounting_1.mountComponent(nextVNode, null, lifecycle, context, isSVG, isClass), lastVNode, lifecycle, isRecycling);
-            }
-        }
-        else if (nextFlags & 3970 /* Element */) {
-            if (lastFlags & 3970 /* Element */) {
-                patchElement(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling);
-            }
-            else {
-                utils_1.replaceVNode(parentDom, mounting_1.mountElement(nextVNode, null, lifecycle, context, isSVG), lastVNode, lifecycle, isRecycling);
-            }
-        }
-        else if (nextFlags & 1 /* Text */) {
-            if (lastFlags & 1 /* Text */) {
-                patchText(lastVNode, nextVNode);
-            }
-            else {
-                utils_1.replaceVNode(parentDom, mounting_1.mountText(nextVNode, null), lastVNode, lifecycle, isRecycling);
-            }
-        }
-        else if (nextFlags & 4096 /* Void */) {
-            if (lastFlags & 4096 /* Void */) {
-                patchVoid(lastVNode, nextVNode);
-            }
-            else {
-                utils_1.replaceVNode(parentDom, mounting_1.mountVoid(nextVNode, null), lastVNode, lifecycle, isRecycling);
-            }
-        }
-        else {
-            // Error case: mount new one replacing old one
-            utils_1.replaceLastChildAndUnmount(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling);
-        }
-    }
-}
-exports.patch = patch;
-function unmountChildren(children, dom, lifecycle, isRecycling) {
-    if (VNodes_1.isVNode(children)) {
-        unmounting_1.unmount(children, dom, lifecycle, true, isRecycling);
-    }
-    else if (inferno_shared_1.isArray(children)) {
-        utils_1.removeAllChildren(dom, children, lifecycle, isRecycling);
-    }
-    else {
-        dom.textContent = '';
-    }
-}
-function patchElement(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling) {
-    var nextTag = nextVNode.type;
-    var lastTag = lastVNode.type;
-    if (lastTag !== nextTag) {
-        utils_1.replaceWithNewNode(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling);
-    }
-    else {
-        var dom = lastVNode.dom;
-        var lastProps = lastVNode.props;
-        var nextProps = nextVNode.props;
-        var lastChildren = lastVNode.children;
-        var nextChildren = nextVNode.children;
-        var lastFlags = lastVNode.flags;
-        var nextFlags = nextVNode.flags;
-        var nextRef = nextVNode.ref;
-        var lastClassName = lastVNode.className;
-        var nextClassName = nextVNode.className;
-        nextVNode.dom = dom;
-        isSVG = isSVG || (nextFlags & 128 /* SvgElement */) > 0;
-        if (lastChildren !== nextChildren) {
-            patchChildren(lastFlags, nextFlags, lastChildren, nextChildren, dom, lifecycle, context, isSVG, isRecycling);
-        }
-        // inlined patchProps  -- starts --
-        if (lastProps !== nextProps) {
-            var lastPropsOrEmpty = lastProps || utils_1.EMPTY_OBJ;
-            var nextPropsOrEmpty = nextProps || utils_1.EMPTY_OBJ;
-            var hasControlledValue = false;
-            if (nextPropsOrEmpty !== utils_1.EMPTY_OBJ) {
-                var isFormElement = (nextFlags & 3584 /* FormElement */) > 0;
-                if (isFormElement) {
-                    hasControlledValue = processElement_1.isControlledFormElement(nextPropsOrEmpty);
-                }
-                for (var prop in nextPropsOrEmpty) {
-                    // do not add a hasOwnProperty check here, it affects performance
-                    var nextValue = nextPropsOrEmpty[prop];
-                    var lastValue = lastPropsOrEmpty[prop];
-                    patchProp(prop, lastValue, nextValue, dom, isSVG, hasControlledValue);
-                }
-                if (isFormElement) {
-                    // When inferno is recycling form element, we need to process it like it would be mounting
-                    processElement_1.processElement(nextFlags, nextVNode, dom, nextPropsOrEmpty, isRecycling, hasControlledValue);
-                }
-            }
-            if (lastPropsOrEmpty !== utils_1.EMPTY_OBJ) {
-                for (var prop in lastPropsOrEmpty) {
-                    // do not add a hasOwnProperty check here, it affects performance
-                    if (inferno_shared_1.isNullOrUndef(nextPropsOrEmpty[prop]) && !inferno_shared_1.isNullOrUndef(lastPropsOrEmpty[prop])) {
-                        removeProp(prop, lastPropsOrEmpty[prop], dom);
-                    }
-                }
-            }
-        }
-        // inlined patchProps  -- ends --
-        if (lastClassName !== nextClassName) {
-            if (inferno_shared_1.isNullOrUndef(nextClassName)) {
-                dom.removeAttribute('class');
-            }
-            else {
-                if (isSVG) {
-                    dom.setAttribute('class', nextClassName);
-                }
-                else {
-                    dom.className = nextClassName;
-                }
-            }
-        }
-        if (nextRef) {
-            if (lastVNode.ref !== nextRef || isRecycling) {
-                mounting_1.mountRef(dom, nextRef, lifecycle);
-            }
-        }
-    }
-}
-exports.patchElement = patchElement;
-function patchChildren(lastFlags, nextFlags, lastChildren, nextChildren, dom, lifecycle, context, isSVG, isRecycling) {
-    var patchArray = false;
-    var patchKeyed = false;
-    if (nextFlags & 64 /* HasNonKeyedChildren */) {
-        patchArray = true;
-    }
-    else if ((lastFlags & 32 /* HasKeyedChildren */) > 0 && (nextFlags & 32 /* HasKeyedChildren */) > 0) {
-        patchKeyed = true;
-        patchArray = true;
-    }
-    else if (inferno_shared_1.isInvalid(nextChildren)) {
-        unmountChildren(lastChildren, dom, lifecycle, isRecycling);
-    }
-    else if (inferno_shared_1.isInvalid(lastChildren)) {
-        if (inferno_shared_1.isStringOrNumber(nextChildren)) {
-            utils_1.setTextContent(dom, nextChildren);
-        }
-        else {
-            if (inferno_shared_1.isArray(nextChildren)) {
-                mounting_1.mountArrayChildren(nextChildren, dom, lifecycle, context, isSVG);
-            }
-            else {
-                mounting_1.mount(nextChildren, dom, lifecycle, context, isSVG);
-            }
-        }
-    }
-    else if (inferno_shared_1.isStringOrNumber(nextChildren)) {
-        if (inferno_shared_1.isStringOrNumber(lastChildren)) {
-            utils_1.updateTextContent(dom, nextChildren);
-        }
-        else {
-            unmountChildren(lastChildren, dom, lifecycle, isRecycling);
-            utils_1.setTextContent(dom, nextChildren);
-        }
-    }
-    else if (inferno_shared_1.isArray(nextChildren)) {
-        if (inferno_shared_1.isArray(lastChildren)) {
-            patchArray = true;
-            if (utils_1.isKeyed(lastChildren, nextChildren)) {
-                patchKeyed = true;
-            }
-        }
-        else {
-            unmountChildren(lastChildren, dom, lifecycle, isRecycling);
-            mounting_1.mountArrayChildren(nextChildren, dom, lifecycle, context, isSVG);
-        }
-    }
-    else if (inferno_shared_1.isArray(lastChildren)) {
-        utils_1.removeAllChildren(dom, lastChildren, lifecycle, isRecycling);
-        mounting_1.mount(nextChildren, dom, lifecycle, context, isSVG);
-    }
-    else if (VNodes_1.isVNode(nextChildren)) {
-        if (VNodes_1.isVNode(lastChildren)) {
-            patch(lastChildren, nextChildren, dom, lifecycle, context, isSVG, isRecycling);
-        }
-        else {
-            unmountChildren(lastChildren, dom, lifecycle, isRecycling);
-            mounting_1.mount(nextChildren, dom, lifecycle, context, isSVG);
-        }
-    }
-    if (patchArray) {
-        if (patchKeyed) {
-            patchKeyedChildren(lastChildren, nextChildren, dom, lifecycle, context, isSVG, isRecycling);
-        }
-        else {
-            patchNonKeyedChildren(lastChildren, nextChildren, dom, lifecycle, context, isSVG, isRecycling);
-        }
-    }
-}
-function patchComponent(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isClass, isRecycling) {
-    var lastType = lastVNode.type;
-    var nextType = nextVNode.type;
-    var lastKey = lastVNode.key;
-    var nextKey = nextVNode.key;
-    if (lastType !== nextType || lastKey !== nextKey) {
-        utils_1.replaceWithNewNode(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling);
-        return false;
-    }
-    else {
-        var nextProps = nextVNode.props || utils_1.EMPTY_OBJ;
-        if (isClass) {
-            var instance = lastVNode.children;
-            instance._updating = true;
-            if (instance._unmounted) {
-                if (inferno_shared_1.isNull(parentDom)) {
-                    return true;
-                }
-                utils_1.replaceChild(parentDom, mounting_1.mountComponent(nextVNode, null, lifecycle, context, isSVG, (nextVNode.flags & 4 /* ComponentClass */) > 0), lastVNode.dom);
-            }
-            else {
-                var hasComponentDidUpdate = !inferno_shared_1.isUndefined(instance.componentDidUpdate);
-                var nextState = instance.state;
-                // When component has componentDidUpdate hook, we need to clone lastState or will be modified by reference during update
-                var lastState = hasComponentDidUpdate ? inferno_shared_1.combineFrom(nextState, null) : nextState;
-                var lastProps = instance.props;
-                var childContext = void 0;
-                if (!inferno_shared_1.isUndefined(instance.getChildContext)) {
-                    childContext = instance.getChildContext();
-                }
-                nextVNode.children = instance;
-                instance._isSVG = isSVG;
-                if (inferno_shared_1.isNullOrUndef(childContext)) {
-                    childContext = context;
-                }
-                else {
-                    childContext = inferno_shared_1.combineFrom(context, childContext);
-                }
-                var lastInput = instance._lastInput;
-                var nextInput = instance._updateComponent(lastState, nextState, lastProps, nextProps, context, false, false);
-                var didUpdate = true;
-                instance._childContext = childContext;
-                if (inferno_shared_1.isInvalid(nextInput)) {
-                    nextInput = VNodes_1.createVoidVNode();
-                }
-                else if (nextInput === inferno_shared_1.NO_OP) {
-                    nextInput = lastInput;
-                    didUpdate = false;
-                }
-                else if (inferno_shared_1.isStringOrNumber(nextInput)) {
-                    nextInput = VNodes_1.createTextVNode(nextInput, null);
-                }
-                else if (inferno_shared_1.isArray(nextInput)) {
-                    if (process.env.NODE_ENV !== 'production') {
-                        inferno_shared_1.throwError('a valid Inferno VNode (or null) must be returned from a component render. You may have returned an array or an invalid object.');
-                    }
-                    inferno_shared_1.throwError();
-                }
-                else if (inferno_shared_1.isObject(nextInput)) {
-                    if (!inferno_shared_1.isNull(nextInput.dom)) {
-                        nextInput = VNodes_1.directClone(nextInput);
-                    }
-                }
-                if (nextInput.flags & 28 /* Component */) {
-                    nextInput.parentVNode = nextVNode;
-                }
-                else if (lastInput.flags & 28 /* Component */) {
-                    lastInput.parentVNode = nextVNode;
-                }
-                instance._lastInput = nextInput;
-                instance._vNode = nextVNode;
-                if (didUpdate) {
-                    patch(lastInput, nextInput, parentDom, lifecycle, childContext, isSVG, isRecycling);
-                    if (hasComponentDidUpdate) {
-                        instance.componentDidUpdate(lastProps, lastState);
-                    }
-                    if (!inferno_shared_1.isNull(options_1.options.afterUpdate)) {
-                        options_1.options.afterUpdate(nextVNode);
-                    }
-                    if (options_1.options.findDOMNodeEnabled) {
-                        rendering_1.componentToDOMNodeMap.set(instance, nextInput.dom);
-                    }
-                }
-                nextVNode.dom = nextInput.dom;
-            }
-            instance._updating = false;
-        }
-        else {
-            var shouldUpdate = true;
-            var lastProps = lastVNode.props;
-            var nextHooks = nextVNode.ref;
-            var nextHooksDefined = !inferno_shared_1.isNullOrUndef(nextHooks);
-            var lastInput = lastVNode.children;
-            var nextInput = lastInput;
-            nextVNode.dom = lastVNode.dom;
-            nextVNode.children = lastInput;
-            if (lastKey !== nextKey) {
-                shouldUpdate = true;
-            }
-            else {
-                if (nextHooksDefined && !inferno_shared_1.isNullOrUndef(nextHooks.onComponentShouldUpdate)) {
-                    shouldUpdate = nextHooks.onComponentShouldUpdate(lastProps, nextProps);
-                }
-            }
-            if (shouldUpdate !== false) {
-                if (nextHooksDefined && !inferno_shared_1.isNullOrUndef(nextHooks.onComponentWillUpdate)) {
-                    nextHooks.onComponentWillUpdate(lastProps, nextProps);
-                }
-                nextInput = nextType(nextProps, context);
-                if (inferno_shared_1.isInvalid(nextInput)) {
-                    nextInput = VNodes_1.createVoidVNode();
-                }
-                else if (inferno_shared_1.isStringOrNumber(nextInput) && nextInput !== inferno_shared_1.NO_OP) {
-                    nextInput = VNodes_1.createTextVNode(nextInput, null);
-                }
-                else if (inferno_shared_1.isArray(nextInput)) {
-                    if (process.env.NODE_ENV !== 'production') {
-                        inferno_shared_1.throwError('a valid Inferno VNode (or null) must be returned from a component render. You may have returned an array or an invalid object.');
-                    }
-                    inferno_shared_1.throwError();
-                }
-                else if (inferno_shared_1.isObject(nextInput)) {
-                    if (!inferno_shared_1.isNull(nextInput.dom)) {
-                        nextInput = VNodes_1.directClone(nextInput);
-                    }
-                }
-                if (nextInput !== inferno_shared_1.NO_OP) {
-                    patch(lastInput, nextInput, parentDom, lifecycle, context, isSVG, isRecycling);
-                    nextVNode.children = nextInput;
-                    if (nextHooksDefined && !inferno_shared_1.isNullOrUndef(nextHooks.onComponentDidUpdate)) {
-                        nextHooks.onComponentDidUpdate(lastProps, nextProps);
-                    }
-                    nextVNode.dom = nextInput.dom;
-                }
-            }
-            if (nextInput.flags & 28 /* Component */) {
-                nextInput.parentVNode = nextVNode;
-            }
-            else if (lastInput.flags & 28 /* Component */) {
-                lastInput.parentVNode = nextVNode;
-            }
-        }
-    }
-    return false;
-}
-exports.patchComponent = patchComponent;
-function patchText(lastVNode, nextVNode) {
-    var nextText = nextVNode.children;
-    var dom = lastVNode.dom;
-    nextVNode.dom = dom;
-    if (lastVNode.children !== nextText) {
-        dom.nodeValue = nextText;
-    }
-}
-exports.patchText = patchText;
-function patchVoid(lastVNode, nextVNode) {
-    nextVNode.dom = lastVNode.dom;
-}
-exports.patchVoid = patchVoid;
-function patchNonKeyedChildren(lastChildren, nextChildren, dom, lifecycle, context, isSVG, isRecycling) {
-    var lastChildrenLength = lastChildren.length;
-    var nextChildrenLength = nextChildren.length;
-    var commonLength = lastChildrenLength > nextChildrenLength ? nextChildrenLength : lastChildrenLength;
-    var i = 0;
-    for (; i < commonLength; i++) {
-        var nextChild = nextChildren[i];
-        if (nextChild.dom) {
-            nextChild = nextChildren[i] = VNodes_1.directClone(nextChild);
-        }
-        patch(lastChildren[i], nextChild, dom, lifecycle, context, isSVG, isRecycling);
-    }
-    if (lastChildrenLength < nextChildrenLength) {
-        for (i = commonLength; i < nextChildrenLength; i++) {
-            var nextChild = nextChildren[i];
-            if (nextChild.dom) {
-                nextChild = nextChildren[i] = VNodes_1.directClone(nextChild);
-            }
-            utils_1.appendChild(dom, mounting_1.mount(nextChild, null, lifecycle, context, isSVG));
-        }
-    }
-    else if (nextChildrenLength === 0) {
-        utils_1.removeAllChildren(dom, lastChildren, lifecycle, isRecycling);
-    }
-    else if (lastChildrenLength > nextChildrenLength) {
-        for (i = commonLength; i < lastChildrenLength; i++) {
-            unmounting_1.unmount(lastChildren[i], dom, lifecycle, false, isRecycling);
-        }
-    }
-}
-exports.patchNonKeyedChildren = patchNonKeyedChildren;
-function patchKeyedChildren(a, b, dom, lifecycle, context, isSVG, isRecycling) {
-    var aLength = a.length;
-    var bLength = b.length;
-    var aEnd = aLength - 1;
-    var bEnd = bLength - 1;
-    var aStart = 0;
-    var bStart = 0;
-    var i;
-    var j;
-    var aNode;
-    var bNode;
-    var nextNode;
-    var nextPos;
-    var node;
-    if (aLength === 0) {
-        if (bLength > 0) {
-            mounting_1.mountArrayChildren(b, dom, lifecycle, context, isSVG);
-        }
-        return;
-    }
-    else if (bLength === 0) {
-        utils_1.removeAllChildren(dom, a, lifecycle, isRecycling);
-        return;
-    }
-    var aStartNode = a[aStart];
-    var bStartNode = b[bStart];
-    var aEndNode = a[aEnd];
-    var bEndNode = b[bEnd];
-    if (bStartNode.dom) {
-        b[bStart] = bStartNode = VNodes_1.directClone(bStartNode);
-    }
-    if (bEndNode.dom) {
-        b[bEnd] = bEndNode = VNodes_1.directClone(bEndNode);
-    }
-    // Step 1
-    /* eslint no-constant-condition: 0 */
-    outer: while (true) {
-        // Sync nodes with the same key at the beginning.
-        while (aStartNode.key === bStartNode.key) {
-            patch(aStartNode, bStartNode, dom, lifecycle, context, isSVG, isRecycling);
-            aStart++;
-            bStart++;
-            if (aStart > aEnd || bStart > bEnd) {
-                break outer;
-            }
-            aStartNode = a[aStart];
-            bStartNode = b[bStart];
-            if (bStartNode.dom) {
-                b[bStart] = bStartNode = VNodes_1.directClone(bStartNode);
-            }
-        }
-        // Sync nodes with the same key at the end.
-        while (aEndNode.key === bEndNode.key) {
-            patch(aEndNode, bEndNode, dom, lifecycle, context, isSVG, isRecycling);
-            aEnd--;
-            bEnd--;
-            if (aStart > aEnd || bStart > bEnd) {
-                break outer;
-            }
-            aEndNode = a[aEnd];
-            bEndNode = b[bEnd];
-            if (bEndNode.dom) {
-                b[bEnd] = bEndNode = VNodes_1.directClone(bEndNode);
-            }
-        }
-        // Move and sync nodes from right to left.
-        if (aEndNode.key === bStartNode.key) {
-            patch(aEndNode, bStartNode, dom, lifecycle, context, isSVG, isRecycling);
-            utils_1.insertOrAppend(dom, bStartNode.dom, aStartNode.dom);
-            aEnd--;
-            bStart++;
-            aEndNode = a[aEnd];
-            bStartNode = b[bStart];
-            if (bStartNode.dom) {
-                b[bStart] = bStartNode = VNodes_1.directClone(bStartNode);
-            }
-            continue;
-        }
-        // Move and sync nodes from left to right.
-        if (aStartNode.key === bEndNode.key) {
-            patch(aStartNode, bEndNode, dom, lifecycle, context, isSVG, isRecycling);
-            nextPos = bEnd + 1;
-            nextNode = nextPos < b.length ? b[nextPos].dom : null;
-            utils_1.insertOrAppend(dom, bEndNode.dom, nextNode);
-            aStart++;
-            bEnd--;
-            aStartNode = a[aStart];
-            bEndNode = b[bEnd];
-            if (bEndNode.dom) {
-                b[bEnd] = bEndNode = VNodes_1.directClone(bEndNode);
-            }
-            continue;
-        }
-        break;
-    }
-    if (aStart > aEnd) {
-        if (bStart <= bEnd) {
-            nextPos = bEnd + 1;
-            nextNode = nextPos < b.length ? b[nextPos].dom : null;
-            while (bStart <= bEnd) {
-                node = b[bStart];
-                if (node.dom) {
-                    b[bStart] = node = VNodes_1.directClone(node);
-                }
-                bStart++;
-                utils_1.insertOrAppend(dom, mounting_1.mount(node, null, lifecycle, context, isSVG), nextNode);
-            }
-        }
-    }
-    else if (bStart > bEnd) {
-        while (aStart <= aEnd) {
-            unmounting_1.unmount(a[aStart++], dom, lifecycle, false, isRecycling);
-        }
-    }
-    else {
-        aLength = aEnd - aStart + 1;
-        bLength = bEnd - bStart + 1;
-        var sources = new Array(bLength);
-        // Mark all nodes as inserted.
-        for (i = 0; i < bLength; i++) {
-            sources[i] = -1;
-        }
-        var moved = false;
-        var pos = 0;
-        var patched = 0;
-        // When sizes are small, just loop them through
-        if ((bLength <= 4) || (aLength * bLength <= 16)) {
-            for (i = aStart; i <= aEnd; i++) {
-                aNode = a[i];
-                if (patched < bLength) {
-                    for (j = bStart; j <= bEnd; j++) {
-                        bNode = b[j];
-                        if (aNode.key === bNode.key) {
-                            sources[j - bStart] = i;
-                            if (pos > j) {
-                                moved = true;
-                            }
-                            else {
-                                pos = j;
-                            }
-                            if (bNode.dom) {
-                                b[j] = bNode = VNodes_1.directClone(bNode);
-                            }
-                            patch(aNode, bNode, dom, lifecycle, context, isSVG, isRecycling);
-                            patched++;
-                            a[i] = null;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        else {
-            var keyIndex = new Map();
-            // Map keys by their index in array
-            for (i = bStart; i <= bEnd; i++) {
-                keyIndex.set(b[i].key, i);
-            }
-            // Try to patch same keys
-            for (i = aStart; i <= aEnd; i++) {
-                aNode = a[i];
-                if (patched < bLength) {
-                    j = keyIndex.get(aNode.key);
-                    if (!inferno_shared_1.isUndefined(j)) {
-                        bNode = b[j];
-                        sources[j - bStart] = i;
-                        if (pos > j) {
-                            moved = true;
-                        }
-                        else {
-                            pos = j;
-                        }
-                        if (bNode.dom) {
-                            b[j] = bNode = VNodes_1.directClone(bNode);
-                        }
-                        patch(aNode, bNode, dom, lifecycle, context, isSVG, isRecycling);
-                        patched++;
-                        a[i] = null;
-                    }
-                }
-            }
-        }
-        // fast-path: if nothing patched remove all old and add all new
-        if (aLength === a.length && patched === 0) {
-            utils_1.removeAllChildren(dom, a, lifecycle, isRecycling);
-            while (bStart < bLength) {
-                node = b[bStart];
-                if (node.dom) {
-                    b[bStart] = node = VNodes_1.directClone(node);
-                }
-                bStart++;
-                utils_1.insertOrAppend(dom, mounting_1.mount(node, null, lifecycle, context, isSVG), null);
-            }
-        }
-        else {
-            i = aLength - patched;
-            while (i > 0) {
-                aNode = a[aStart++];
-                if (!inferno_shared_1.isNull(aNode)) {
-                    unmounting_1.unmount(aNode, dom, lifecycle, true, isRecycling);
-                    i--;
-                }
-            }
-            if (moved) {
-                var seq = lis_algorithm(sources);
-                j = seq.length - 1;
-                for (i = bLength - 1; i >= 0; i--) {
-                    if (sources[i] === -1) {
-                        pos = i + bStart;
-                        node = b[pos];
-                        if (node.dom) {
-                            b[pos] = node = VNodes_1.directClone(node);
-                        }
-                        nextPos = pos + 1;
-                        nextNode = nextPos < b.length ? b[nextPos].dom : null;
-                        utils_1.insertOrAppend(dom, mounting_1.mount(node, dom, lifecycle, context, isSVG), nextNode);
-                    }
-                    else {
-                        if (j < 0 || i !== seq[j]) {
-                            pos = i + bStart;
-                            node = b[pos];
-                            nextPos = pos + 1;
-                            nextNode = nextPos < b.length ? b[nextPos].dom : null;
-                            utils_1.insertOrAppend(dom, node.dom, nextNode);
-                        }
-                        else {
-                            j--;
-                        }
-                    }
-                }
-            }
-            else if (patched !== bLength) {
-                // when patched count doesn't match b length we need to insert those new ones
-                // loop backwards so we can use insertBefore
-                for (i = bLength - 1; i >= 0; i--) {
-                    if (sources[i] === -1) {
-                        pos = i + bStart;
-                        node = b[pos];
-                        if (node.dom) {
-                            b[pos] = node = VNodes_1.directClone(node);
-                        }
-                        nextPos = pos + 1;
-                        nextNode = nextPos < b.length ? b[nextPos].dom : null;
-                        utils_1.insertOrAppend(dom, mounting_1.mount(node, null, lifecycle, context, isSVG), nextNode);
-                    }
-                }
-            }
-        }
-    }
-}
-exports.patchKeyedChildren = patchKeyedChildren;
-// // https://en.wikipedia.org/wiki/Longest_increasing_subsequence
-function lis_algorithm(arr) {
-    var p = arr.slice(0);
-    var result = [0];
-    var i;
-    var j;
-    var u;
-    var v;
-    var c;
-    var len = arr.length;
-    for (i = 0; i < len; i++) {
-        var arrI = arr[i];
-        if (arrI === -1) {
-            continue;
-        }
-        j = result[result.length - 1];
-        if (arr[j] < arrI) {
-            p[i] = j;
-            result.push(i);
-            continue;
-        }
-        u = 0;
-        v = result.length - 1;
-        while (u < v) {
-            c = ((u + v) / 2) | 0;
-            if (arr[result[c]] < arrI) {
-                u = c + 1;
-            }
-            else {
-                v = c;
-            }
-        }
-        if (arrI < arr[result[u]]) {
-            if (u > 0) {
-                p[i] = result[u - 1];
-            }
-            result[u] = i;
-        }
-    }
-    u = result.length;
-    v = result[u - 1];
-    while (u-- > 0) {
-        result[u] = v;
-        v = p[v];
-    }
-    return result;
-}
-function isAttrAnEvent(attr) {
-    return attr[0] === 'o' && attr[1] === 'n';
-}
-exports.isAttrAnEvent = isAttrAnEvent;
-function patchProp(prop, lastValue, nextValue, dom, isSVG, hasControlledValue) {
-    if (lastValue !== nextValue) {
-        if (constants_1.skipProps.has(prop) || (hasControlledValue && prop === 'value')) {
-            return;
-        }
-        else if (constants_1.booleanProps.has(prop)) {
-            prop = prop === 'autoFocus' ? prop.toLowerCase() : prop;
-            dom[prop] = !!nextValue;
-        }
-        else if (constants_1.strictProps.has(prop)) {
-            var value = inferno_shared_1.isNullOrUndef(nextValue) ? '' : nextValue;
-            if (dom[prop] !== value) {
-                dom[prop] = value;
-            }
-        }
-        else if (isAttrAnEvent(prop)) {
-            patchEvent(prop, lastValue, nextValue, dom);
-        }
-        else if (inferno_shared_1.isNullOrUndef(nextValue)) {
-            dom.removeAttribute(prop);
-        }
-        else if (prop === 'style') {
-            patchStyle(lastValue, nextValue, dom);
-        }
-        else if (prop === 'dangerouslySetInnerHTML') {
-            var lastHtml = lastValue && lastValue.__html;
-            var nextHtml = nextValue && nextValue.__html;
-            if (lastHtml !== nextHtml) {
-                if (!inferno_shared_1.isNullOrUndef(nextHtml)) {
-                    dom.innerHTML = nextHtml;
-                }
-            }
-        }
-        else {
-            // We optimize for NS being boolean. Its 99.9% time false
-            if (isSVG && constants_1.namespaces.has(prop)) {
-                // If we end up in this path we can read property again
-                dom.setAttributeNS(constants_1.namespaces.get(prop), prop, nextValue);
-            }
-            else {
-                dom.setAttribute(prop, nextValue);
-            }
-        }
-    }
-}
-exports.patchProp = patchProp;
-function patchEvent(name, lastValue, nextValue, dom) {
-    if (lastValue !== nextValue) {
-        if (constants_1.delegatedEvents.has(name)) {
-            delegation_1.handleEvent(name, lastValue, nextValue, dom);
-        }
-        else {
-            var nameLowerCase = name.toLowerCase();
-            var domEvent = dom[nameLowerCase];
-            // if the function is wrapped, that means it's been controlled by a wrapper
-            if (domEvent && domEvent.wrapped) {
-                return;
-            }
-            if (!inferno_shared_1.isFunction(nextValue) && !inferno_shared_1.isNullOrUndef(nextValue)) {
-                var linkEvent_1 = nextValue.event;
-                if (linkEvent_1 && inferno_shared_1.isFunction(linkEvent_1)) {
-                    dom[nameLowerCase] = function (e) {
-                        linkEvent_1(nextValue.data, e);
-                    };
-                }
-                else {
-                    if (process.env.NODE_ENV !== 'production') {
-                        inferno_shared_1.throwError("an event on a VNode \"" + name + "\". was not a function or a valid linkEvent.");
-                    }
-                    inferno_shared_1.throwError();
-                }
-            }
-            else {
-                dom[nameLowerCase] = nextValue;
-            }
-        }
-    }
-}
-exports.patchEvent = patchEvent;
-// We are assuming here that we come from patchProp routine
-// -nextAttrValue cannot be null or undefined
-function patchStyle(lastAttrValue, nextAttrValue, dom) {
-    var domStyle = dom.style;
-    if (inferno_shared_1.isString(nextAttrValue)) {
-        domStyle.cssText = nextAttrValue;
-        return;
-    }
-    for (var style in nextAttrValue) {
-        // do not add a hasOwnProperty check here, it affects performance
-        var value = nextAttrValue[style];
-        if (!inferno_shared_1.isNumber(value) || constants_1.isUnitlessNumber.has(style)) {
-            domStyle[style] = value;
-        }
-        else {
-            domStyle[style] = value + 'px';
-        }
-    }
-    if (!inferno_shared_1.isNullOrUndef(lastAttrValue)) {
-        for (var style in lastAttrValue) {
-            if (inferno_shared_1.isNullOrUndef(nextAttrValue[style])) {
-                domStyle[style] = '';
-            }
-        }
-    }
-}
-exports.patchStyle = patchStyle;
-function removeProp(prop, lastValue, dom) {
-    if (prop === 'value') {
-        dom.value = '';
-    }
-    else if (prop === 'style') {
-        dom.removeAttribute('style');
-    }
-    else if (isAttrAnEvent(prop)) {
-        delegation_1.handleEvent(prop, lastValue, null, dom);
-    }
-    else {
-        dom.removeAttribute(prop);
-    }
-}
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(49).default;
-module.exports.default = module.exports;
-
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
-Object.defineProperty(exports, "__esModule", { value: true });
-var inferno_shared_1 = __webpack_require__(0);
-var options_1 = __webpack_require__(4);
-var VNodes_1 = __webpack_require__(5);
-var hydration_1 = __webpack_require__(57);
-var mounting_1 = __webpack_require__(12);
-var patching_1 = __webpack_require__(6);
-var unmounting_1 = __webpack_require__(14);
-var utils_1 = __webpack_require__(3);
-// rather than use a Map, like we did before, we can use an array here
-// given there shouldn't be THAT many roots on the page, the difference
-// in performance is huge: https://esbench.com/bench/5802a691330ab09900a1a2da
-exports.componentToDOMNodeMap = new Map();
-var roots = options_1.options.roots;
-/**
- * When inferno.options.findDOMNOdeEnabled is true, this function will return DOM Node by component instance
- * @param ref Component instance
- * @returns {*|null} returns dom node
- */
-function findDOMNode(ref) {
-    if (!options_1.options.findDOMNodeEnabled) {
-        if (process.env.NODE_ENV !== 'production') {
-            inferno_shared_1.throwError('findDOMNode() has been disabled, use Inferno.options.findDOMNodeEnabled = true; enabled findDOMNode(). Warning this can significantly impact performance!');
-        }
-        inferno_shared_1.throwError();
-    }
-    var dom = ref && ref.nodeType ? ref : null;
-    return exports.componentToDOMNodeMap.get(ref) || dom;
-}
-exports.findDOMNode = findDOMNode;
-function getRoot(dom) {
-    for (var i = 0, len = roots.length; i < len; i++) {
-        var root = roots[i];
-        if (root.dom === dom) {
-            return root;
-        }
-    }
-    return null;
-}
-function setRoot(dom, input, lifecycle) {
-    var root = {
-        dom: dom,
-        input: input,
-        lifecycle: lifecycle
-    };
-    roots.push(root);
-    return root;
-}
-function removeRoot(root) {
-    for (var i = 0, len = roots.length; i < len; i++) {
-        if (roots[i] === root) {
-            roots.splice(i, 1);
-            return;
-        }
-    }
-}
-if (process.env.NODE_ENV !== 'production') {
-    if (inferno_shared_1.isBrowser && document.body === null) {
-        inferno_shared_1.warning('Inferno warning: you cannot initialize inferno without "document.body". Wait on "DOMContentLoaded" event, add script to bottom of body, or use async/defer attributes on script tag.');
-    }
-}
-var documentBody = inferno_shared_1.isBrowser ? document.body : null;
-/**
- * Renders virtual node tree into parent node.
- * @param {VNode | null | string | number} input vNode to be rendered
- * @param parentDom DOM node which content will be replaced by virtual node
- * @returns {InfernoChildren} rendered virtual node
- */
-function render(input, parentDom) {
-    if (documentBody === parentDom) {
-        if (process.env.NODE_ENV !== 'production') {
-            inferno_shared_1.throwError('you cannot render() to the "document.body". Use an empty element as a container instead.');
-        }
-        inferno_shared_1.throwError();
-    }
-    if (input === inferno_shared_1.NO_OP) {
-        return;
-    }
-    var root = getRoot(parentDom);
-    if (inferno_shared_1.isNull(root)) {
-        var lifecycle = new inferno_shared_1.Lifecycle();
-        if (!inferno_shared_1.isInvalid(input)) {
-            if (input.dom) {
-                input = VNodes_1.directClone(input);
-            }
-            if (!hydration_1.hydrateRoot(input, parentDom, lifecycle)) {
-                mounting_1.mount(input, parentDom, lifecycle, utils_1.EMPTY_OBJ, false);
-            }
-            root = setRoot(parentDom, input, lifecycle);
-            lifecycle.trigger();
-        }
-    }
-    else {
-        var lifecycle = root.lifecycle;
-        lifecycle.listeners = [];
-        if (inferno_shared_1.isNullOrUndef(input)) {
-            unmounting_1.unmount(root.input, parentDom, lifecycle, false, false);
-            removeRoot(root);
-        }
-        else {
-            if (input.dom) {
-                input = VNodes_1.directClone(input);
-            }
-            patching_1.patch(root.input, input, parentDom, lifecycle, utils_1.EMPTY_OBJ, false, false);
-        }
-        root.input = input;
-        lifecycle.trigger();
-    }
-    if (root) {
-        var rootInput = root.input;
-        if (rootInput && (rootInput.flags & 28 /* Component */)) {
-            return rootInput.children;
-        }
-    }
-}
-exports.render = render;
-function createRenderer(parentDom) {
-    return function renderer(lastInput, nextInput) {
-        if (!parentDom) {
-            parentDom = lastInput;
-        }
-        render(nextInput, parentDom);
-    };
-}
-exports.createRenderer = createRenderer;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var GameScene = exports.GameScene = {
-  Naming: 0,
-  ChoosingAction: 1,
-  Room: 2,
-  Gaming: 3
-};
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(53).default;
-module.exports.default = module.exports;
-
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.xlinkNS = 'http://www.w3.org/1999/xlink';
-exports.xmlNS = 'http://www.w3.org/XML/1998/namespace';
-exports.svgNS = 'http://www.w3.org/2000/svg';
-exports.strictProps = new Set();
-exports.strictProps.add('volume');
-exports.strictProps.add('defaultChecked');
-exports.booleanProps = new Set();
-exports.booleanProps.add('muted');
-exports.booleanProps.add('scoped');
-exports.booleanProps.add('loop');
-exports.booleanProps.add('open');
-exports.booleanProps.add('checked');
-exports.booleanProps.add('default');
-exports.booleanProps.add('capture');
-exports.booleanProps.add('disabled');
-exports.booleanProps.add('readOnly');
-exports.booleanProps.add('required');
-exports.booleanProps.add('autoplay');
-exports.booleanProps.add('controls');
-exports.booleanProps.add('seamless');
-exports.booleanProps.add('reversed');
-exports.booleanProps.add('allowfullscreen');
-exports.booleanProps.add('novalidate');
-exports.booleanProps.add('hidden');
-exports.booleanProps.add('autoFocus');
-exports.booleanProps.add('selected');
-exports.namespaces = new Map();
-exports.namespaces.set('xlink:href', exports.xlinkNS);
-exports.namespaces.set('xlink:arcrole', exports.xlinkNS);
-exports.namespaces.set('xlink:actuate', exports.xlinkNS);
-exports.namespaces.set('xlink:show', exports.xlinkNS);
-exports.namespaces.set('xlink:role', exports.xlinkNS);
-exports.namespaces.set('xlink:title', exports.xlinkNS);
-exports.namespaces.set('xlink:type', exports.xlinkNS);
-exports.namespaces.set('xml:base', exports.xmlNS);
-exports.namespaces.set('xml:lang', exports.xmlNS);
-exports.namespaces.set('xml:space', exports.xmlNS);
-exports.isUnitlessNumber = new Set();
-exports.isUnitlessNumber.add('animationIterationCount');
-exports.isUnitlessNumber.add('borderImageOutset');
-exports.isUnitlessNumber.add('borderImageSlice');
-exports.isUnitlessNumber.add('borderImageWidth');
-exports.isUnitlessNumber.add('boxFlex');
-exports.isUnitlessNumber.add('boxFlexGroup');
-exports.isUnitlessNumber.add('boxOrdinalGroup');
-exports.isUnitlessNumber.add('columnCount');
-exports.isUnitlessNumber.add('flex');
-exports.isUnitlessNumber.add('flexGrow');
-exports.isUnitlessNumber.add('flexPositive');
-exports.isUnitlessNumber.add('flexShrink');
-exports.isUnitlessNumber.add('flexNegative');
-exports.isUnitlessNumber.add('flexOrder');
-exports.isUnitlessNumber.add('gridRow');
-exports.isUnitlessNumber.add('gridColumn');
-exports.isUnitlessNumber.add('fontWeight');
-exports.isUnitlessNumber.add('lineClamp');
-exports.isUnitlessNumber.add('lineHeight');
-exports.isUnitlessNumber.add('opacity');
-exports.isUnitlessNumber.add('order');
-exports.isUnitlessNumber.add('orphans');
-exports.isUnitlessNumber.add('tabSize');
-exports.isUnitlessNumber.add('widows');
-exports.isUnitlessNumber.add('zIndex');
-exports.isUnitlessNumber.add('zoom');
-exports.isUnitlessNumber.add('fillOpacity');
-exports.isUnitlessNumber.add('floodOpacity');
-exports.isUnitlessNumber.add('stopOpacity');
-exports.isUnitlessNumber.add('strokeDasharray');
-exports.isUnitlessNumber.add('strokeDashoffset');
-exports.isUnitlessNumber.add('strokeMiterlimit');
-exports.isUnitlessNumber.add('strokeOpacity');
-exports.isUnitlessNumber.add('strokeWidth');
-exports.skipProps = new Set();
-exports.skipProps.add('children');
-exports.skipProps.add('childrenType');
-exports.skipProps.add('defaultValue');
-exports.skipProps.add('ref');
-exports.skipProps.add('key');
-exports.skipProps.add('checked');
-exports.skipProps.add('multiple');
-exports.delegatedEvents = new Set();
-exports.delegatedEvents.add('onClick');
-exports.delegatedEvents.add('onMouseDown');
-exports.delegatedEvents.add('onMouseUp');
-exports.delegatedEvents.add('onMouseMove');
-exports.delegatedEvents.add('onSubmit');
-exports.delegatedEvents.add('onDblClick');
-exports.delegatedEvents.add('onKeyDown');
-exports.delegatedEvents.add('onKeyUp');
-exports.delegatedEvents.add('onKeyPress');
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
-Object.defineProperty(exports, "__esModule", { value: true });
-var inferno_shared_1 = __webpack_require__(0);
-var options_1 = __webpack_require__(4);
-var VNodes_1 = __webpack_require__(5);
-var patching_1 = __webpack_require__(6);
-var recycling_1 = __webpack_require__(19);
-var rendering_1 = __webpack_require__(8);
-var utils_1 = __webpack_require__(3);
-var processElement_1 = __webpack_require__(15);
-function mount(vNode, parentDom, lifecycle, context, isSVG) {
-    var flags = vNode.flags;
-    if (flags & 3970 /* Element */) {
-        return mountElement(vNode, parentDom, lifecycle, context, isSVG);
-    }
-    else if (flags & 28 /* Component */) {
-        return mountComponent(vNode, parentDom, lifecycle, context, isSVG, (flags & 4 /* ComponentClass */) > 0);
-    }
-    else if (flags & 4096 /* Void */) {
-        return mountVoid(vNode, parentDom);
-    }
-    else if (flags & 1 /* Text */) {
-        return mountText(vNode, parentDom);
-    }
-    else {
-        if (process.env.NODE_ENV !== 'production') {
-            if (typeof vNode === 'object') {
-                inferno_shared_1.throwError("mount() received an object that's not a valid VNode, you should stringify it first. Object: \"" + JSON.stringify(vNode) + "\".");
-            }
-            else {
-                inferno_shared_1.throwError("mount() expects a valid VNode, instead it received an object with the type \"" + typeof vNode + "\".");
-            }
-        }
-        inferno_shared_1.throwError();
-    }
-}
-exports.mount = mount;
-function mountText(vNode, parentDom) {
-    var dom = document.createTextNode(vNode.children);
-    vNode.dom = dom;
-    if (!inferno_shared_1.isNull(parentDom)) {
-        utils_1.appendChild(parentDom, dom);
-    }
-    return dom;
-}
-exports.mountText = mountText;
-function mountVoid(vNode, parentDom) {
-    var dom = document.createTextNode('');
-    vNode.dom = dom;
-    if (!inferno_shared_1.isNull(parentDom)) {
-        utils_1.appendChild(parentDom, dom);
-    }
-    return dom;
-}
-exports.mountVoid = mountVoid;
-function mountElement(vNode, parentDom, lifecycle, context, isSVG) {
-    if (options_1.options.recyclingEnabled) {
-        var dom_1 = recycling_1.recycleElement(vNode, lifecycle, context, isSVG);
-        if (!inferno_shared_1.isNull(dom_1)) {
-            if (!inferno_shared_1.isNull(parentDom)) {
-                utils_1.appendChild(parentDom, dom_1);
-            }
-            return dom_1;
-        }
-    }
-    var flags = vNode.flags;
-    isSVG = isSVG || (flags & 128 /* SvgElement */) > 0;
-    var dom = utils_1.documentCreateElement(vNode.type, isSVG);
-    var children = vNode.children;
-    var props = vNode.props;
-    var className = vNode.className;
-    var ref = vNode.ref;
-    vNode.dom = dom;
-    if (!inferno_shared_1.isInvalid(children)) {
-        if (inferno_shared_1.isStringOrNumber(children)) {
-            utils_1.setTextContent(dom, children);
-        }
-        else if (inferno_shared_1.isArray(children)) {
-            mountArrayChildren(children, dom, lifecycle, context, isSVG);
-        }
-        else if (VNodes_1.isVNode(children)) {
-            mount(children, dom, lifecycle, context, isSVG);
-        }
-    }
-    if (!inferno_shared_1.isNull(props)) {
-        var hasControlledValue = false;
-        var isFormElement = (flags & 3584 /* FormElement */) > 0;
-        if (isFormElement) {
-            hasControlledValue = processElement_1.isControlledFormElement(props);
-        }
-        for (var prop in props) {
-            // do not add a hasOwnProperty check here, it affects performance
-            patching_1.patchProp(prop, null, props[prop], dom, isSVG, hasControlledValue);
-        }
-        if (isFormElement) {
-            processElement_1.processElement(flags, vNode, dom, props, true, hasControlledValue);
-        }
-    }
-    if (className !== null) {
-        if (isSVG) {
-            dom.setAttribute('class', className);
-        }
-        else {
-            dom.className = className;
-        }
-    }
-    if (!inferno_shared_1.isNull(ref)) {
-        mountRef(dom, ref, lifecycle);
-    }
-    if (!inferno_shared_1.isNull(parentDom)) {
-        utils_1.appendChild(parentDom, dom);
-    }
-    return dom;
-}
-exports.mountElement = mountElement;
-function mountArrayChildren(children, dom, lifecycle, context, isSVG) {
-    for (var i = 0, len = children.length; i < len; i++) {
-        var child = children[i];
-        // Verify can string/number be here. might cause de-opt. - Normalization takes care of it.
-        if (!inferno_shared_1.isInvalid(child)) {
-            if (child.dom) {
-                children[i] = child = VNodes_1.directClone(child);
-            }
-            mount(children[i], dom, lifecycle, context, isSVG);
-        }
-    }
-}
-exports.mountArrayChildren = mountArrayChildren;
-function mountComponent(vNode, parentDom, lifecycle, context, isSVG, isClass) {
-    if (options_1.options.recyclingEnabled) {
-        var dom_2 = recycling_1.recycleComponent(vNode, lifecycle, context, isSVG);
-        if (!inferno_shared_1.isNull(dom_2)) {
-            if (!inferno_shared_1.isNull(parentDom)) {
-                utils_1.appendChild(parentDom, dom_2);
-            }
-            return dom_2;
-        }
-    }
-    var type = vNode.type;
-    var props = vNode.props || utils_1.EMPTY_OBJ;
-    var ref = vNode.ref;
-    var dom;
-    if (isClass) {
-        var instance = utils_1.createClassComponentInstance(vNode, type, props, context, isSVG, lifecycle);
-        var input = instance._lastInput;
-        instance._vNode = vNode;
-        vNode.dom = dom = mount(input, null, lifecycle, instance._childContext, isSVG);
-        if (!inferno_shared_1.isNull(parentDom)) {
-            utils_1.appendChild(parentDom, dom);
-        }
-        mountClassComponentCallbacks(vNode, ref, instance, lifecycle);
-        instance._updating = false;
-        if (options_1.options.findDOMNodeEnabled) {
-            rendering_1.componentToDOMNodeMap.set(instance, dom);
-        }
-    }
-    else {
-        var input = utils_1.createFunctionalComponentInput(vNode, type, props, context);
-        vNode.dom = dom = mount(input, null, lifecycle, context, isSVG);
-        vNode.children = input;
-        mountFunctionalComponentCallbacks(ref, dom, lifecycle);
-        if (!inferno_shared_1.isNull(parentDom)) {
-            utils_1.appendChild(parentDom, dom);
-        }
-    }
-    return dom;
-}
-exports.mountComponent = mountComponent;
-function mountClassComponentCallbacks(vNode, ref, instance, lifecycle) {
-    if (ref) {
-        if (inferno_shared_1.isFunction(ref)) {
-            ref(instance);
-        }
-        else {
-            if (process.env.NODE_ENV !== 'production') {
-                if (inferno_shared_1.isStringOrNumber(ref)) {
-                    inferno_shared_1.throwError('string "refs" are not supported in Inferno 1.0. Use callback "refs" instead.');
-                }
-                else if (inferno_shared_1.isObject(ref) && (vNode.flags & 4 /* ComponentClass */)) {
-                    inferno_shared_1.throwError('functional component lifecycle events are not supported on ES2015 class components.');
-                }
-                else {
-                    inferno_shared_1.throwError("a bad value for \"ref\" was used on component: \"" + JSON.stringify(ref) + "\"");
-                }
-            }
-            inferno_shared_1.throwError();
-        }
-    }
-    var hasDidMount = !inferno_shared_1.isUndefined(instance.componentDidMount);
-    var afterMount = options_1.options.afterMount;
-    if (hasDidMount || !inferno_shared_1.isNull(afterMount)) {
-        lifecycle.addListener(function () {
-            instance._updating = true;
-            if (afterMount) {
-                afterMount(vNode);
-            }
-            if (hasDidMount) {
-                instance.componentDidMount();
-            }
-            instance._updating = false;
-        });
-    }
-}
-exports.mountClassComponentCallbacks = mountClassComponentCallbacks;
-function mountFunctionalComponentCallbacks(ref, dom, lifecycle) {
-    if (ref) {
-        if (!inferno_shared_1.isNullOrUndef(ref.onComponentWillMount)) {
-            ref.onComponentWillMount();
-        }
-        if (!inferno_shared_1.isNullOrUndef(ref.onComponentDidMount)) {
-            lifecycle.addListener(function () { return ref.onComponentDidMount(dom); });
-        }
-    }
-}
-exports.mountFunctionalComponentCallbacks = mountFunctionalComponentCallbacks;
-function mountRef(dom, value, lifecycle) {
-    if (inferno_shared_1.isFunction(value)) {
-        lifecycle.addListener(function () { return value(dom); });
-    }
-    else {
-        if (inferno_shared_1.isInvalid(value)) {
-            return;
-        }
-        if (process.env.NODE_ENV !== 'production') {
-            inferno_shared_1.throwError('string "refs" are not supported in Inferno 1.0. Use callback "refs" instead.');
-        }
-        inferno_shared_1.throwError();
-    }
-}
-exports.mountRef = mountRef;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
-
-/***/ }),
-/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5043,10 +3495,222 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 
 	Object.defineProperty(exports, '__esModule', { value: true });
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 14 */
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var inferno_shared_1 = __webpack_require__(0);
+var utils_1 = __webpack_require__(3);
+var normalization_1 = __webpack_require__(23);
+var options_1 = __webpack_require__(4);
+function VNode(children, className, flags, key, props, ref, type) {
+    this.children = children;
+    this.className = className;
+    this.dom = null;
+    this.flags = flags;
+    this.key = key;
+    this.props = props;
+    this.ref = ref;
+    this.type = type;
+}
+/**
+ * Creates virtual node
+ * @param {number} flags
+ * @param {string|Function|null} type
+ * @param {string|null=} className
+ * @param {object=} children
+ * @param {object=} props
+ * @param {*=} key
+ * @param {object|Function=} ref
+ * @param {boolean=} noNormalise
+ * @returns {VNode} returns new virtual node
+ */
+function createVNode(flags, type, className, children, props, key, ref, noNormalise) {
+    if (flags & 16 /* ComponentUnknown */) {
+        flags = inferno_shared_1.isStatefulComponent(type) ? 4 /* ComponentClass */ : 8 /* ComponentFunction */;
+    }
+    var vNode = new VNode(children === void 0 ? null : children, className === void 0 ? null : className, flags, key === void 0 ? null : key, props === void 0 ? null : props, ref === void 0 ? null : ref, type);
+    if (noNormalise !== true) {
+        normalization_1.normalize(vNode);
+    }
+    if (options_1.options.createVNode !== null) {
+        options_1.options.createVNode(vNode);
+    }
+    return vNode;
+}
+exports.createVNode = createVNode;
+function directClone(vNodeToClone) {
+    var newVNode;
+    var flags = vNodeToClone.flags;
+    if (flags & 28 /* Component */) {
+        var props = void 0;
+        var propsToClone = vNodeToClone.props;
+        if (inferno_shared_1.isNull(propsToClone)) {
+            props = utils_1.EMPTY_OBJ;
+        }
+        else {
+            props = {};
+            for (var key in propsToClone) {
+                props[key] = propsToClone[key];
+            }
+        }
+        newVNode = createVNode(flags, vNodeToClone.type, null, null, props, vNodeToClone.key, vNodeToClone.ref, true);
+        var newProps = newVNode.props;
+        var newChildren = newProps.children;
+        // we need to also clone component children that are in props
+        // as the children may also have been hoisted
+        if (newChildren) {
+            if (inferno_shared_1.isArray(newChildren)) {
+                var len = newChildren.length;
+                if (len > 0) {
+                    var tmpArray = [];
+                    for (var i = 0; i < len; i++) {
+                        var child = newChildren[i];
+                        if (inferno_shared_1.isStringOrNumber(child)) {
+                            tmpArray.push(child);
+                        }
+                        else if (!inferno_shared_1.isInvalid(child) && isVNode(child)) {
+                            tmpArray.push(directClone(child));
+                        }
+                    }
+                    newProps.children = tmpArray;
+                }
+            }
+            else if (isVNode(newChildren)) {
+                newProps.children = directClone(newChildren);
+            }
+        }
+        newVNode.children = null;
+    }
+    else if (flags & 3970 /* Element */) {
+        var children = vNodeToClone.children;
+        var props = void 0;
+        var propsToClone = vNodeToClone.props;
+        if (propsToClone === null) {
+            props = utils_1.EMPTY_OBJ;
+        }
+        else {
+            props = {};
+            for (var key in propsToClone) {
+                props[key] = propsToClone[key];
+            }
+        }
+        newVNode = createVNode(flags, vNodeToClone.type, vNodeToClone.className, children, props, vNodeToClone.key, vNodeToClone.ref, !children);
+    }
+    else if (flags & 1 /* Text */) {
+        newVNode = createTextVNode(vNodeToClone.children, vNodeToClone.key);
+    }
+    return newVNode;
+}
+exports.directClone = directClone;
+/*
+ directClone is preferred over cloneVNode and used internally also.
+ This function makes Inferno backwards compatible.
+ And can be tree-shaked by modern bundlers
+
+ Would be nice to combine this with directClone but could not do it without breaking change
+ */
+/**
+ * Clones given virtual node by creating new instance of it
+ * @param {VNode} vNodeToClone virtual node to be cloned
+ * @param {Props=} props additional props for new virtual node
+ * @param {...*} _children new children for new virtual node
+ * @returns {VNode} new virtual node
+ */
+function cloneVNode(vNodeToClone, props) {
+    var _children = [];
+    for (var _i = 2; _i < arguments.length; _i++) {
+        _children[_i - 2] = arguments[_i];
+    }
+    var children = _children;
+    var childrenLen = _children.length;
+    if (childrenLen > 0 && !inferno_shared_1.isUndefined(_children[0])) {
+        if (!props) {
+            props = {};
+        }
+        if (childrenLen === 1) {
+            children = _children[0];
+        }
+        if (!inferno_shared_1.isUndefined(children)) {
+            props.children = children;
+        }
+    }
+    var newVNode;
+    if (inferno_shared_1.isArray(vNodeToClone)) {
+        var tmpArray = [];
+        for (var i = 0, len = vNodeToClone.length; i < len; i++) {
+            tmpArray.push(directClone(vNodeToClone[i]));
+        }
+        newVNode = tmpArray;
+    }
+    else {
+        var flags = vNodeToClone.flags;
+        var className = vNodeToClone.className || (props && props.className);
+        var key = !inferno_shared_1.isNullOrUndef(vNodeToClone.key) ? vNodeToClone.key : (props ? props.key : null);
+        var ref = vNodeToClone.ref || (props ? props.ref : null);
+        if (flags & 28 /* Component */) {
+            newVNode = createVNode(flags, vNodeToClone.type, className, null, (!vNodeToClone.props && !props) ? utils_1.EMPTY_OBJ : inferno_shared_1.combineFrom(vNodeToClone.props, props), key, ref, true);
+            var newProps = newVNode.props;
+            if (newProps) {
+                var newChildren = newProps.children;
+                // we need to also clone component children that are in props
+                // as the children may also have been hoisted
+                if (newChildren) {
+                    if (inferno_shared_1.isArray(newChildren)) {
+                        var len = newChildren.length;
+                        if (len > 0) {
+                            var tmpArray = [];
+                            for (var i = 0; i < len; i++) {
+                                var child = newChildren[i];
+                                if (inferno_shared_1.isStringOrNumber(child)) {
+                                    tmpArray.push(child);
+                                }
+                                else if (!inferno_shared_1.isInvalid(child) && isVNode(child)) {
+                                    tmpArray.push(directClone(child));
+                                }
+                            }
+                            newProps.children = tmpArray;
+                        }
+                    }
+                    else if (isVNode(newChildren)) {
+                        newProps.children = directClone(newChildren);
+                    }
+                }
+            }
+            newVNode.children = null;
+        }
+        else if (flags & 3970 /* Element */) {
+            children = (props && !inferno_shared_1.isUndefined(props.children)) ? props.children : vNodeToClone.children;
+            newVNode = createVNode(flags, vNodeToClone.type, className, children, (!vNodeToClone.props && !props) ? utils_1.EMPTY_OBJ : inferno_shared_1.combineFrom(vNodeToClone.props, props), key, ref, !children);
+        }
+        else if (flags & 1 /* Text */) {
+            newVNode = createTextVNode(vNodeToClone.children, key);
+        }
+    }
+    return newVNode;
+}
+exports.cloneVNode = cloneVNode;
+function createVoidVNode() {
+    return createVNode(4096 /* Void */, null);
+}
+exports.createVoidVNode = createVoidVNode;
+function createTextVNode(text, key) {
+    return createVNode(1 /* Text */, null, null, text, null, key);
+}
+exports.createTextVNode = createTextVNode;
+function isVNode(o) {
+    return !!o.flags;
+}
+exports.isVNode = isVNode;
+
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5054,9 +3718,1484 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
 var options_1 = __webpack_require__(4);
-var patching_1 = __webpack_require__(6);
-var recycling_1 = __webpack_require__(19);
-var rendering_1 = __webpack_require__(8);
+var VNodes_1 = __webpack_require__(6);
+var constants_1 = __webpack_require__(14);
+var delegation_1 = __webpack_require__(64);
+var mounting_1 = __webpack_require__(15);
+var rendering_1 = __webpack_require__(9);
+var unmounting_1 = __webpack_require__(16);
+var utils_1 = __webpack_require__(3);
+var processElement_1 = __webpack_require__(17);
+function patch(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling) {
+    if (lastVNode !== nextVNode) {
+        var lastFlags = lastVNode.flags;
+        var nextFlags = nextVNode.flags;
+        if (nextFlags & 28 /* Component */) {
+            var isClass = (nextFlags & 4 /* ComponentClass */) > 0;
+            if (lastFlags & 28 /* Component */) {
+                patchComponent(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isClass, isRecycling);
+            }
+            else {
+                utils_1.replaceVNode(parentDom, mounting_1.mountComponent(nextVNode, null, lifecycle, context, isSVG, isClass), lastVNode, lifecycle, isRecycling);
+            }
+        }
+        else if (nextFlags & 3970 /* Element */) {
+            if (lastFlags & 3970 /* Element */) {
+                patchElement(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling);
+            }
+            else {
+                utils_1.replaceVNode(parentDom, mounting_1.mountElement(nextVNode, null, lifecycle, context, isSVG), lastVNode, lifecycle, isRecycling);
+            }
+        }
+        else if (nextFlags & 1 /* Text */) {
+            if (lastFlags & 1 /* Text */) {
+                patchText(lastVNode, nextVNode);
+            }
+            else {
+                utils_1.replaceVNode(parentDom, mounting_1.mountText(nextVNode, null), lastVNode, lifecycle, isRecycling);
+            }
+        }
+        else if (nextFlags & 4096 /* Void */) {
+            if (lastFlags & 4096 /* Void */) {
+                patchVoid(lastVNode, nextVNode);
+            }
+            else {
+                utils_1.replaceVNode(parentDom, mounting_1.mountVoid(nextVNode, null), lastVNode, lifecycle, isRecycling);
+            }
+        }
+        else {
+            // Error case: mount new one replacing old one
+            utils_1.replaceLastChildAndUnmount(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling);
+        }
+    }
+}
+exports.patch = patch;
+function unmountChildren(children, dom, lifecycle, isRecycling) {
+    if (VNodes_1.isVNode(children)) {
+        unmounting_1.unmount(children, dom, lifecycle, true, isRecycling);
+    }
+    else if (inferno_shared_1.isArray(children)) {
+        utils_1.removeAllChildren(dom, children, lifecycle, isRecycling);
+    }
+    else {
+        dom.textContent = '';
+    }
+}
+function patchElement(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling) {
+    var nextTag = nextVNode.type;
+    var lastTag = lastVNode.type;
+    if (lastTag !== nextTag) {
+        utils_1.replaceWithNewNode(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling);
+    }
+    else {
+        var dom = lastVNode.dom;
+        var lastProps = lastVNode.props;
+        var nextProps = nextVNode.props;
+        var lastChildren = lastVNode.children;
+        var nextChildren = nextVNode.children;
+        var lastFlags = lastVNode.flags;
+        var nextFlags = nextVNode.flags;
+        var nextRef = nextVNode.ref;
+        var lastClassName = lastVNode.className;
+        var nextClassName = nextVNode.className;
+        nextVNode.dom = dom;
+        isSVG = isSVG || (nextFlags & 128 /* SvgElement */) > 0;
+        if (lastChildren !== nextChildren) {
+            patchChildren(lastFlags, nextFlags, lastChildren, nextChildren, dom, lifecycle, context, isSVG, isRecycling);
+        }
+        // inlined patchProps  -- starts --
+        if (lastProps !== nextProps) {
+            var lastPropsOrEmpty = lastProps || utils_1.EMPTY_OBJ;
+            var nextPropsOrEmpty = nextProps || utils_1.EMPTY_OBJ;
+            var hasControlledValue = false;
+            if (nextPropsOrEmpty !== utils_1.EMPTY_OBJ) {
+                var isFormElement = (nextFlags & 3584 /* FormElement */) > 0;
+                if (isFormElement) {
+                    hasControlledValue = processElement_1.isControlledFormElement(nextPropsOrEmpty);
+                }
+                for (var prop in nextPropsOrEmpty) {
+                    // do not add a hasOwnProperty check here, it affects performance
+                    var nextValue = nextPropsOrEmpty[prop];
+                    var lastValue = lastPropsOrEmpty[prop];
+                    patchProp(prop, lastValue, nextValue, dom, isSVG, hasControlledValue);
+                }
+                if (isFormElement) {
+                    // When inferno is recycling form element, we need to process it like it would be mounting
+                    processElement_1.processElement(nextFlags, nextVNode, dom, nextPropsOrEmpty, isRecycling, hasControlledValue);
+                }
+            }
+            if (lastPropsOrEmpty !== utils_1.EMPTY_OBJ) {
+                for (var prop in lastPropsOrEmpty) {
+                    // do not add a hasOwnProperty check here, it affects performance
+                    if (inferno_shared_1.isNullOrUndef(nextPropsOrEmpty[prop]) && !inferno_shared_1.isNullOrUndef(lastPropsOrEmpty[prop])) {
+                        removeProp(prop, lastPropsOrEmpty[prop], dom);
+                    }
+                }
+            }
+        }
+        // inlined patchProps  -- ends --
+        if (lastClassName !== nextClassName) {
+            if (inferno_shared_1.isNullOrUndef(nextClassName)) {
+                dom.removeAttribute('class');
+            }
+            else {
+                if (isSVG) {
+                    dom.setAttribute('class', nextClassName);
+                }
+                else {
+                    dom.className = nextClassName;
+                }
+            }
+        }
+        if (nextRef) {
+            if (lastVNode.ref !== nextRef || isRecycling) {
+                mounting_1.mountRef(dom, nextRef, lifecycle);
+            }
+        }
+    }
+}
+exports.patchElement = patchElement;
+function patchChildren(lastFlags, nextFlags, lastChildren, nextChildren, dom, lifecycle, context, isSVG, isRecycling) {
+    var patchArray = false;
+    var patchKeyed = false;
+    if (nextFlags & 64 /* HasNonKeyedChildren */) {
+        patchArray = true;
+    }
+    else if ((lastFlags & 32 /* HasKeyedChildren */) > 0 && (nextFlags & 32 /* HasKeyedChildren */) > 0) {
+        patchKeyed = true;
+        patchArray = true;
+    }
+    else if (inferno_shared_1.isInvalid(nextChildren)) {
+        unmountChildren(lastChildren, dom, lifecycle, isRecycling);
+    }
+    else if (inferno_shared_1.isInvalid(lastChildren)) {
+        if (inferno_shared_1.isStringOrNumber(nextChildren)) {
+            utils_1.setTextContent(dom, nextChildren);
+        }
+        else {
+            if (inferno_shared_1.isArray(nextChildren)) {
+                mounting_1.mountArrayChildren(nextChildren, dom, lifecycle, context, isSVG);
+            }
+            else {
+                mounting_1.mount(nextChildren, dom, lifecycle, context, isSVG);
+            }
+        }
+    }
+    else if (inferno_shared_1.isStringOrNumber(nextChildren)) {
+        if (inferno_shared_1.isStringOrNumber(lastChildren)) {
+            utils_1.updateTextContent(dom, nextChildren);
+        }
+        else {
+            unmountChildren(lastChildren, dom, lifecycle, isRecycling);
+            utils_1.setTextContent(dom, nextChildren);
+        }
+    }
+    else if (inferno_shared_1.isArray(nextChildren)) {
+        if (inferno_shared_1.isArray(lastChildren)) {
+            patchArray = true;
+            if (utils_1.isKeyed(lastChildren, nextChildren)) {
+                patchKeyed = true;
+            }
+        }
+        else {
+            unmountChildren(lastChildren, dom, lifecycle, isRecycling);
+            mounting_1.mountArrayChildren(nextChildren, dom, lifecycle, context, isSVG);
+        }
+    }
+    else if (inferno_shared_1.isArray(lastChildren)) {
+        utils_1.removeAllChildren(dom, lastChildren, lifecycle, isRecycling);
+        mounting_1.mount(nextChildren, dom, lifecycle, context, isSVG);
+    }
+    else if (VNodes_1.isVNode(nextChildren)) {
+        if (VNodes_1.isVNode(lastChildren)) {
+            patch(lastChildren, nextChildren, dom, lifecycle, context, isSVG, isRecycling);
+        }
+        else {
+            unmountChildren(lastChildren, dom, lifecycle, isRecycling);
+            mounting_1.mount(nextChildren, dom, lifecycle, context, isSVG);
+        }
+    }
+    if (patchArray) {
+        if (patchKeyed) {
+            patchKeyedChildren(lastChildren, nextChildren, dom, lifecycle, context, isSVG, isRecycling);
+        }
+        else {
+            patchNonKeyedChildren(lastChildren, nextChildren, dom, lifecycle, context, isSVG, isRecycling);
+        }
+    }
+}
+function patchComponent(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isClass, isRecycling) {
+    var lastType = lastVNode.type;
+    var nextType = nextVNode.type;
+    var lastKey = lastVNode.key;
+    var nextKey = nextVNode.key;
+    if (lastType !== nextType || lastKey !== nextKey) {
+        utils_1.replaceWithNewNode(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling);
+        return false;
+    }
+    else {
+        var nextProps = nextVNode.props || utils_1.EMPTY_OBJ;
+        if (isClass) {
+            var instance = lastVNode.children;
+            instance._updating = true;
+            if (instance._unmounted) {
+                if (inferno_shared_1.isNull(parentDom)) {
+                    return true;
+                }
+                utils_1.replaceChild(parentDom, mounting_1.mountComponent(nextVNode, null, lifecycle, context, isSVG, (nextVNode.flags & 4 /* ComponentClass */) > 0), lastVNode.dom);
+            }
+            else {
+                var hasComponentDidUpdate = !inferno_shared_1.isUndefined(instance.componentDidUpdate);
+                var nextState = instance.state;
+                // When component has componentDidUpdate hook, we need to clone lastState or will be modified by reference during update
+                var lastState = hasComponentDidUpdate ? inferno_shared_1.combineFrom(nextState, null) : nextState;
+                var lastProps = instance.props;
+                var childContext = void 0;
+                if (!inferno_shared_1.isUndefined(instance.getChildContext)) {
+                    childContext = instance.getChildContext();
+                }
+                nextVNode.children = instance;
+                instance._isSVG = isSVG;
+                if (inferno_shared_1.isNullOrUndef(childContext)) {
+                    childContext = context;
+                }
+                else {
+                    childContext = inferno_shared_1.combineFrom(context, childContext);
+                }
+                var lastInput = instance._lastInput;
+                var nextInput = instance._updateComponent(lastState, nextState, lastProps, nextProps, context, false, false);
+                var didUpdate = true;
+                instance._childContext = childContext;
+                if (inferno_shared_1.isInvalid(nextInput)) {
+                    nextInput = VNodes_1.createVoidVNode();
+                }
+                else if (nextInput === inferno_shared_1.NO_OP) {
+                    nextInput = lastInput;
+                    didUpdate = false;
+                }
+                else if (inferno_shared_1.isStringOrNumber(nextInput)) {
+                    nextInput = VNodes_1.createTextVNode(nextInput, null);
+                }
+                else if (inferno_shared_1.isArray(nextInput)) {
+                    if (process.env.NODE_ENV !== 'production') {
+                        inferno_shared_1.throwError('a valid Inferno VNode (or null) must be returned from a component render. You may have returned an array or an invalid object.');
+                    }
+                    inferno_shared_1.throwError();
+                }
+                else if (inferno_shared_1.isObject(nextInput)) {
+                    if (!inferno_shared_1.isNull(nextInput.dom)) {
+                        nextInput = VNodes_1.directClone(nextInput);
+                    }
+                }
+                if (nextInput.flags & 28 /* Component */) {
+                    nextInput.parentVNode = nextVNode;
+                }
+                else if (lastInput.flags & 28 /* Component */) {
+                    lastInput.parentVNode = nextVNode;
+                }
+                instance._lastInput = nextInput;
+                instance._vNode = nextVNode;
+                if (didUpdate) {
+                    patch(lastInput, nextInput, parentDom, lifecycle, childContext, isSVG, isRecycling);
+                    if (hasComponentDidUpdate) {
+                        instance.componentDidUpdate(lastProps, lastState);
+                    }
+                    if (!inferno_shared_1.isNull(options_1.options.afterUpdate)) {
+                        options_1.options.afterUpdate(nextVNode);
+                    }
+                    if (options_1.options.findDOMNodeEnabled) {
+                        rendering_1.componentToDOMNodeMap.set(instance, nextInput.dom);
+                    }
+                }
+                nextVNode.dom = nextInput.dom;
+            }
+            instance._updating = false;
+        }
+        else {
+            var shouldUpdate = true;
+            var lastProps = lastVNode.props;
+            var nextHooks = nextVNode.ref;
+            var nextHooksDefined = !inferno_shared_1.isNullOrUndef(nextHooks);
+            var lastInput = lastVNode.children;
+            var nextInput = lastInput;
+            nextVNode.dom = lastVNode.dom;
+            nextVNode.children = lastInput;
+            if (lastKey !== nextKey) {
+                shouldUpdate = true;
+            }
+            else {
+                if (nextHooksDefined && !inferno_shared_1.isNullOrUndef(nextHooks.onComponentShouldUpdate)) {
+                    shouldUpdate = nextHooks.onComponentShouldUpdate(lastProps, nextProps);
+                }
+            }
+            if (shouldUpdate !== false) {
+                if (nextHooksDefined && !inferno_shared_1.isNullOrUndef(nextHooks.onComponentWillUpdate)) {
+                    nextHooks.onComponentWillUpdate(lastProps, nextProps);
+                }
+                nextInput = nextType(nextProps, context);
+                if (inferno_shared_1.isInvalid(nextInput)) {
+                    nextInput = VNodes_1.createVoidVNode();
+                }
+                else if (inferno_shared_1.isStringOrNumber(nextInput) && nextInput !== inferno_shared_1.NO_OP) {
+                    nextInput = VNodes_1.createTextVNode(nextInput, null);
+                }
+                else if (inferno_shared_1.isArray(nextInput)) {
+                    if (process.env.NODE_ENV !== 'production') {
+                        inferno_shared_1.throwError('a valid Inferno VNode (or null) must be returned from a component render. You may have returned an array or an invalid object.');
+                    }
+                    inferno_shared_1.throwError();
+                }
+                else if (inferno_shared_1.isObject(nextInput)) {
+                    if (!inferno_shared_1.isNull(nextInput.dom)) {
+                        nextInput = VNodes_1.directClone(nextInput);
+                    }
+                }
+                if (nextInput !== inferno_shared_1.NO_OP) {
+                    patch(lastInput, nextInput, parentDom, lifecycle, context, isSVG, isRecycling);
+                    nextVNode.children = nextInput;
+                    if (nextHooksDefined && !inferno_shared_1.isNullOrUndef(nextHooks.onComponentDidUpdate)) {
+                        nextHooks.onComponentDidUpdate(lastProps, nextProps);
+                    }
+                    nextVNode.dom = nextInput.dom;
+                }
+            }
+            if (nextInput.flags & 28 /* Component */) {
+                nextInput.parentVNode = nextVNode;
+            }
+            else if (lastInput.flags & 28 /* Component */) {
+                lastInput.parentVNode = nextVNode;
+            }
+        }
+    }
+    return false;
+}
+exports.patchComponent = patchComponent;
+function patchText(lastVNode, nextVNode) {
+    var nextText = nextVNode.children;
+    var dom = lastVNode.dom;
+    nextVNode.dom = dom;
+    if (lastVNode.children !== nextText) {
+        dom.nodeValue = nextText;
+    }
+}
+exports.patchText = patchText;
+function patchVoid(lastVNode, nextVNode) {
+    nextVNode.dom = lastVNode.dom;
+}
+exports.patchVoid = patchVoid;
+function patchNonKeyedChildren(lastChildren, nextChildren, dom, lifecycle, context, isSVG, isRecycling) {
+    var lastChildrenLength = lastChildren.length;
+    var nextChildrenLength = nextChildren.length;
+    var commonLength = lastChildrenLength > nextChildrenLength ? nextChildrenLength : lastChildrenLength;
+    var i = 0;
+    for (; i < commonLength; i++) {
+        var nextChild = nextChildren[i];
+        if (nextChild.dom) {
+            nextChild = nextChildren[i] = VNodes_1.directClone(nextChild);
+        }
+        patch(lastChildren[i], nextChild, dom, lifecycle, context, isSVG, isRecycling);
+    }
+    if (lastChildrenLength < nextChildrenLength) {
+        for (i = commonLength; i < nextChildrenLength; i++) {
+            var nextChild = nextChildren[i];
+            if (nextChild.dom) {
+                nextChild = nextChildren[i] = VNodes_1.directClone(nextChild);
+            }
+            utils_1.appendChild(dom, mounting_1.mount(nextChild, null, lifecycle, context, isSVG));
+        }
+    }
+    else if (nextChildrenLength === 0) {
+        utils_1.removeAllChildren(dom, lastChildren, lifecycle, isRecycling);
+    }
+    else if (lastChildrenLength > nextChildrenLength) {
+        for (i = commonLength; i < lastChildrenLength; i++) {
+            unmounting_1.unmount(lastChildren[i], dom, lifecycle, false, isRecycling);
+        }
+    }
+}
+exports.patchNonKeyedChildren = patchNonKeyedChildren;
+function patchKeyedChildren(a, b, dom, lifecycle, context, isSVG, isRecycling) {
+    var aLength = a.length;
+    var bLength = b.length;
+    var aEnd = aLength - 1;
+    var bEnd = bLength - 1;
+    var aStart = 0;
+    var bStart = 0;
+    var i;
+    var j;
+    var aNode;
+    var bNode;
+    var nextNode;
+    var nextPos;
+    var node;
+    if (aLength === 0) {
+        if (bLength > 0) {
+            mounting_1.mountArrayChildren(b, dom, lifecycle, context, isSVG);
+        }
+        return;
+    }
+    else if (bLength === 0) {
+        utils_1.removeAllChildren(dom, a, lifecycle, isRecycling);
+        return;
+    }
+    var aStartNode = a[aStart];
+    var bStartNode = b[bStart];
+    var aEndNode = a[aEnd];
+    var bEndNode = b[bEnd];
+    if (bStartNode.dom) {
+        b[bStart] = bStartNode = VNodes_1.directClone(bStartNode);
+    }
+    if (bEndNode.dom) {
+        b[bEnd] = bEndNode = VNodes_1.directClone(bEndNode);
+    }
+    // Step 1
+    /* eslint no-constant-condition: 0 */
+    outer: while (true) {
+        // Sync nodes with the same key at the beginning.
+        while (aStartNode.key === bStartNode.key) {
+            patch(aStartNode, bStartNode, dom, lifecycle, context, isSVG, isRecycling);
+            aStart++;
+            bStart++;
+            if (aStart > aEnd || bStart > bEnd) {
+                break outer;
+            }
+            aStartNode = a[aStart];
+            bStartNode = b[bStart];
+            if (bStartNode.dom) {
+                b[bStart] = bStartNode = VNodes_1.directClone(bStartNode);
+            }
+        }
+        // Sync nodes with the same key at the end.
+        while (aEndNode.key === bEndNode.key) {
+            patch(aEndNode, bEndNode, dom, lifecycle, context, isSVG, isRecycling);
+            aEnd--;
+            bEnd--;
+            if (aStart > aEnd || bStart > bEnd) {
+                break outer;
+            }
+            aEndNode = a[aEnd];
+            bEndNode = b[bEnd];
+            if (bEndNode.dom) {
+                b[bEnd] = bEndNode = VNodes_1.directClone(bEndNode);
+            }
+        }
+        // Move and sync nodes from right to left.
+        if (aEndNode.key === bStartNode.key) {
+            patch(aEndNode, bStartNode, dom, lifecycle, context, isSVG, isRecycling);
+            utils_1.insertOrAppend(dom, bStartNode.dom, aStartNode.dom);
+            aEnd--;
+            bStart++;
+            aEndNode = a[aEnd];
+            bStartNode = b[bStart];
+            if (bStartNode.dom) {
+                b[bStart] = bStartNode = VNodes_1.directClone(bStartNode);
+            }
+            continue;
+        }
+        // Move and sync nodes from left to right.
+        if (aStartNode.key === bEndNode.key) {
+            patch(aStartNode, bEndNode, dom, lifecycle, context, isSVG, isRecycling);
+            nextPos = bEnd + 1;
+            nextNode = nextPos < b.length ? b[nextPos].dom : null;
+            utils_1.insertOrAppend(dom, bEndNode.dom, nextNode);
+            aStart++;
+            bEnd--;
+            aStartNode = a[aStart];
+            bEndNode = b[bEnd];
+            if (bEndNode.dom) {
+                b[bEnd] = bEndNode = VNodes_1.directClone(bEndNode);
+            }
+            continue;
+        }
+        break;
+    }
+    if (aStart > aEnd) {
+        if (bStart <= bEnd) {
+            nextPos = bEnd + 1;
+            nextNode = nextPos < b.length ? b[nextPos].dom : null;
+            while (bStart <= bEnd) {
+                node = b[bStart];
+                if (node.dom) {
+                    b[bStart] = node = VNodes_1.directClone(node);
+                }
+                bStart++;
+                utils_1.insertOrAppend(dom, mounting_1.mount(node, null, lifecycle, context, isSVG), nextNode);
+            }
+        }
+    }
+    else if (bStart > bEnd) {
+        while (aStart <= aEnd) {
+            unmounting_1.unmount(a[aStart++], dom, lifecycle, false, isRecycling);
+        }
+    }
+    else {
+        aLength = aEnd - aStart + 1;
+        bLength = bEnd - bStart + 1;
+        var sources = new Array(bLength);
+        // Mark all nodes as inserted.
+        for (i = 0; i < bLength; i++) {
+            sources[i] = -1;
+        }
+        var moved = false;
+        var pos = 0;
+        var patched = 0;
+        // When sizes are small, just loop them through
+        if ((bLength <= 4) || (aLength * bLength <= 16)) {
+            for (i = aStart; i <= aEnd; i++) {
+                aNode = a[i];
+                if (patched < bLength) {
+                    for (j = bStart; j <= bEnd; j++) {
+                        bNode = b[j];
+                        if (aNode.key === bNode.key) {
+                            sources[j - bStart] = i;
+                            if (pos > j) {
+                                moved = true;
+                            }
+                            else {
+                                pos = j;
+                            }
+                            if (bNode.dom) {
+                                b[j] = bNode = VNodes_1.directClone(bNode);
+                            }
+                            patch(aNode, bNode, dom, lifecycle, context, isSVG, isRecycling);
+                            patched++;
+                            a[i] = null;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            var keyIndex = new Map();
+            // Map keys by their index in array
+            for (i = bStart; i <= bEnd; i++) {
+                keyIndex.set(b[i].key, i);
+            }
+            // Try to patch same keys
+            for (i = aStart; i <= aEnd; i++) {
+                aNode = a[i];
+                if (patched < bLength) {
+                    j = keyIndex.get(aNode.key);
+                    if (!inferno_shared_1.isUndefined(j)) {
+                        bNode = b[j];
+                        sources[j - bStart] = i;
+                        if (pos > j) {
+                            moved = true;
+                        }
+                        else {
+                            pos = j;
+                        }
+                        if (bNode.dom) {
+                            b[j] = bNode = VNodes_1.directClone(bNode);
+                        }
+                        patch(aNode, bNode, dom, lifecycle, context, isSVG, isRecycling);
+                        patched++;
+                        a[i] = null;
+                    }
+                }
+            }
+        }
+        // fast-path: if nothing patched remove all old and add all new
+        if (aLength === a.length && patched === 0) {
+            utils_1.removeAllChildren(dom, a, lifecycle, isRecycling);
+            while (bStart < bLength) {
+                node = b[bStart];
+                if (node.dom) {
+                    b[bStart] = node = VNodes_1.directClone(node);
+                }
+                bStart++;
+                utils_1.insertOrAppend(dom, mounting_1.mount(node, null, lifecycle, context, isSVG), null);
+            }
+        }
+        else {
+            i = aLength - patched;
+            while (i > 0) {
+                aNode = a[aStart++];
+                if (!inferno_shared_1.isNull(aNode)) {
+                    unmounting_1.unmount(aNode, dom, lifecycle, true, isRecycling);
+                    i--;
+                }
+            }
+            if (moved) {
+                var seq = lis_algorithm(sources);
+                j = seq.length - 1;
+                for (i = bLength - 1; i >= 0; i--) {
+                    if (sources[i] === -1) {
+                        pos = i + bStart;
+                        node = b[pos];
+                        if (node.dom) {
+                            b[pos] = node = VNodes_1.directClone(node);
+                        }
+                        nextPos = pos + 1;
+                        nextNode = nextPos < b.length ? b[nextPos].dom : null;
+                        utils_1.insertOrAppend(dom, mounting_1.mount(node, dom, lifecycle, context, isSVG), nextNode);
+                    }
+                    else {
+                        if (j < 0 || i !== seq[j]) {
+                            pos = i + bStart;
+                            node = b[pos];
+                            nextPos = pos + 1;
+                            nextNode = nextPos < b.length ? b[nextPos].dom : null;
+                            utils_1.insertOrAppend(dom, node.dom, nextNode);
+                        }
+                        else {
+                            j--;
+                        }
+                    }
+                }
+            }
+            else if (patched !== bLength) {
+                // when patched count doesn't match b length we need to insert those new ones
+                // loop backwards so we can use insertBefore
+                for (i = bLength - 1; i >= 0; i--) {
+                    if (sources[i] === -1) {
+                        pos = i + bStart;
+                        node = b[pos];
+                        if (node.dom) {
+                            b[pos] = node = VNodes_1.directClone(node);
+                        }
+                        nextPos = pos + 1;
+                        nextNode = nextPos < b.length ? b[nextPos].dom : null;
+                        utils_1.insertOrAppend(dom, mounting_1.mount(node, null, lifecycle, context, isSVG), nextNode);
+                    }
+                }
+            }
+        }
+    }
+}
+exports.patchKeyedChildren = patchKeyedChildren;
+// // https://en.wikipedia.org/wiki/Longest_increasing_subsequence
+function lis_algorithm(arr) {
+    var p = arr.slice(0);
+    var result = [0];
+    var i;
+    var j;
+    var u;
+    var v;
+    var c;
+    var len = arr.length;
+    for (i = 0; i < len; i++) {
+        var arrI = arr[i];
+        if (arrI === -1) {
+            continue;
+        }
+        j = result[result.length - 1];
+        if (arr[j] < arrI) {
+            p[i] = j;
+            result.push(i);
+            continue;
+        }
+        u = 0;
+        v = result.length - 1;
+        while (u < v) {
+            c = ((u + v) / 2) | 0;
+            if (arr[result[c]] < arrI) {
+                u = c + 1;
+            }
+            else {
+                v = c;
+            }
+        }
+        if (arrI < arr[result[u]]) {
+            if (u > 0) {
+                p[i] = result[u - 1];
+            }
+            result[u] = i;
+        }
+    }
+    u = result.length;
+    v = result[u - 1];
+    while (u-- > 0) {
+        result[u] = v;
+        v = p[v];
+    }
+    return result;
+}
+function isAttrAnEvent(attr) {
+    return attr[0] === 'o' && attr[1] === 'n';
+}
+exports.isAttrAnEvent = isAttrAnEvent;
+function patchProp(prop, lastValue, nextValue, dom, isSVG, hasControlledValue) {
+    if (lastValue !== nextValue) {
+        if (constants_1.skipProps.has(prop) || (hasControlledValue && prop === 'value')) {
+            return;
+        }
+        else if (constants_1.booleanProps.has(prop)) {
+            prop = prop === 'autoFocus' ? prop.toLowerCase() : prop;
+            dom[prop] = !!nextValue;
+        }
+        else if (constants_1.strictProps.has(prop)) {
+            var value = inferno_shared_1.isNullOrUndef(nextValue) ? '' : nextValue;
+            if (dom[prop] !== value) {
+                dom[prop] = value;
+            }
+        }
+        else if (isAttrAnEvent(prop)) {
+            patchEvent(prop, lastValue, nextValue, dom);
+        }
+        else if (inferno_shared_1.isNullOrUndef(nextValue)) {
+            dom.removeAttribute(prop);
+        }
+        else if (prop === 'style') {
+            patchStyle(lastValue, nextValue, dom);
+        }
+        else if (prop === 'dangerouslySetInnerHTML') {
+            var lastHtml = lastValue && lastValue.__html;
+            var nextHtml = nextValue && nextValue.__html;
+            if (lastHtml !== nextHtml) {
+                if (!inferno_shared_1.isNullOrUndef(nextHtml)) {
+                    dom.innerHTML = nextHtml;
+                }
+            }
+        }
+        else {
+            // We optimize for NS being boolean. Its 99.9% time false
+            if (isSVG && constants_1.namespaces.has(prop)) {
+                // If we end up in this path we can read property again
+                dom.setAttributeNS(constants_1.namespaces.get(prop), prop, nextValue);
+            }
+            else {
+                dom.setAttribute(prop, nextValue);
+            }
+        }
+    }
+}
+exports.patchProp = patchProp;
+function patchEvent(name, lastValue, nextValue, dom) {
+    if (lastValue !== nextValue) {
+        if (constants_1.delegatedEvents.has(name)) {
+            delegation_1.handleEvent(name, lastValue, nextValue, dom);
+        }
+        else {
+            var nameLowerCase = name.toLowerCase();
+            var domEvent = dom[nameLowerCase];
+            // if the function is wrapped, that means it's been controlled by a wrapper
+            if (domEvent && domEvent.wrapped) {
+                return;
+            }
+            if (!inferno_shared_1.isFunction(nextValue) && !inferno_shared_1.isNullOrUndef(nextValue)) {
+                var linkEvent_1 = nextValue.event;
+                if (linkEvent_1 && inferno_shared_1.isFunction(linkEvent_1)) {
+                    dom[nameLowerCase] = function (e) {
+                        linkEvent_1(nextValue.data, e);
+                    };
+                }
+                else {
+                    if (process.env.NODE_ENV !== 'production') {
+                        inferno_shared_1.throwError("an event on a VNode \"" + name + "\". was not a function or a valid linkEvent.");
+                    }
+                    inferno_shared_1.throwError();
+                }
+            }
+            else {
+                dom[nameLowerCase] = nextValue;
+            }
+        }
+    }
+}
+exports.patchEvent = patchEvent;
+// We are assuming here that we come from patchProp routine
+// -nextAttrValue cannot be null or undefined
+function patchStyle(lastAttrValue, nextAttrValue, dom) {
+    var domStyle = dom.style;
+    if (inferno_shared_1.isString(nextAttrValue)) {
+        domStyle.cssText = nextAttrValue;
+        return;
+    }
+    for (var style in nextAttrValue) {
+        // do not add a hasOwnProperty check here, it affects performance
+        var value = nextAttrValue[style];
+        if (!inferno_shared_1.isNumber(value) || constants_1.isUnitlessNumber.has(style)) {
+            domStyle[style] = value;
+        }
+        else {
+            domStyle[style] = value + 'px';
+        }
+    }
+    if (!inferno_shared_1.isNullOrUndef(lastAttrValue)) {
+        for (var style in lastAttrValue) {
+            if (inferno_shared_1.isNullOrUndef(nextAttrValue[style])) {
+                domStyle[style] = '';
+            }
+        }
+    }
+}
+exports.patchStyle = patchStyle;
+function removeProp(prop, lastValue, dom) {
+    if (prop === 'value') {
+        dom.value = '';
+    }
+    else if (prop === 'style') {
+        dom.removeAttribute('style');
+    }
+    else if (isAttrAnEvent(prop)) {
+        delegation_1.handleEvent(prop, lastValue, null, dom);
+    }
+    else {
+        dom.removeAttribute(prop);
+    }
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(58).default;
+module.exports.default = module.exports;
+
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+Object.defineProperty(exports, "__esModule", { value: true });
+var inferno_shared_1 = __webpack_require__(0);
+var options_1 = __webpack_require__(4);
+var VNodes_1 = __webpack_require__(6);
+var hydration_1 = __webpack_require__(66);
+var mounting_1 = __webpack_require__(15);
+var patching_1 = __webpack_require__(7);
+var unmounting_1 = __webpack_require__(16);
+var utils_1 = __webpack_require__(3);
+// rather than use a Map, like we did before, we can use an array here
+// given there shouldn't be THAT many roots on the page, the difference
+// in performance is huge: https://esbench.com/bench/5802a691330ab09900a1a2da
+exports.componentToDOMNodeMap = new Map();
+var roots = options_1.options.roots;
+/**
+ * When inferno.options.findDOMNOdeEnabled is true, this function will return DOM Node by component instance
+ * @param ref Component instance
+ * @returns {*|null} returns dom node
+ */
+function findDOMNode(ref) {
+    if (!options_1.options.findDOMNodeEnabled) {
+        if (process.env.NODE_ENV !== 'production') {
+            inferno_shared_1.throwError('findDOMNode() has been disabled, use Inferno.options.findDOMNodeEnabled = true; enabled findDOMNode(). Warning this can significantly impact performance!');
+        }
+        inferno_shared_1.throwError();
+    }
+    var dom = ref && ref.nodeType ? ref : null;
+    return exports.componentToDOMNodeMap.get(ref) || dom;
+}
+exports.findDOMNode = findDOMNode;
+function getRoot(dom) {
+    for (var i = 0, len = roots.length; i < len; i++) {
+        var root = roots[i];
+        if (root.dom === dom) {
+            return root;
+        }
+    }
+    return null;
+}
+function setRoot(dom, input, lifecycle) {
+    var root = {
+        dom: dom,
+        input: input,
+        lifecycle: lifecycle
+    };
+    roots.push(root);
+    return root;
+}
+function removeRoot(root) {
+    for (var i = 0, len = roots.length; i < len; i++) {
+        if (roots[i] === root) {
+            roots.splice(i, 1);
+            return;
+        }
+    }
+}
+if (process.env.NODE_ENV !== 'production') {
+    if (inferno_shared_1.isBrowser && document.body === null) {
+        inferno_shared_1.warning('Inferno warning: you cannot initialize inferno without "document.body". Wait on "DOMContentLoaded" event, add script to bottom of body, or use async/defer attributes on script tag.');
+    }
+}
+var documentBody = inferno_shared_1.isBrowser ? document.body : null;
+/**
+ * Renders virtual node tree into parent node.
+ * @param {VNode | null | string | number} input vNode to be rendered
+ * @param parentDom DOM node which content will be replaced by virtual node
+ * @returns {InfernoChildren} rendered virtual node
+ */
+function render(input, parentDom) {
+    if (documentBody === parentDom) {
+        if (process.env.NODE_ENV !== 'production') {
+            inferno_shared_1.throwError('you cannot render() to the "document.body". Use an empty element as a container instead.');
+        }
+        inferno_shared_1.throwError();
+    }
+    if (input === inferno_shared_1.NO_OP) {
+        return;
+    }
+    var root = getRoot(parentDom);
+    if (inferno_shared_1.isNull(root)) {
+        var lifecycle = new inferno_shared_1.Lifecycle();
+        if (!inferno_shared_1.isInvalid(input)) {
+            if (input.dom) {
+                input = VNodes_1.directClone(input);
+            }
+            if (!hydration_1.hydrateRoot(input, parentDom, lifecycle)) {
+                mounting_1.mount(input, parentDom, lifecycle, utils_1.EMPTY_OBJ, false);
+            }
+            root = setRoot(parentDom, input, lifecycle);
+            lifecycle.trigger();
+        }
+    }
+    else {
+        var lifecycle = root.lifecycle;
+        lifecycle.listeners = [];
+        if (inferno_shared_1.isNullOrUndef(input)) {
+            unmounting_1.unmount(root.input, parentDom, lifecycle, false, false);
+            removeRoot(root);
+        }
+        else {
+            if (input.dom) {
+                input = VNodes_1.directClone(input);
+            }
+            patching_1.patch(root.input, input, parentDom, lifecycle, utils_1.EMPTY_OBJ, false, false);
+        }
+        root.input = input;
+        lifecycle.trigger();
+    }
+    if (root) {
+        var rootInput = root.input;
+        if (rootInput && (rootInput.flags & 28 /* Component */)) {
+            return rootInput.children;
+        }
+    }
+}
+exports.render = render;
+function createRenderer(parentDom) {
+    return function renderer(lastInput, nextInput) {
+        if (!parentDom) {
+            parentDom = lastInput;
+        }
+        render(nextInput, parentDom);
+    };
+}
+exports.createRenderer = createRenderer;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var GameScene = exports.GameScene = {
+  Naming: 0,
+  ChoosingAction: 1,
+  Room: 2,
+  Gaming: 3
+};
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getValue = getValue;
+exports.getTextWidth = getTextWidth;
+exports.getValueText = getValueText;
+exports.getSuitImagePath = getSuitImagePath;
+
+var _constants = __webpack_require__(12);
+
+var SuitMap = new Map();
+SuitMap.set(_constants.Suit.Spade, 'assets/image/sym-spade.png');
+SuitMap.set(_constants.Suit.Heart, 'assets/image/sym-heart.png');
+SuitMap.set(_constants.Suit.Club, 'assets/image/sym-club.png');
+SuitMap.set(_constants.Suit.Diamond, 'assets/image/sym-diamond.png');
+
+function getValue(valueInDefault, currentValue, defaultValue) {
+  var ratio = currentValue / defaultValue;
+  return Math.floor(valueInDefault * ratio);
+}
+
+var textEl = new PIXI.Text();
+
+function getTextWidth(text, style) {
+  textEl.style = style;
+  textEl.text = text;
+  return textEl.width;
+}
+
+function getValueText(value) {
+  if (value === 1) {
+    return 'A';
+  } else if (value === 11) {
+    return 'J';
+  } else if (value === 12) {
+    return 'Q';
+  } else if (value === 13) {
+    return 'K';
+  }
+  return value;
+}
+
+function getSuitImagePath(suit) {
+  return SuitMap.get(suit);
+}
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var Suit = exports.Suit = {
+  Spade: 0,
+  Heart: 1,
+  Club: 2,
+  Diamond: 3
+};
+
+var CardType = exports.CardType = {
+  Basic: 0,
+  Functional: 1,
+  Equipment: 2
+};
+
+var BasicType = exports.BasicType = {
+  Attack: 0,
+  Dodge: 1,
+  Peach: 2,
+  Wine: 3,
+  LightningAttack: 4,
+  FireAttack: 5
+};
+
+var FunctionalType = exports.FunctionalType = {
+  Steal: 0, // 順手
+  Dismantle: 1, // 拆橋
+  Duress: 2, // 借刀
+  Duel: 3, // 決鬥
+  RainingArrows: 4, // 萬箭
+  Barbarians: 5, // 南蠻
+  PeachGarden: 6, // 桃園
+  Harvest: 7, // 五谷
+  Draw2: 8, // 無中
+  Negate: 9, // 無懈
+  NegateKingdom: 10, // 國無懈
+  Blaze: 11, // 火攻
+  IronChain: 12, // 鐵索
+  Amass: 13, // 以逸待勞
+  Ascertain: 14, // 知己知彼
+  Alliance: 15, // 遠交近攻
+  Exile: 16, // 調虎離山
+  OneMoreRound: 17, // 挾天子
+  ChainTogether: 18, // 勠力同心
+  Disarm: 19, // 水掩七軍
+  BlazeTogether: 20, // 火燒連營
+  ShowYourself: 21, // 敕令
+  Banquet: 22, // 聯軍盛宴
+  Acedia: 23, // 樂不
+  RationsDepleted: 24, // 兵糧
+  Lightning: 25 // 閃電
+};
+
+var EquipmentType = exports.EquipmentType = {
+  CrossBow: 0, // 連弩
+  BlueBlade: 1, // 青紅劍
+  Double: 2, // 雌雄雙股劍
+  Axe: 3, // 貫石
+  Halberd: 4, // 丈八
+  Bow: 5, // 麒麟弓
+  FrostBlade: 6, // 寒兵
+  Fan: 7, // 朱雀
+  SixBlade: 8, // 吳六劍
+  Trident: 9, // 三尖
+  Dragon: 10, // 青龍
+  Sky: 11, // 方天
+  EightTrigrams: 12, // 八掛
+  RenWangShield: 13, // 仁王
+  RattanArmour: 14, // 滕甲
+  SliverLionHelmet: 15, // 白銀
+  FireArmor: 16, // 明光
+  HeartShield: 17, // 護心
+  WoodHorse: 18, // 木牛
+  JadeSeal: 19, // 玉璽
+  DefendHorse: 20,
+  OffenseHorse: 21
+};
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(62).default;
+module.exports.default = module.exports;
+
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.xlinkNS = 'http://www.w3.org/1999/xlink';
+exports.xmlNS = 'http://www.w3.org/XML/1998/namespace';
+exports.svgNS = 'http://www.w3.org/2000/svg';
+exports.strictProps = new Set();
+exports.strictProps.add('volume');
+exports.strictProps.add('defaultChecked');
+exports.booleanProps = new Set();
+exports.booleanProps.add('muted');
+exports.booleanProps.add('scoped');
+exports.booleanProps.add('loop');
+exports.booleanProps.add('open');
+exports.booleanProps.add('checked');
+exports.booleanProps.add('default');
+exports.booleanProps.add('capture');
+exports.booleanProps.add('disabled');
+exports.booleanProps.add('readOnly');
+exports.booleanProps.add('required');
+exports.booleanProps.add('autoplay');
+exports.booleanProps.add('controls');
+exports.booleanProps.add('seamless');
+exports.booleanProps.add('reversed');
+exports.booleanProps.add('allowfullscreen');
+exports.booleanProps.add('novalidate');
+exports.booleanProps.add('hidden');
+exports.booleanProps.add('autoFocus');
+exports.booleanProps.add('selected');
+exports.namespaces = new Map();
+exports.namespaces.set('xlink:href', exports.xlinkNS);
+exports.namespaces.set('xlink:arcrole', exports.xlinkNS);
+exports.namespaces.set('xlink:actuate', exports.xlinkNS);
+exports.namespaces.set('xlink:show', exports.xlinkNS);
+exports.namespaces.set('xlink:role', exports.xlinkNS);
+exports.namespaces.set('xlink:title', exports.xlinkNS);
+exports.namespaces.set('xlink:type', exports.xlinkNS);
+exports.namespaces.set('xml:base', exports.xmlNS);
+exports.namespaces.set('xml:lang', exports.xmlNS);
+exports.namespaces.set('xml:space', exports.xmlNS);
+exports.isUnitlessNumber = new Set();
+exports.isUnitlessNumber.add('animationIterationCount');
+exports.isUnitlessNumber.add('borderImageOutset');
+exports.isUnitlessNumber.add('borderImageSlice');
+exports.isUnitlessNumber.add('borderImageWidth');
+exports.isUnitlessNumber.add('boxFlex');
+exports.isUnitlessNumber.add('boxFlexGroup');
+exports.isUnitlessNumber.add('boxOrdinalGroup');
+exports.isUnitlessNumber.add('columnCount');
+exports.isUnitlessNumber.add('flex');
+exports.isUnitlessNumber.add('flexGrow');
+exports.isUnitlessNumber.add('flexPositive');
+exports.isUnitlessNumber.add('flexShrink');
+exports.isUnitlessNumber.add('flexNegative');
+exports.isUnitlessNumber.add('flexOrder');
+exports.isUnitlessNumber.add('gridRow');
+exports.isUnitlessNumber.add('gridColumn');
+exports.isUnitlessNumber.add('fontWeight');
+exports.isUnitlessNumber.add('lineClamp');
+exports.isUnitlessNumber.add('lineHeight');
+exports.isUnitlessNumber.add('opacity');
+exports.isUnitlessNumber.add('order');
+exports.isUnitlessNumber.add('orphans');
+exports.isUnitlessNumber.add('tabSize');
+exports.isUnitlessNumber.add('widows');
+exports.isUnitlessNumber.add('zIndex');
+exports.isUnitlessNumber.add('zoom');
+exports.isUnitlessNumber.add('fillOpacity');
+exports.isUnitlessNumber.add('floodOpacity');
+exports.isUnitlessNumber.add('stopOpacity');
+exports.isUnitlessNumber.add('strokeDasharray');
+exports.isUnitlessNumber.add('strokeDashoffset');
+exports.isUnitlessNumber.add('strokeMiterlimit');
+exports.isUnitlessNumber.add('strokeOpacity');
+exports.isUnitlessNumber.add('strokeWidth');
+exports.skipProps = new Set();
+exports.skipProps.add('children');
+exports.skipProps.add('childrenType');
+exports.skipProps.add('defaultValue');
+exports.skipProps.add('ref');
+exports.skipProps.add('key');
+exports.skipProps.add('checked');
+exports.skipProps.add('multiple');
+exports.delegatedEvents = new Set();
+exports.delegatedEvents.add('onClick');
+exports.delegatedEvents.add('onMouseDown');
+exports.delegatedEvents.add('onMouseUp');
+exports.delegatedEvents.add('onMouseMove');
+exports.delegatedEvents.add('onSubmit');
+exports.delegatedEvents.add('onDblClick');
+exports.delegatedEvents.add('onKeyDown');
+exports.delegatedEvents.add('onKeyUp');
+exports.delegatedEvents.add('onKeyPress');
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+Object.defineProperty(exports, "__esModule", { value: true });
+var inferno_shared_1 = __webpack_require__(0);
+var options_1 = __webpack_require__(4);
+var VNodes_1 = __webpack_require__(6);
+var patching_1 = __webpack_require__(7);
+var recycling_1 = __webpack_require__(22);
+var rendering_1 = __webpack_require__(9);
+var utils_1 = __webpack_require__(3);
+var processElement_1 = __webpack_require__(17);
+function mount(vNode, parentDom, lifecycle, context, isSVG) {
+    var flags = vNode.flags;
+    if (flags & 3970 /* Element */) {
+        return mountElement(vNode, parentDom, lifecycle, context, isSVG);
+    }
+    else if (flags & 28 /* Component */) {
+        return mountComponent(vNode, parentDom, lifecycle, context, isSVG, (flags & 4 /* ComponentClass */) > 0);
+    }
+    else if (flags & 4096 /* Void */) {
+        return mountVoid(vNode, parentDom);
+    }
+    else if (flags & 1 /* Text */) {
+        return mountText(vNode, parentDom);
+    }
+    else {
+        if (process.env.NODE_ENV !== 'production') {
+            if (typeof vNode === 'object') {
+                inferno_shared_1.throwError("mount() received an object that's not a valid VNode, you should stringify it first. Object: \"" + JSON.stringify(vNode) + "\".");
+            }
+            else {
+                inferno_shared_1.throwError("mount() expects a valid VNode, instead it received an object with the type \"" + typeof vNode + "\".");
+            }
+        }
+        inferno_shared_1.throwError();
+    }
+}
+exports.mount = mount;
+function mountText(vNode, parentDom) {
+    var dom = document.createTextNode(vNode.children);
+    vNode.dom = dom;
+    if (!inferno_shared_1.isNull(parentDom)) {
+        utils_1.appendChild(parentDom, dom);
+    }
+    return dom;
+}
+exports.mountText = mountText;
+function mountVoid(vNode, parentDom) {
+    var dom = document.createTextNode('');
+    vNode.dom = dom;
+    if (!inferno_shared_1.isNull(parentDom)) {
+        utils_1.appendChild(parentDom, dom);
+    }
+    return dom;
+}
+exports.mountVoid = mountVoid;
+function mountElement(vNode, parentDom, lifecycle, context, isSVG) {
+    if (options_1.options.recyclingEnabled) {
+        var dom_1 = recycling_1.recycleElement(vNode, lifecycle, context, isSVG);
+        if (!inferno_shared_1.isNull(dom_1)) {
+            if (!inferno_shared_1.isNull(parentDom)) {
+                utils_1.appendChild(parentDom, dom_1);
+            }
+            return dom_1;
+        }
+    }
+    var flags = vNode.flags;
+    isSVG = isSVG || (flags & 128 /* SvgElement */) > 0;
+    var dom = utils_1.documentCreateElement(vNode.type, isSVG);
+    var children = vNode.children;
+    var props = vNode.props;
+    var className = vNode.className;
+    var ref = vNode.ref;
+    vNode.dom = dom;
+    if (!inferno_shared_1.isInvalid(children)) {
+        if (inferno_shared_1.isStringOrNumber(children)) {
+            utils_1.setTextContent(dom, children);
+        }
+        else if (inferno_shared_1.isArray(children)) {
+            mountArrayChildren(children, dom, lifecycle, context, isSVG);
+        }
+        else if (VNodes_1.isVNode(children)) {
+            mount(children, dom, lifecycle, context, isSVG);
+        }
+    }
+    if (!inferno_shared_1.isNull(props)) {
+        var hasControlledValue = false;
+        var isFormElement = (flags & 3584 /* FormElement */) > 0;
+        if (isFormElement) {
+            hasControlledValue = processElement_1.isControlledFormElement(props);
+        }
+        for (var prop in props) {
+            // do not add a hasOwnProperty check here, it affects performance
+            patching_1.patchProp(prop, null, props[prop], dom, isSVG, hasControlledValue);
+        }
+        if (isFormElement) {
+            processElement_1.processElement(flags, vNode, dom, props, true, hasControlledValue);
+        }
+    }
+    if (className !== null) {
+        if (isSVG) {
+            dom.setAttribute('class', className);
+        }
+        else {
+            dom.className = className;
+        }
+    }
+    if (!inferno_shared_1.isNull(ref)) {
+        mountRef(dom, ref, lifecycle);
+    }
+    if (!inferno_shared_1.isNull(parentDom)) {
+        utils_1.appendChild(parentDom, dom);
+    }
+    return dom;
+}
+exports.mountElement = mountElement;
+function mountArrayChildren(children, dom, lifecycle, context, isSVG) {
+    for (var i = 0, len = children.length; i < len; i++) {
+        var child = children[i];
+        // Verify can string/number be here. might cause de-opt. - Normalization takes care of it.
+        if (!inferno_shared_1.isInvalid(child)) {
+            if (child.dom) {
+                children[i] = child = VNodes_1.directClone(child);
+            }
+            mount(children[i], dom, lifecycle, context, isSVG);
+        }
+    }
+}
+exports.mountArrayChildren = mountArrayChildren;
+function mountComponent(vNode, parentDom, lifecycle, context, isSVG, isClass) {
+    if (options_1.options.recyclingEnabled) {
+        var dom_2 = recycling_1.recycleComponent(vNode, lifecycle, context, isSVG);
+        if (!inferno_shared_1.isNull(dom_2)) {
+            if (!inferno_shared_1.isNull(parentDom)) {
+                utils_1.appendChild(parentDom, dom_2);
+            }
+            return dom_2;
+        }
+    }
+    var type = vNode.type;
+    var props = vNode.props || utils_1.EMPTY_OBJ;
+    var ref = vNode.ref;
+    var dom;
+    if (isClass) {
+        var instance = utils_1.createClassComponentInstance(vNode, type, props, context, isSVG, lifecycle);
+        var input = instance._lastInput;
+        instance._vNode = vNode;
+        vNode.dom = dom = mount(input, null, lifecycle, instance._childContext, isSVG);
+        if (!inferno_shared_1.isNull(parentDom)) {
+            utils_1.appendChild(parentDom, dom);
+        }
+        mountClassComponentCallbacks(vNode, ref, instance, lifecycle);
+        instance._updating = false;
+        if (options_1.options.findDOMNodeEnabled) {
+            rendering_1.componentToDOMNodeMap.set(instance, dom);
+        }
+    }
+    else {
+        var input = utils_1.createFunctionalComponentInput(vNode, type, props, context);
+        vNode.dom = dom = mount(input, null, lifecycle, context, isSVG);
+        vNode.children = input;
+        mountFunctionalComponentCallbacks(ref, dom, lifecycle);
+        if (!inferno_shared_1.isNull(parentDom)) {
+            utils_1.appendChild(parentDom, dom);
+        }
+    }
+    return dom;
+}
+exports.mountComponent = mountComponent;
+function mountClassComponentCallbacks(vNode, ref, instance, lifecycle) {
+    if (ref) {
+        if (inferno_shared_1.isFunction(ref)) {
+            ref(instance);
+        }
+        else {
+            if (process.env.NODE_ENV !== 'production') {
+                if (inferno_shared_1.isStringOrNumber(ref)) {
+                    inferno_shared_1.throwError('string "refs" are not supported in Inferno 1.0. Use callback "refs" instead.');
+                }
+                else if (inferno_shared_1.isObject(ref) && (vNode.flags & 4 /* ComponentClass */)) {
+                    inferno_shared_1.throwError('functional component lifecycle events are not supported on ES2015 class components.');
+                }
+                else {
+                    inferno_shared_1.throwError("a bad value for \"ref\" was used on component: \"" + JSON.stringify(ref) + "\"");
+                }
+            }
+            inferno_shared_1.throwError();
+        }
+    }
+    var hasDidMount = !inferno_shared_1.isUndefined(instance.componentDidMount);
+    var afterMount = options_1.options.afterMount;
+    if (hasDidMount || !inferno_shared_1.isNull(afterMount)) {
+        lifecycle.addListener(function () {
+            instance._updating = true;
+            if (afterMount) {
+                afterMount(vNode);
+            }
+            if (hasDidMount) {
+                instance.componentDidMount();
+            }
+            instance._updating = false;
+        });
+    }
+}
+exports.mountClassComponentCallbacks = mountClassComponentCallbacks;
+function mountFunctionalComponentCallbacks(ref, dom, lifecycle) {
+    if (ref) {
+        if (!inferno_shared_1.isNullOrUndef(ref.onComponentWillMount)) {
+            ref.onComponentWillMount();
+        }
+        if (!inferno_shared_1.isNullOrUndef(ref.onComponentDidMount)) {
+            lifecycle.addListener(function () { return ref.onComponentDidMount(dom); });
+        }
+    }
+}
+exports.mountFunctionalComponentCallbacks = mountFunctionalComponentCallbacks;
+function mountRef(dom, value, lifecycle) {
+    if (inferno_shared_1.isFunction(value)) {
+        lifecycle.addListener(function () { return value(dom); });
+    }
+    else {
+        if (inferno_shared_1.isInvalid(value)) {
+            return;
+        }
+        if (process.env.NODE_ENV !== 'production') {
+            inferno_shared_1.throwError('string "refs" are not supported in Inferno 1.0. Use callback "refs" instead.');
+        }
+        inferno_shared_1.throwError();
+    }
+}
+exports.mountRef = mountRef;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+Object.defineProperty(exports, "__esModule", { value: true });
+var inferno_shared_1 = __webpack_require__(0);
+var options_1 = __webpack_require__(4);
+var patching_1 = __webpack_require__(7);
+var recycling_1 = __webpack_require__(22);
+var rendering_1 = __webpack_require__(9);
 var utils_1 = __webpack_require__(3);
 function unmount(vNode, parentDom, lifecycle, canRecycle, isRecycling) {
     var flags = vNode.flags;
@@ -5180,19 +5319,19 @@ function unmountRef(ref) {
     }
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var InputWrapper_1 = __webpack_require__(58);
-var SelectWrapper_1 = __webpack_require__(59);
-var TextareaWrapper_1 = __webpack_require__(60);
+var InputWrapper_1 = __webpack_require__(67);
+var SelectWrapper_1 = __webpack_require__(68);
+var TextareaWrapper_1 = __webpack_require__(69);
 /**
  * There is currently no support for switching same input between controlled and nonControlled
  * If that ever becomes a real issue, then re design controlled elements
@@ -5217,31 +5356,1030 @@ exports.isControlledFormElement = isControlledFormElement;
 
 
 /***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(61).default;
-module.exports.default = module.exports;
-
-
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(48).default;
-module.exports.default = module.exports;
-
-
-
-/***/ }),
 /* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(70).default;
+module.exports.default = module.exports;
+
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.FullDeck = exports.PotentialExpansionDeck = exports.BasicDeck = undefined;
+
+var _constants = __webpack_require__(12);
+
+var id = 0;
+
+function addId(_ref) {
+  var suit = _ref.suit,
+      value = _ref.value,
+      type = _ref.type,
+      effectType = _ref.effectType,
+      isGiveable = _ref.isGiveable;
+
+  return {
+    id: id++,
+    suit: suit,
+    value: value,
+    type: type,
+    effectType: effectType,
+    isGiveable: isGiveable
+  };
+}
+
+var BasicDeck = exports.BasicDeck = [{
+  suit: _constants.Suit.Spade,
+  value: 1,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Lightning,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 1,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Duel,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 2,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.Double,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 2,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.EightTrigrams,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 2,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.FrostBlade,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 3,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Steal,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 3,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Dismantle,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 4,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Steal,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 4,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Dismantle,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 5,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 5,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.DefendHorse,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 6,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.LightningAttack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 6,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.BlueBlade,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 7,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.LightningAttack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 7,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 8,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 8,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 9,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 9,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Wine,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 10,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.RationsDepleted,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 10,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 11,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Negate,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 11,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 12,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.Halberd,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 12,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.IronChain,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 13,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.OffenseHorse,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 13,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Barbarians,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 1,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.RainingArrows,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 1,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.PeachGarden,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 2,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Blaze,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 2,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 3,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Blaze,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 3,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Harvest,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 4,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.FireAttack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 4,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Peach,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 5,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.Bow,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 5,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.OffenseHorse,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 6,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Acedia,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 6,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Peach,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 7,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Draw2,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 7,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Peach,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 8,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Draw2,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 8,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Peach,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 9,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Alliance,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 9,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Peach,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 10,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 10,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Peach,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 11,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Amass,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 11,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 12,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Dismantle,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 12,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 12,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Peach,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 13,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 13,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.OffenseHorse,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 1,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.SliverLionHelmet,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 1,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Duel,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 2,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 2,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.RattanArmour,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 2,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.RenWangShield,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 3,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Ascertain,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 3,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 4,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Ascertain,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 4,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 5,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.DefendHorse,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 5,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 6,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.LightningAttack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 6,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Acedia,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 7,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.LightningAttack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 7,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Barbarians,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 8,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.LightningAttack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 8,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 9,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Wine,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 9,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 10,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.RationsDepleted,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 10,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 11,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 11,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 12,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Duress,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 12,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.IronChain,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 13,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.NegateKingdom,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 13,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.IronChain,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 1,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.Fan,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 1,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.CrossBow,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 2,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 2,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Peach,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 3,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 3,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Steal,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 4,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.FireAttack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 4,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Amass,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 5,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.FireAttack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 5,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.Axe,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 6,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 6,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.SixBlade,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 7,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 7,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 8,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 8,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 9,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 9,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Wine,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 10,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 10,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 11,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 11,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 12,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.Trident,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 12,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 12,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.NegateKingdom,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 13,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.OffenseHorse,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 13,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}].map(addId);
+
+var PotentialExpansionDeck = exports.PotentialExpansionDeck = [{
+  suit: _constants.Suit.Spade,
+  value: 1,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.OneMoreRound,
+  isGiveable: true
+}, {
+  suit: _constants.Suit.Spade,
+  value: 2,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.FireArmor,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 3,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.BlazeTogether,
+  isGiveable: true
+}, {
+  suit: _constants.Suit.Spade,
+  value: 4,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 5,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.Dragon,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 6,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Wine,
+  isGiveable: true
+}, {
+  suit: _constants.Suit.Spade,
+  value: 7,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 8,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 9,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.LightningAttack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 10,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.LightningAttack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 11,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.LightningAttack,
+  isGiveable: true
+}, {
+  suit: _constants.Suit.Spade,
+  value: 12,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.ChainTogether,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Spade,
+  value: 13,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Negate,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 1,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Banquet,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 2,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Exile,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 3,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.OffenseHorse,
+  isGiveable: true
+}, {
+  suit: _constants.Suit.Heart,
+  value: 4,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 5,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 6,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 7,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 8,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Peach,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 9,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Peach,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 10,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 11,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Heart,
+  value: 12,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.BlazeTogether,
+  isGiveable: true
+}, {
+  suit: _constants.Suit.Heart,
+  value: 13,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Disarm,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 1,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.JadeSeal,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 2,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.HeartShield,
+  isGiveable: true
+}, {
+  suit: _constants.Suit.Club,
+  value: 3,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.ShowYourself,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 4,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 5,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.LightningAttack,
+  isGiveable: true
+}, {
+  suit: _constants.Suit.Club,
+  value: 6,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 7,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 8,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Attack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 9,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Wine,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 10,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.ChainTogether,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 11,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.BlazeTogether,
+  isGiveable: true
+}, {
+  suit: _constants.Suit.Club,
+  value: 12,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Disarm,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Club,
+  value: 13,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.NegateKingdom,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 1,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.OneMoreRound,
+  isGiveable: true
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 2,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Peach,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 3,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Peach,
+  isGiveable: true
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 4,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.OneMoreRound,
+  isGiveable: true
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 5,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.WoodHorse,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 6,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 7,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 8,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.FireAttack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 9,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.FireAttack,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 10,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.Exile,
+  isGiveable: true
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 11,
+  type: _constants.CardType.Functional,
+  effectType: _constants.FunctionalType.NegateKingdom,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 12,
+  type: _constants.CardType.Equipment,
+  effectType: _constants.EquipmentType.Sky,
+  isGiveable: false
+}, {
+  suit: _constants.Suit.Diamond,
+  value: 13,
+  type: _constants.CardType.Basic,
+  effectType: _constants.BasicType.Dodge,
+  isGiveable: false
+}].map(addId);
+
+var FullDeck = exports.FullDeck = BasicDeck.concat(PotentialExpansionDeck);
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(57).default;
+module.exports.default = module.exports;
+
+
+
+/***/ }),
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var redux_1 = __webpack_require__(73);
+var redux_1 = __webpack_require__(82);
 /**
  * Prints a warning in the console if it exists.
  *
@@ -5292,14 +6430,14 @@ exports.wrapActionCreators = wrapActionCreators;
 
 
 /***/ }),
-/* 19 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var patching_1 = __webpack_require__(6);
+var patching_1 = __webpack_require__(7);
 var componentPools = new Map();
 var elementPools = new Map();
 function recycleElement(vNode, lifecycle, context, isSVG) {
@@ -5399,14 +6537,14 @@ exports.poolComponent = poolComponent;
 
 
 /***/ }),
-/* 20 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var VNodes_1 = __webpack_require__(5);
+var VNodes_1 = __webpack_require__(6);
 function applyKey(key, vNode) {
     vNode.key = key;
     return vNode;
@@ -5596,14 +6734,14 @@ function normalize(vNode) {
 }
 exports.normalize = normalize;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 21 */
+/* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__root_js__ = __webpack_require__(68);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__root_js__ = __webpack_require__(77);
 
 
 /** Built-in value references. */
@@ -5613,13 +6751,13 @@ var Symbol = __WEBPACK_IMPORTED_MODULE_0__root_js__["a" /* default */].Symbol;
 
 
 /***/ }),
-/* 22 */
+/* 25 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__baseGetTag_js__ = __webpack_require__(62);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getPrototype_js__ = __webpack_require__(64);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__isObjectLike_js__ = __webpack_require__(69);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__baseGetTag_js__ = __webpack_require__(71);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getPrototype_js__ = __webpack_require__(73);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__isObjectLike_js__ = __webpack_require__(78);
 
 
 
@@ -5685,7 +6823,7 @@ function isPlainObject(value) {
 
 
 /***/ }),
-/* 23 */
+/* 26 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5726,14 +6864,14 @@ function compose() {
 }
 
 /***/ }),
-/* 24 */
+/* 27 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ActionTypes; });
 /* harmony export (immutable) */ __webpack_exports__["a"] = createStore;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_es_isPlainObject__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_symbol_observable__ = __webpack_require__(74);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_es_isPlainObject__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_symbol_observable__ = __webpack_require__(83);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_symbol_observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_symbol_observable__);
 
 
@@ -5985,7 +7123,7 @@ function createStore(reducer, preloadedState, enhancer) {
 }
 
 /***/ }),
-/* 25 */
+/* 28 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6013,7 +7151,7 @@ function warning(message) {
 }
 
 /***/ }),
-/* 26 */
+/* 29 */
 /***/ (function(module, exports) {
 
 var g;
@@ -6040,7 +7178,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 27 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6053,29 +7191,29 @@ exports.Game = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _index = __webpack_require__(36);
+var _index = __webpack_require__(39);
 
-var _viewportController = __webpack_require__(31);
+var _viewportController = __webpack_require__(34);
 
-var _rendererController = __webpack_require__(29);
+var _rendererController = __webpack_require__(32);
 
-var _socketController = __webpack_require__(30);
+var _socketController = __webpack_require__(33);
 
-var _helium = __webpack_require__(13);
+var _helium = __webpack_require__(5);
 
-var _textField = __webpack_require__(28);
+var _textField = __webpack_require__(31);
 
-var _mainScene = __webpack_require__(45);
+var _mainScene = __webpack_require__(50);
 
-var _infernoMainScene = __webpack_require__(43);
+var _infernoMainScene = __webpack_require__(48);
 
-var _inferno = __webpack_require__(16);
+var _inferno = __webpack_require__(18);
 
-var _infernoCreateElement = __webpack_require__(7);
+var _infernoCreateElement = __webpack_require__(8);
 
 var _infernoCreateElement2 = _interopRequireDefault(_infernoCreateElement);
 
-var _infernoRedux = __webpack_require__(10);
+var _infernoRedux = __webpack_require__(13);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6108,6 +7246,7 @@ var Game = exports.Game = function () {
 
       var renderer = PIXI.autoDetectRenderer(width / resolution, height / resolution, {
         autoResize: true,
+        transparent: true,
         resolution: resolution
       });
       heliumStage.appendChild(renderer.view);
@@ -6137,7 +7276,7 @@ var Game = exports.Game = function () {
 }();
 
 /***/ }),
-/* 28 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6232,7 +7371,7 @@ var TextField = exports.TextField = function () {
 }();
 
 /***/ }),
-/* 29 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6272,7 +7411,7 @@ function RendererController(store, renderer) {
 }
 
 /***/ }),
-/* 30 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6283,9 +7422,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.SocketController = SocketController;
 
-var _constants = __webpack_require__(9);
+var _constants = __webpack_require__(10);
 
-var _actions = __webpack_require__(2);
+var _actions = __webpack_require__(1);
 
 function SocketController(store) {
 
@@ -6349,7 +7488,7 @@ function SocketController(store) {
 }
 
 /***/ }),
-/* 31 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6360,7 +7499,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ViewportController = ViewportController;
 
-var _actions = __webpack_require__(2);
+var _actions = __webpack_require__(1);
 
 function ViewportController(store) {
   var interval = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 200;
@@ -6407,19 +7546,19 @@ function ViewportController(store) {
 }
 
 /***/ }),
-/* 32 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _game = __webpack_require__(27);
+var _game = __webpack_require__(30);
 
 var game = new _game.Game();
 game.start();
 
 /***/ }),
-/* 33 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6430,7 +7569,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.gameId = gameId;
 
-var _actions = __webpack_require__(2);
+var _actions = __webpack_require__(1);
 
 function gameId() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : -1;
@@ -6445,7 +7584,7 @@ function gameId() {
 }
 
 /***/ }),
-/* 34 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6456,7 +7595,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.gameList = gameList;
 
-var _actions = __webpack_require__(2);
+var _actions = __webpack_require__(1);
 
 function gameList() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
@@ -6471,7 +7610,7 @@ function gameList() {
 }
 
 /***/ }),
-/* 35 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6482,9 +7621,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.gameScene = gameScene;
 
-var _constants = __webpack_require__(9);
+var _constants = __webpack_require__(10);
 
-var _actions = __webpack_require__(2);
+var _actions = __webpack_require__(1);
 
 function gameScene() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _constants.GameScene.Naming;
@@ -6505,7 +7644,7 @@ function gameScene() {
 }
 
 /***/ }),
-/* 36 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6516,21 +7655,23 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.game = undefined;
 
-var _gameScene = __webpack_require__(35);
+var _gameScene = __webpack_require__(38);
 
-var _viewport = __webpack_require__(41);
+var _viewport = __webpack_require__(45);
 
-var _name = __webpack_require__(39);
+var _name = __webpack_require__(42);
 
-var _isEnteredRoom = __webpack_require__(37);
+var _isEnteredRoom = __webpack_require__(40);
 
-var _gameId = __webpack_require__(33);
+var _gameId = __webpack_require__(36);
 
-var _isHost = __webpack_require__(38);
+var _isHost = __webpack_require__(41);
 
-var _gameList = __webpack_require__(34);
+var _gameList = __webpack_require__(37);
 
-var _users = __webpack_require__(40);
+var _users = __webpack_require__(44);
+
+var _players = __webpack_require__(43);
 
 var game = Redux.combineReducers({
   gameScene: _gameScene.gameScene,
@@ -6540,13 +7681,14 @@ var game = Redux.combineReducers({
   gameId: _gameId.gameId,
   isHost: _isHost.isHost,
   gameList: _gameList.gameList,
-  users: _users.users
+  users: _users.users,
+  players: _players.players
 });
 
 exports.game = game;
 
 /***/ }),
-/* 37 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6557,7 +7699,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.isEnteredRoom = isEnteredRoom;
 
-var _actions = __webpack_require__(2);
+var _actions = __webpack_require__(1);
 
 function isEnteredRoom() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
@@ -6572,7 +7714,7 @@ function isEnteredRoom() {
 }
 
 /***/ }),
-/* 38 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6583,7 +7725,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.isHost = isHost;
 
-var _actions = __webpack_require__(2);
+var _actions = __webpack_require__(1);
 
 function isHost() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
@@ -6611,7 +7753,7 @@ function isHost() {
 }
 
 /***/ }),
-/* 39 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6622,7 +7764,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.name = name;
 
-var _actions = __webpack_require__(2);
+var _actions = __webpack_require__(1);
 
 function name() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
@@ -6637,7 +7779,36 @@ function name() {
 }
 
 /***/ }),
-/* 40 */
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.players = players;
+
+var _actions = __webpack_require__(1);
+
+function players() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var action = arguments[1];
+
+  switch (action.type) {
+    case _actions.Actions.UpdateGame:
+      {
+        var gameInstance = action.gameInstance;
+        return gameInstance.players;
+      }
+    default:
+      return state;
+  }
+}
+
+/***/ }),
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6648,7 +7819,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.users = users;
 
-var _actions = __webpack_require__(2);
+var _actions = __webpack_require__(1);
 
 function users() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
@@ -6666,7 +7837,7 @@ function users() {
 }
 
 /***/ }),
-/* 41 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6677,7 +7848,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.viewport = viewport;
 
-var _actions = __webpack_require__(2);
+var _actions = __webpack_require__(1);
 
 function viewport() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
@@ -6709,7 +7880,114 @@ function viewport() {
 }
 
 /***/ }),
-/* 42 */
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Armor = Armor;
+
+var _helium = __webpack_require__(5);
+
+var _helpers = __webpack_require__(11);
+
+var _constants = __webpack_require__(12);
+
+var _deck = __webpack_require__(19);
+
+var DefaultHeight = 24;
+var ArmorName = new Map();
+ArmorName.set(_constants.EquipmentType.EightTrigrams, '八卦陣');
+ArmorName.set(_constants.EquipmentType.RenWangShield, '仁王盾');
+ArmorName.set(_constants.EquipmentType.RattanArmour, '藤甲');
+ArmorName.set(_constants.EquipmentType.SliverLionHelmet, '白銀獅子');
+ArmorName.set(_constants.EquipmentType.FireArmor, '明光鎧');
+ArmorName.set(_constants.EquipmentType.HeartShield, '護心鏡');
+
+function Armor(_ref) {
+  var _ref$width = _ref.width,
+      width = _ref$width === undefined ? 0 : _ref$width,
+      _ref$height = _ref.height,
+      height = _ref$height === undefined ? 0 : _ref$height,
+      _ref$x = _ref.x,
+      x = _ref$x === undefined ? 0 : _ref$x,
+      _ref$y = _ref.y,
+      y = _ref$y === undefined ? 0 : _ref$y,
+      _ref$cardId = _ref.cardId,
+      cardId = _ref$cardId === undefined ? -1 : _ref$cardId;
+
+  var fontFamily = '\"微軟正黑體\", Arial, Helvetica, sans-serif';
+  var fontSize = (0, _helpers.getValue)(9, height, DefaultHeight);
+  var textY = (0, _helpers.getValue)(6, height, DefaultHeight);
+  var style = {
+    fontSize: fontSize,
+    fontFamily: fontFamily,
+    fill: 'white'
+  };
+  var children = [];
+  if (cardId !== -1) {
+    var card = _deck.FullDeck.find(function (cardInDeck) {
+      return cardInDeck.id === cardId;
+    });
+    if (card) {
+      var suitWidth = (0, _helpers.getValue)(14.4, height, DefaultHeight);
+      var numberText = (0, _helpers.getValueText)(card.value);
+      var numberWidth = (0, _helpers.getTextWidth)(numberText, style);
+      var armorText = ArmorName.get(card.effectType);
+      var iconY = (0, _helpers.getValue)(4, height, DefaultHeight);
+      if (armorText) {
+        var armorTextWidth = (0, _helpers.getTextWidth)(armorText, style);
+        var numberPadding = (0, _helpers.getValue)(2, height, DefaultHeight);
+        var armorTextPadding = (0, _helpers.getValue)(4, height, DefaultHeight);
+        var wholeWidth = suitWidth + numberWidth + numberPadding + armorTextPadding + armorTextWidth;
+        var margin = (width - wholeWidth) / 2 - (0, _helpers.getValue)(3, height, DefaultHeight);
+        children.push((0, _helium.createElement)('Sprite', {
+          width: suitWidth,
+          height: suitWidth,
+          y: iconY,
+          x: margin,
+          texture: PIXI.Texture.fromImage((0, _helpers.getSuitImagePath)(card.suit))
+        }), (0, _helium.createElement)('Text', {
+          text: numberText,
+          style: style,
+          y: textY,
+          x: margin + suitWidth + numberPadding
+        }), (0, _helium.createElement)('Text', {
+          text: armorText,
+          style: style,
+          y: textY,
+          x: margin + suitWidth + numberPadding + numberWidth + armorTextPadding
+        }));
+      }
+    }
+  } else {
+    children.push((0, _helium.createElement)('Text', {
+      text: '防具',
+      style: {
+        fill: '#BF5C19',
+        fontWeight: 'bold',
+        fontSize: fontSize
+      },
+      anchor: {
+        x: 0.5,
+        y: 0
+      },
+      x: width / 2,
+      y: textY
+    }));
+  }
+  return (0, _helium.createElement)('Container', {
+    x: x,
+    y: y
+  }, children);
+}
+
+/***/ }),
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6721,13 +7999,13 @@ Object.defineProperty(exports, "__esModule", {
 exports.ConnectChoosingActionScene = undefined;
 exports.ChoosingActionScene = ChoosingActionScene;
 
-var _infernoRedux = __webpack_require__(10);
+var _infernoRedux = __webpack_require__(13);
 
-var _infernoCreateElement = __webpack_require__(7);
+var _infernoCreateElement = __webpack_require__(8);
 
 var _infernoCreateElement2 = _interopRequireDefault(_infernoCreateElement);
 
-var _actions = __webpack_require__(2);
+var _actions = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6796,7 +8074,7 @@ var ConnectChoosingActionScene = (0, _infernoRedux.connect)(function mapStateToP
 exports.ConnectChoosingActionScene = ConnectChoosingActionScene;
 
 /***/ }),
-/* 43 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6808,17 +8086,17 @@ Object.defineProperty(exports, "__esModule", {
 exports.ConnectInfernoMainScene = undefined;
 exports.InfernoMainScene = InfernoMainScene;
 
-var _infernoRedux = __webpack_require__(10);
+var _infernoRedux = __webpack_require__(13);
 
-var _infernoCreateElement = __webpack_require__(7);
+var _infernoCreateElement = __webpack_require__(8);
 
 var _infernoCreateElement2 = _interopRequireDefault(_infernoCreateElement);
 
-var _constants = __webpack_require__(9);
+var _constants = __webpack_require__(10);
 
-var _namingScene = __webpack_require__(46);
+var _namingScene = __webpack_require__(51);
 
-var _choosingActionScene = __webpack_require__(42);
+var _choosingActionScene = __webpack_require__(47);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6860,7 +8138,7 @@ var ConnectInfernoMainScene = (0, _infernoRedux.connect)(function mapStateToProp
 exports.ConnectInfernoMainScene = ConnectInfernoMainScene;
 
 /***/ }),
-/* 44 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6872,28 +8150,45 @@ Object.defineProperty(exports, "__esModule", {
 exports.ConnectLobbyScene = undefined;
 exports.LobbyScene = LobbyScene;
 
-var _helium = __webpack_require__(13);
+var _helium = __webpack_require__(5);
 
-var _actions = __webpack_require__(2);
+var _actions = __webpack_require__(1);
+
+var _playerPanel = __webpack_require__(52);
+
+var _helpers = __webpack_require__(11);
+
+var DefaultWidth = 1152;
 
 function LobbyScene(_ref) {
   var width = _ref.width,
-      height = _ref.height,
+      x = _ref.x,
+      y = _ref.y,
       users = _ref.users,
       isHost = _ref.isHost,
       onStartGame = _ref.onStartGame;
 
-  var children = users.map(function (user, index) {
-    return (0, _helium.createElement)('Text', {
-      text: user.name,
-      style: {
-        fill: 'white',
-        fontSize: '16px'
-      },
-      y: 20 * index
-    });
-  });
-  return (0, _helium.createElement)('Container', null, children);
+  var maxUser = 7;
+  var children = [];
+  var playerPanelWidth = (0, _helpers.getValue)(234, width, DefaultWidth);
+  var playerPanelHeight = (0, _helpers.getValue)(259.976, width, DefaultWidth);
+  for (var i = 0; i < maxUser; i++) {
+    var name = '';
+    if (i < users.length) {
+      name = users[i].name;
+    }
+    var _x = playerPanelWidth * i;
+    children.push((0, _helium.createElement)(_playerPanel.ConnectPlayerPanel, {
+      name: name,
+      x: _x,
+      width: playerPanelWidth,
+      height: playerPanelHeight
+    }));
+  }
+  return (0, _helium.createElement)('Container', {
+    x: x,
+    y: y
+  }, children);
 }
 
 var ConnectLobbyScene = (0, _helium.connect)(function mapStateToProps(state) {
@@ -6914,7 +8209,7 @@ var ConnectLobbyScene = (0, _helium.connect)(function mapStateToProps(state) {
 exports.ConnectLobbyScene = ConnectLobbyScene;
 
 /***/ }),
-/* 45 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6926,11 +8221,14 @@ Object.defineProperty(exports, "__esModule", {
 exports.ConnectMainScene = undefined;
 exports.MainScene = MainScene;
 
-var _helium = __webpack_require__(13);
+var _helium = __webpack_require__(5);
 
-var _constants = __webpack_require__(9);
+var _constants = __webpack_require__(10);
 
-var _lobbyScene = __webpack_require__(44);
+var _lobbyScene = __webpack_require__(49);
+
+var DefaultWidth = 1152;
+var DefaultHeight = 768;
 
 function MainScene(_ref) {
   var _ref$width = _ref.width,
@@ -6943,14 +8241,23 @@ function MainScene(_ref) {
       gameScene = _ref$gameScene === undefined ? _constants.GameScene.Naming : _ref$gameScene;
 
   var child = void 0;
+  var ratio = Math.min(width / DefaultWidth, height / DefaultHeight);
+  var sceneHeight = DefaultHeight * ratio;
+  var sceneWidth = DefaultWidth * ratio;
+  var sceneX = (width - sceneWidth) / 2;
+  var sceneY = (height - sceneHeight) / 2;
+
   switch (gameScene) {
     case _constants.GameScene.Room:
       child = (0, _helium.createElement)(_lobbyScene.ConnectLobbyScene, {
-        width: width,
-        height: height
+        width: sceneWidth,
+        height: sceneHeight,
+        x: sceneX,
+        y: sceneY
       });
       break;
   }
+
   return (0, _helium.createElement)('Container', {
     scale: {
       x: 1 / resolution,
@@ -6979,7 +8286,7 @@ var ConnectMainScene = (0, _helium.connect)(function mapStateToProps(state) {
 exports.ConnectMainScene = ConnectMainScene;
 
 /***/ }),
-/* 46 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6991,13 +8298,13 @@ Object.defineProperty(exports, "__esModule", {
 exports.ConnectNamingScene = undefined;
 exports.NamingScene = NamingScene;
 
-var _infernoRedux = __webpack_require__(10);
+var _infernoRedux = __webpack_require__(13);
 
-var _infernoCreateElement = __webpack_require__(7);
+var _infernoCreateElement = __webpack_require__(8);
 
 var _infernoCreateElement2 = _interopRequireDefault(_infernoCreateElement);
 
-var _actions = __webpack_require__(2);
+var _actions = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7043,7 +8350,416 @@ var ConnectNamingScene = (0, _infernoRedux.connect)(function mapStateToProps(sta
 exports.ConnectNamingScene = ConnectNamingScene;
 
 /***/ }),
-/* 47 */
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ConnectPlayerPanel = undefined;
+exports.PlayerPanel = PlayerPanel;
+
+var _helium = __webpack_require__(5);
+
+var _constants = __webpack_require__(55);
+
+var _helpers = __webpack_require__(11);
+
+var _rectangle = __webpack_require__(53);
+
+var _weapon = __webpack_require__(54);
+
+var _armor = __webpack_require__(46);
+
+var DefaultWidth = 234;
+
+function PlayerPanel(_ref) {
+  var _ref$width = _ref.width,
+      width = _ref$width === undefined ? 0 : _ref$width,
+      _ref$x = _ref.x,
+      x = _ref$x === undefined ? 0 : _ref$x,
+      _ref$y = _ref.y,
+      y = _ref$y === undefined ? 0 : _ref$y,
+      _ref$name = _ref.name,
+      name = _ref$name === undefined ? '' : _ref$name,
+      _ref$maxHp = _ref.maxHp,
+      maxHp = _ref$maxHp === undefined ? 0 : _ref$maxHp,
+      _ref$hp = _ref.hp,
+      hp = _ref$hp === undefined ? 0 : _ref$hp,
+      _ref$position = _ref.position,
+      position = _ref$position === undefined ? 1 : _ref$position;
+
+  var fontFamily = '\"微軟正黑體\", Arial, Helvetica, sans-serif';
+  var mainGeneralText = '主 | SP Vincent';
+  var viceGeneralText = '副 | SP Vincent';
+  var generalTextStyle = {
+    fill: 'white',
+    fontFamily: fontFamily,
+    fontWeight: 'bold',
+    fontSize: (0, _helpers.getValue)(8, width, DefaultWidth)
+  };
+  return (0, _helium.createElement)('Container', {
+    x: x,
+    y: y
+  }, [(0, _helium.createElement)('Sprite', {
+    texture: PIXI.Texture.fromImage('assets/image/panel-enemy.png'),
+    width: width,
+    height: width
+  }), (0, _helium.createElement)('Sprite', {
+    texture: PIXI.Texture.fromImage('assets/image/region-purple.png'),
+    width: (0, _helpers.getValue)(54, width, DefaultWidth),
+    height: (0, _helpers.getValue)(54, width, DefaultWidth)
+  }), (0, _helium.createElement)('Sprite', {
+    texture: PIXI.Texture.fromImage('assets/image/chain.png'),
+    anchor: {
+      x: 0.5,
+      y: 0
+    },
+    x: width / 2,
+    y: (0, _helpers.getValue)(102.43, width, DefaultWidth),
+    width: (0, _helpers.getValue)(203.1, width, DefaultWidth),
+    height: (0, _helpers.getValue)(41.4, width, DefaultWidth)
+  }), (0, _helium.createElement)(_rectangle.Rectangle, {
+    color: 0x000000,
+    alpha: 0.5,
+    x: (0, _helpers.getValue)(36, width, DefaultWidth),
+    y: (0, _helpers.getValue)(54.5, width, DefaultWidth),
+    width: (0, _helpers.getValue)(70, width, DefaultWidth),
+    height: (0, _helpers.getValue)(15, width, DefaultWidth)
+  }), (0, _helium.createElement)(_rectangle.Rectangle, {
+    color: 0x000000,
+    alpha: 0.5,
+    x: (0, _helpers.getValue)(119, width, DefaultWidth),
+    y: (0, _helpers.getValue)(54.5, width, DefaultWidth),
+    width: (0, _helpers.getValue)(70, width, DefaultWidth),
+    height: (0, _helpers.getValue)(15, width, DefaultWidth)
+  }), (0, _helium.createElement)(_rectangle.Rectangle, {
+    color: 0xffffff,
+    alpha: 0.5,
+    x: (0, _helpers.getValue)(36.5, width, DefaultWidth),
+    y: (0, _helpers.getValue)(140, width, DefaultWidth),
+    anchor: {
+      x: 0,
+      y: 1
+    },
+    width: (0, _helpers.getValue)(80.5, width, DefaultWidth),
+    height: (0, _helpers.getValue)(16, width, DefaultWidth)
+  }), (0, _helium.createElement)(_rectangle.Rectangle, {
+    color: 0xffffff,
+    alpha: 0.5,
+    x: (0, _helpers.getValue)(120, width, DefaultWidth),
+    y: (0, _helpers.getValue)(140, width, DefaultWidth),
+    anchor: {
+      x: 0,
+      y: 1
+    },
+    width: (0, _helpers.getValue)(80.5, width, DefaultWidth),
+    height: (0, _helpers.getValue)(16, width, DefaultWidth)
+  }), (0, _helium.createElement)('Text', {
+    text: position + ' | ' + name,
+    x: (0, _helpers.getValue)(43, width, DefaultWidth),
+    y: (0, _helpers.getValue)(31, width, DefaultWidth),
+    style: {
+      fill: 'white',
+      fontFamily: fontFamily,
+      fontWeight: 'bold',
+      fontSize: (0, _helpers.getValue)(11, width, DefaultWidth)
+    }
+  }), (0, _helium.createElement)('Text', {
+    text: mainGeneralText,
+    x: (0, _helpers.getValue)(38, width, DefaultWidth),
+    y: (0, _helpers.getValue)(57, width, DefaultWidth),
+    style: generalTextStyle
+  }), (0, _helium.createElement)('Text', {
+    text: viceGeneralText,
+    x: (0, _helpers.getValue)(122, width, DefaultWidth),
+    y: (0, _helpers.getValue)(57, width, DefaultWidth),
+    style: generalTextStyle
+  }), (0, _helium.createElement)('Text', {
+    text: '12',
+    x: (0, _helpers.getValue)(151, width, DefaultWidth),
+    y: (0, _helpers.getValue)(32, width, DefaultWidth),
+    anchor: {
+      x: 0.5,
+      y: 0
+    },
+    style: {
+      fill: 'white',
+      fontFamily: fontFamily,
+      fontWeight: 'bold',
+      fontSize: (0, _helpers.getValue)(9, width, DefaultWidth)
+    }
+  }), (0, _helium.createElement)('Text', {
+    text: hp + '/' + maxHp,
+    x: (0, _helpers.getValue)(197, width, DefaultWidth),
+    y: (0, _helpers.getValue)(32, width, DefaultWidth),
+    anchor: {
+      x: 1,
+      y: 0
+    },
+    style: {
+      fill: 'white',
+      fontFamily: fontFamily,
+      fontWeight: 'bold',
+      fontSize: (0, _helpers.getValue)(9, width, DefaultWidth)
+    }
+  }), (0, _helium.createElement)(_weapon.Weapon, {
+    x: (0, _helpers.getValue)(36.5, width, DefaultWidth),
+    y: (0, _helpers.getValue)(158.5, width, DefaultWidth),
+    width: (0, _helpers.getValue)(80.5, width, DefaultWidth),
+    height: (0, _helpers.getValue)(24, width, DefaultWidth)
+  }), (0, _helium.createElement)(_armor.Armor, {
+    x: (0, _helpers.getValue)(120, width, DefaultWidth),
+    y: (0, _helpers.getValue)(158.5, width, DefaultWidth),
+    width: (0, _helpers.getValue)(80.5, width, DefaultWidth),
+    height: (0, _helpers.getValue)(24, width, DefaultWidth)
+  })]);
+}
+
+var ConnectPlayerPanel = (0, _helium.connect)(function mapStateToProps(state, _ref2) {
+  var _ref2$name = _ref2.name,
+      name = _ref2$name === undefined ? '' : _ref2$name;
+
+  var player = state.players.find(function (item) {
+    return item.name === name;
+  });
+  if (player) {
+    var _player$hp = player.hp,
+        hp = _player$hp === undefined ? 0 : _player$hp,
+        _player$maxHp = player.maxHp,
+        maxHp = _player$maxHp === undefined ? 0 : _player$maxHp,
+        _player$generals = player.generals,
+        generals = _player$generals === undefined ? [] : _player$generals,
+        _player$gender = player.gender,
+        gender = _player$gender === undefined ? _constants.Gender.Undef : _player$gender,
+        _player$region = player.region,
+        region = _player$region === undefined ? _constants.Region.Undef : _player$region;
+
+    var position = state.players.indexOf(player) + 1;
+    return {
+      hp: hp,
+      maxHp: maxHp,
+      generals: generals,
+      gender: gender,
+      region: region,
+      position: position
+    };
+  }
+  return null;
+})(PlayerPanel);
+
+exports.ConnectPlayerPanel = ConnectPlayerPanel;
+
+/***/ }),
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Rectangle = Rectangle;
+
+var _helium = __webpack_require__(5);
+
+var canvas = document.createElement('canvas');
+canvas.width = 8;
+canvas.height = 8;
+var ctx = canvas.getContext('2d');
+ctx.fillStyle = '#fff';
+ctx.lineWidth = 0;
+ctx.fillRect(0, 0, 8, 8);
+var texture = PIXI.Texture.fromCanvas(canvas);
+
+function Rectangle(_ref) {
+  var _ref$width = _ref.width,
+      width = _ref$width === undefined ? 0 : _ref$width,
+      _ref$height = _ref.height,
+      height = _ref$height === undefined ? 0 : _ref$height,
+      _ref$x = _ref.x,
+      x = _ref$x === undefined ? 0 : _ref$x,
+      _ref$y = _ref.y,
+      y = _ref$y === undefined ? 0 : _ref$y,
+      _ref$alpha = _ref.alpha,
+      alpha = _ref$alpha === undefined ? 1 : _ref$alpha,
+      _ref$color = _ref.color,
+      color = _ref$color === undefined ? 0xffffff : _ref$color;
+
+  return (0, _helium.createElement)('Sprite', {
+    x: x,
+    y: y,
+    width: width,
+    height: height,
+    alpha: alpha,
+    tint: color,
+    texture: texture
+  });
+}
+
+/***/ }),
+/* 54 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Weapon = Weapon;
+
+var _helium = __webpack_require__(5);
+
+var _helpers = __webpack_require__(11);
+
+var _constants = __webpack_require__(12);
+
+var _deck = __webpack_require__(19);
+
+var DefaultHeight = 24;
+var WeaponName = new Map();
+WeaponName.set(_constants.EquipmentType.CrossBow, '諸葛連弩');
+WeaponName.set(_constants.EquipmentType.BlueBlade, '青紅劍');
+WeaponName.set(_constants.EquipmentType.Double, '雌雄雙股劍');
+WeaponName.set(_constants.EquipmentType.Axe, '貫石斧');
+WeaponName.set(_constants.EquipmentType.Halberd, '丈八蛇矛');
+WeaponName.set(_constants.EquipmentType.Bow, '麒麟弓');
+WeaponName.set(_constants.EquipmentType.FrostBlade, '寒冰劍');
+WeaponName.set(_constants.EquipmentType.Fan, '朱雀羽扇');
+WeaponName.set(_constants.EquipmentType.SixBlade, '吳六劍');
+WeaponName.set(_constants.EquipmentType.Trident, '三尖兩刃刀');
+WeaponName.set(_constants.EquipmentType.Dragon, '青龍偃月刀');
+WeaponName.set(_constants.EquipmentType.Sky, '方天畫戟');
+
+//const DefaultId = FullDeck.find((card) => (card.effectType === EquipmentType.Sky && card.type === CardType.Equipment)).id;
+
+function Weapon(_ref) {
+  var _ref$width = _ref.width,
+      width = _ref$width === undefined ? 0 : _ref$width,
+      _ref$height = _ref.height,
+      height = _ref$height === undefined ? 0 : _ref$height,
+      _ref$x = _ref.x,
+      x = _ref$x === undefined ? 0 : _ref$x,
+      _ref$y = _ref.y,
+      y = _ref$y === undefined ? 0 : _ref$y,
+      _ref$cardId = _ref.cardId,
+      cardId = _ref$cardId === undefined ? -1 : _ref$cardId;
+
+  var fontFamily = '\"微軟正黑體\", Arial, Helvetica, sans-serif';
+  var fontSize = (0, _helpers.getValue)(9, height, DefaultHeight);
+  var textY = (0, _helpers.getValue)(6, height, DefaultHeight);
+  var style = {
+    fontSize: fontSize,
+    fontFamily: fontFamily,
+    fill: 'white'
+  };
+  var children = [];
+  if (cardId !== -1) {
+    var card = _deck.FullDeck.find(function (cardInDeck) {
+      return cardInDeck.id === cardId;
+    });
+    if (card) {
+      var suitWidth = (0, _helpers.getValue)(14.4, height, DefaultHeight);
+      var numberText = (0, _helpers.getValueText)(card.value);
+      var numberWidth = (0, _helpers.getTextWidth)(numberText, style);
+      var weaponText = WeaponName.get(card.effectType);
+      var iconY = (0, _helpers.getValue)(4, height, DefaultHeight);
+      if (weaponText) {
+        var weaponTextWidth = (0, _helpers.getTextWidth)(weaponText, style);
+        var numberPadding = (0, _helpers.getValue)(2, height, DefaultHeight);
+        var weaponTextPadding = (0, _helpers.getValue)(4, height, DefaultHeight);
+        var wholeWidth = suitWidth + numberWidth + numberPadding + weaponTextPadding + weaponTextWidth;
+        var margin = (width - wholeWidth) / 2 - (0, _helpers.getValue)(3, height, DefaultHeight);
+        children.push((0, _helium.createElement)('Sprite', {
+          width: suitWidth,
+          height: suitWidth,
+          y: iconY,
+          x: margin,
+          texture: PIXI.Texture.fromImage((0, _helpers.getSuitImagePath)(card.suit))
+        }), (0, _helium.createElement)('Text', {
+          text: numberText,
+          style: style,
+          y: textY,
+          x: margin + suitWidth + numberPadding
+        }), (0, _helium.createElement)('Text', {
+          text: weaponText,
+          style: style,
+          y: textY,
+          x: margin + suitWidth + numberPadding + numberWidth + weaponTextPadding
+        }));
+      }
+    }
+  } else {
+    children.push((0, _helium.createElement)('Text', {
+      text: '武器',
+      style: {
+        fill: '#BF5C19',
+        fontWeight: 'bold',
+        fontSize: fontSize
+      },
+      anchor: {
+        x: 0.5,
+        y: 0
+      },
+      x: width / 2,
+      y: textY
+    }));
+  }
+  return (0, _helium.createElement)('Container', {
+    x: x,
+    y: y
+  }, children);
+}
+
+/***/ }),
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var GameState = exports.GameState = {
+  WaitingPlayer: 0,
+  Prepare: 1,
+  Gaming: 2,
+  EndGame: 3
+};
+
+var Region = exports.Region = {
+  Undef: -1,
+  Red: 0,
+  Green: 1,
+  Blue: 3,
+  Grey: 4,
+  Independent: 5
+};
+
+var Gender = exports.Gender = {
+  Undef: -1,
+  Male: 0,
+  Female: 1
+};
+
+var FlowState = exports.FlowState = {
+  Starting: 'starting',
+  Preparing: 'preparing',
+  Judging: 'judging',
+  Drawing: 'drawing',
+  Dealing: 'dealing',
+  Folding: 'folding',
+  Ending: 'ending'
+};
+
+/***/ }),
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7098,14 +8814,14 @@ module.exports.default = module.exports;
 
 
 /***/ }),
-/* 48 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // Make sure u use EMPTY_OBJ from 'inferno', otherwise it'll be a different reference
-var inferno_1 = __webpack_require__(16);
+var inferno_1 = __webpack_require__(18);
 var inferno_shared_1 = __webpack_require__(0);
 var noOp = inferno_shared_1.ERROR_MSG;
 if (process.env.NODE_ENV !== 'production') {
@@ -7366,16 +9082,16 @@ var Component = (function () {
 }());
 exports.default = Component;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 49 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var inferno_1 = __webpack_require__(16);
+var inferno_1 = __webpack_require__(18);
 var inferno_shared_1 = __webpack_require__(0);
 var componentHooks = new Set();
 componentHooks.add('onComponentWillMount');
@@ -7469,7 +9185,7 @@ exports.default = createElement;
 
 
 /***/ }),
-/* 50 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7485,9 +9201,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var inferno_component_1 = __webpack_require__(17);
+var inferno_component_1 = __webpack_require__(20);
 var inferno_shared_1 = __webpack_require__(0);
-var utils_1 = __webpack_require__(18);
+var utils_1 = __webpack_require__(21);
 var didWarnAboutReceivingStore = false;
 function warnAboutReceivingStore() {
     if (didWarnAboutReceivingStore) {
@@ -7525,10 +9241,10 @@ if (process.env.NODE_ENV !== 'production') {
     };
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 51 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7544,12 +9260,12 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var hoist_non_inferno_statics_1 = __webpack_require__(47);
-var inferno_component_1 = __webpack_require__(17);
-var inferno_create_element_1 = __webpack_require__(7);
+var hoist_non_inferno_statics_1 = __webpack_require__(56);
+var inferno_component_1 = __webpack_require__(20);
+var inferno_create_element_1 = __webpack_require__(8);
 var inferno_shared_1 = __webpack_require__(0);
-var helpers_1 = __webpack_require__(52);
-var utils_1 = __webpack_require__(18);
+var helpers_1 = __webpack_require__(61);
+var utils_1 = __webpack_require__(21);
 var errorObject = { value: null };
 var defaultMapStateToProps = function (state) { return ({}); }; // eslint-disable-line no-unused-vars
 var defaultMapDispatchToProps = function (dispatch) { return ({ dispatch: dispatch }); };
@@ -7836,10 +9552,10 @@ function connect(mapStateToProps, mapDispatchToProps, mergeProps, options) {
 }
 exports.default = connect;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 52 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7878,15 +9594,15 @@ exports.isPlainObject = isPlainObject;
 
 
 /***/ }),
-/* 53 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var connect_1 = __webpack_require__(51);
+var connect_1 = __webpack_require__(60);
 exports.connect = connect_1.default;
-var Provider_1 = __webpack_require__(50);
+var Provider_1 = __webpack_require__(59);
 exports.Provider = Provider_1.default;
 exports.default = {
     Provider: Provider_1.default,
@@ -7895,7 +9611,7 @@ exports.default = {
 
 
 /***/ }),
-/* 54 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8002,7 +9718,7 @@ Lifecycle.prototype.trigger = function trigger() {
 
 
 /***/ }),
-/* 55 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8113,7 +9829,7 @@ function trapClickOnNonInteractiveElement(dom) {
 
 
 /***/ }),
-/* 56 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8136,7 +9852,7 @@ exports.linkEvent = linkEvent;
 
 
 /***/ }),
-/* 57 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8144,12 +9860,12 @@ exports.linkEvent = linkEvent;
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
 var options_1 = __webpack_require__(4);
-var constants_1 = __webpack_require__(11);
-var mounting_1 = __webpack_require__(12);
-var patching_1 = __webpack_require__(6);
-var rendering_1 = __webpack_require__(8);
+var constants_1 = __webpack_require__(14);
+var mounting_1 = __webpack_require__(15);
+var patching_1 = __webpack_require__(7);
+var rendering_1 = __webpack_require__(9);
 var utils_1 = __webpack_require__(3);
-var processElement_1 = __webpack_require__(15);
+var processElement_1 = __webpack_require__(17);
 function normalizeChildNodes(parentDom) {
     var dom = parentDom.firstChild;
     while (dom) {
@@ -8338,10 +10054,10 @@ function hydrateRoot(input, parentDom, lifecycle) {
 }
 exports.hydrateRoot = hydrateRoot;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 58 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8476,14 +10192,14 @@ exports.applyValue = applyValue;
 
 
 /***/ }),
-/* 59 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var VNodes_1 = __webpack_require__(5);
+var VNodes_1 = __webpack_require__(6);
 var utils_1 = __webpack_require__(3);
 function updateChildOptionGroup(vNode, value) {
     var type = vNode.type;
@@ -8576,7 +10292,7 @@ exports.applyValue = applyValue;
 
 
 /***/ }),
-/* 60 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8662,7 +10378,7 @@ exports.applyValue = applyValue;
 
 
 /***/ }),
-/* 61 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8671,21 +10387,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /* tslint:disable:object-literal-sort-keys */
 var inferno_shared_1 = __webpack_require__(0);
 exports.NO_OP = inferno_shared_1.NO_OP;
-var normalization_1 = __webpack_require__(20);
+var normalization_1 = __webpack_require__(23);
 exports.getFlagsForElementVnode = normalization_1.getFlagsForElementVnode;
 exports.internal_normalize = normalization_1.normalize;
 var options_1 = __webpack_require__(4);
 exports.options = options_1.options;
-var VNodes_1 = __webpack_require__(5);
+var VNodes_1 = __webpack_require__(6);
 exports.cloneVNode = VNodes_1.cloneVNode;
 exports.createVNode = VNodes_1.createVNode;
-var constants_1 = __webpack_require__(11);
+var constants_1 = __webpack_require__(14);
 exports.internal_isUnitlessNumber = constants_1.isUnitlessNumber;
-var linkEvent_1 = __webpack_require__(56);
+var linkEvent_1 = __webpack_require__(65);
 exports.linkEvent = linkEvent_1.linkEvent;
-var patching_1 = __webpack_require__(6);
+var patching_1 = __webpack_require__(7);
 exports.internal_patch = patching_1.patch;
-var rendering_1 = __webpack_require__(8);
+var rendering_1 = __webpack_require__(9);
 exports.internal_DOMNodeMap = rendering_1.componentToDOMNodeMap;
 exports.createRenderer = rendering_1.createRenderer;
 exports.findDOMNode = rendering_1.findDOMNode;
@@ -8723,16 +10439,16 @@ exports.default = {
     version: version // DOM
 };
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 62 */
+/* 71 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Symbol_js__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getRawTag_js__ = __webpack_require__(65);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__objectToString_js__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Symbol_js__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getRawTag_js__ = __webpack_require__(74);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__objectToString_js__ = __webpack_require__(75);
 
 
 
@@ -8764,7 +10480,7 @@ function baseGetTag(value) {
 
 
 /***/ }),
-/* 63 */
+/* 72 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8773,14 +10489,14 @@ var freeGlobal = typeof global == 'object' && global && global.Object === Object
 
 /* harmony default export */ __webpack_exports__["a"] = (freeGlobal);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(26)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(29)))
 
 /***/ }),
-/* 64 */
+/* 73 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__overArg_js__ = __webpack_require__(67);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__overArg_js__ = __webpack_require__(76);
 
 
 /** Built-in value references. */
@@ -8790,11 +10506,11 @@ var getPrototype = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__overArg_js
 
 
 /***/ }),
-/* 65 */
+/* 74 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Symbol_js__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Symbol_js__ = __webpack_require__(24);
 
 
 /** Used for built-in method references. */
@@ -8844,7 +10560,7 @@ function getRawTag(value) {
 
 
 /***/ }),
-/* 66 */
+/* 75 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8873,7 +10589,7 @@ function objectToString(value) {
 
 
 /***/ }),
-/* 67 */
+/* 76 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8895,11 +10611,11 @@ function overArg(func, transform) {
 
 
 /***/ }),
-/* 68 */
+/* 77 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__freeGlobal_js__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__freeGlobal_js__ = __webpack_require__(72);
 
 
 /** Detect free variable `self`. */
@@ -8912,7 +10628,7 @@ var root = __WEBPACK_IMPORTED_MODULE_0__freeGlobal_js__["a" /* default */] || fr
 
 
 /***/ }),
-/* 69 */
+/* 78 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8948,12 +10664,12 @@ function isObjectLike(value) {
 
 
 /***/ }),
-/* 70 */
+/* 79 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = applyMiddleware;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__compose__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__compose__ = __webpack_require__(26);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 
@@ -9004,7 +10720,7 @@ function applyMiddleware() {
 }
 
 /***/ }),
-/* 71 */
+/* 80 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9058,14 +10774,14 @@ function bindActionCreators(actionCreators, dispatch) {
 }
 
 /***/ }),
-/* 72 */
+/* 81 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/* harmony export (immutable) */ __webpack_exports__["a"] = combineReducers;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createStore__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash_es_isPlainObject__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_warning__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createStore__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash_es_isPlainObject__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_warning__ = __webpack_require__(28);
 
 
 
@@ -9195,20 +10911,20 @@ function combineReducers(reducers) {
     return hasChanged ? nextState : state;
   };
 }
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
 
 /***/ }),
-/* 73 */
+/* 82 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createStore__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__combineReducers__ = __webpack_require__(72);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bindActionCreators__ = __webpack_require__(71);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__applyMiddleware__ = __webpack_require__(70);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__compose__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_warning__ = __webpack_require__(25);
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createStore__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__combineReducers__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bindActionCreators__ = __webpack_require__(80);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__applyMiddleware__ = __webpack_require__(79);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__compose__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_warning__ = __webpack_require__(28);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "createStore", function() { return __WEBPACK_IMPORTED_MODULE_0__createStore__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "combineReducers", function() { return __WEBPACK_IMPORTED_MODULE_1__combineReducers__["a"]; });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "bindActionCreators", function() { return __WEBPACK_IMPORTED_MODULE_2__bindActionCreators__["a"]; });
@@ -9232,17 +10948,17 @@ if (process.env.NODE_ENV !== 'production' && typeof isCrushed.name === 'string' 
 }
 
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
 
 /***/ }),
-/* 74 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(75);
+module.exports = __webpack_require__(84);
 
 
 /***/ }),
-/* 75 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9252,7 +10968,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _ponyfill = __webpack_require__(76);
+var _ponyfill = __webpack_require__(85);
 
 var _ponyfill2 = _interopRequireDefault(_ponyfill);
 
@@ -9275,10 +10991,10 @@ if (typeof self !== 'undefined') {
 
 var result = (0, _ponyfill2['default'])(root);
 exports['default'] = result;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26), __webpack_require__(77)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(29), __webpack_require__(86)(module)))
 
 /***/ }),
-/* 76 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9307,7 +11023,7 @@ function symbolObservablePonyfill(root) {
 };
 
 /***/ }),
-/* 77 */
+/* 86 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {

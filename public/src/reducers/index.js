@@ -22,6 +22,9 @@ import {
 import {
   users
 } from './users';
+import {
+  players
+} from './players';
 
 const game = Redux.combineReducers({
   gameScene,
@@ -31,7 +34,8 @@ const game = Redux.combineReducers({
   gameId,
   isHost,
   gameList,
-  users
+  users,
+  players
 });
 
 export {

@@ -5,21 +5,44 @@ import {
 import {
   Actions
 } from '../actions';
+import {
+  ConnectPlayerPanel
+} from './player-panel';
+import {
+  getValue
+} from '../helpers';
 
-export function LobbyScene ({ width, height, users, isHost, onStartGame }) {
-  const children = users.map((user, index) => {
-    return createElement('Text', {
-      text: user.name,
-      style: {
-        fill: 'white',
-        fontSize: '16px'
-      },
-      y: 20 * index
-    });
-  });
+const DefaultWidth = 1152;
+
+export function LobbyScene ({ width, x, y, users, isHost, onStartGame }) {
+  const maxUser = 7;
+  const children = [];
+  const playerPanelWidth = getValue(234, width, DefaultWidth);
+  const playerPanelHeight = getValue(259.976, width, DefaultWidth)
+  for (let i = 0; i < maxUser; i++) {
+    let name = '';
+    if (i < users.length) {
+      name = users[i].name;
+    }
+    const x = playerPanelWidth * i;
+    children.push(
+      createElement(
+        ConnectPlayerPanel,
+        {
+          name,
+          x,
+          width: playerPanelWidth,
+          height: playerPanelHeight
+        }
+      )
+    );
+  }
   return createElement(
     'Container',
-    null,
+    {
+      x,
+      y
+    },
     children
   );
 }

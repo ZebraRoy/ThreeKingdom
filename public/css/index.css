@@ -8,6 +8,16 @@ body,
   overflow: hidden;
 }
 
+body {
+  background-image: url('../assets/image/bg.jpg');
+  background-size: cover;
+  background-position: center center;
+}
+
+audio {
+  display: none;
+}
+
 #helium-stage {
   position: absolute;
   top: 0;
