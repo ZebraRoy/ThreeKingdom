@@ -92,27 +92,19 @@ Whatever the store update, it should push the data into client with filters. Cur
     "isNextRoundSoft": false // Use for indicate the next round is soft round or hard round. It is affected by one more round functional card or similar skills
   },
   "flowState": {
-    "currentState": "Drawing:start", // Starting -> Preparing -> Judging -> Drawing -> Dealing -> Folding -> Ending. Depend on the skills player owned, may added sub-state, such as Starting:end, Preparing:start
-    "nextState": "Drawing", // next state. May be affected by some functional card or general skills, ex: acedia functional card
+    "currentState": "Judging", // Starting -> Preparing -> Judging -> Drawing -> Dealing -> Folding -> Ending. Depend on the skills player owned, may added sub-state, such as Starting:end, Preparing:start
+    "nextState": "Drawing", // next state. May be affected by some functional card or general skills, ex: acedia functional card,
+    "stateQueue": ["Dealing", "Folding", "Ending"], // remaining state, used for skip state
     "decisionQueue": [ // decision queue stack, when whole queue is completed, step to next state
       { // a simple decision model demo
         playerIndex: 0, // the decision is waiting which index player
-        isCompleted: true, // this decision is completed or not. The whole event is completed when this attribute is completed and waiting is completed
-        event: 'Drawing:start', // what is the decision event
-        waiting: [ // this event is waiting for which event complete. This event will be completed only when this waiting list completed
-          {
-            playerIndex: 2,
-            isCompleted: false,
-            event: 'Skills:SpringDrawCard',
-            waiting: []
-          }
-        ]
+        event: 'drawing', // what is the decision event
+        eventArgs: []
       },
       {
         playerIndex: 1,
-        isCompleted: false,
-        event: 'Drawing:start',
-        waiting: []
+        event: 'gniward',
+        eventArgs: []
       }
     ]
   },

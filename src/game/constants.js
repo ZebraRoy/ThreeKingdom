@@ -19,3 +19,13 @@ export const Gender = {
   Male: 0,
   Female: 1
 };
+
+export const FlowState = {
+  Starting: 'starting',
+  Preparing: 'preparing',
+  Judging: 'judging',
+  Drawing: 'drawing',
+  Dealing: 'dealing',
+  Folding: 'folding',
+  Ending: 'ending'
+};
