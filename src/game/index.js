@@ -83,7 +83,30 @@ export class Game {
       }
     }
   }
-
+  chooseGenerals (generalNames, socket) {
+    const socketMap = this.socketMap;
+    const me = socketMap.find((user) => (user.socket === socket));
+    const store = this.store;
+    if (me) {
+      const userName = me.name;
+      const state = store.getState();
+      const players = state.players;
+      const playerOrder = players.findIndex(player) => (player.name === userName);
+      const generals = state.generalDeck.playerPool[playerOrder].filter((general) => generalNames.indexOf(general.name) !== -1);
+    //  const readyPlayer = state.generalDeck.playerPool.filter((pool) => pool.length <= state.gameSetting.maxGeneral);
+      store.dispatch({
+        type: Actions.ChooseGenerals,
+        playerOrder,
+        generals
+      });
+      socket.emit('generalUpdate', true);
+    //   if (state.gameState === GameState.Prepare &&  readyPlayer.length === players.length - 1) {
+    //     store.dispatch({
+    //       type: Actions.InitPlayer
+    //     });
+    //   }
+    }
+  }
   socketDisconnect (socket) {
     const socketMap = this.socketMap;
     const me = socketMap.find((user) => (user.socket === socket));

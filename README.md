@@ -37,6 +37,17 @@ socket.on(
   }
 );
 ```
+Choose generals
+```
+socket.on(
+  "chooseGenerals",
+  function (gameId, generalNames) { // generalNames['Vincent', 'Roy'] master: Vincent, side: Roy
+    // Check the generals is at the same region
+    // Start init player
+    // expected response: response success if general chosen
+  }
+);
+```
 
 # Store
 Whatever the store update, it should push the data into client with filters. Current data structure of the store should contains following items. The message name is "gameUpdate"

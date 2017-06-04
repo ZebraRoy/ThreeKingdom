@@ -1,6 +1,7 @@
 export function gameSetting (
   state = {
-    maxPlayer: 8
+    maxPlayer: 8,
+    maxGeneral: 2,
   },
   action
 ) {

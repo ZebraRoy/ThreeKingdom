@@ -45,6 +45,13 @@ io.on('connection', function onSocketConnected (socket) {
     }
   });
 
+  socket.on('chooseGenerals', function onChooseGenerals (gameId, generalNames) {
+    const game = gameMap[gameId];
+    if (game) {
+      game.chooseGenerals(generalNames, socket);
+    }
+  });
+
   socket.on('disconnect', function onDisconnect () {
     const keys = Object.keys(gameMap);
     for (let i = 0, len = keys.length; i < len; i++) {

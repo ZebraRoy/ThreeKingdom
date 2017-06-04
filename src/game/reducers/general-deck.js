@@ -38,6 +38,27 @@ export function generalDeck (
         playerPool
       };
     }
+    case Actions.ChooseGenerals: {
+      const discardPool = state.discardPool.slice();
+      const playerOrder = action.playerOrder;
+      const generals = action.generals;
+      const playerPool = state.playerPool.slice();
+      playerPool.map(pool, index) => {
+        if(playerOrder === index) {
+          discardPool.concat(pool.filter((p) => generals.indexOf(p) === -1));
+          return generals.slice();
+        }
+        else {
+          return pool;
+        }
+      };
+
+      return {
+        remainingDeck: state.remainingDeck,
+        discardPool,
+        playerPool
+      };
+    }
     default:
       return state;
   }
