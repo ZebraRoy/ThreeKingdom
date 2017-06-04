@@ -1292,9 +1292,9 @@ function mountElement(vNode, parentDom, lifecycle, context) {
       return _dom;
     }
   }
-  var dom = documentCreateElement(vNode.type);
-  var children = vNode.children;
   var props = vNode.props;
+  var dom = documentCreateElement(vNode.type, props);
+  var children = vNode.children;
   var ref = vNode.ref;
 
   vNode.dom = dom;
@@ -1535,14 +1535,14 @@ function registerBaseView(name, view) {
 }
 
 var HOM = function () {
-  function HOM(tagName) {
+  function HOM(tagName, props) {
     classCallCheck(this, HOM);
 
     this.parentNode = null;
     this.tagName = tagName;
     if (baseView.has(tagName)) {
       var View = baseView.get(tagName);
-      this.tagInstance = new View();
+      this.tagInstance = new View(props);
     } else {
       throwError(tagName + ' is not a base view');
     }
@@ -1747,8 +1747,8 @@ function insertOrAppend(parentDom, newNode, nextNode) {
   }
 }
 
-function documentCreateElement(tag) {
-  return new HOM(tag);
+function documentCreateElement(tag, props) {
+  return new HOM(tag, props);
 }
 
 function replaceWithNewNode(lastNode, nextNode, parentDom, lifecycle, context, isRecycling) {

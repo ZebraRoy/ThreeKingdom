@@ -94,7 +94,7 @@ export const BasicDeck = [
     suit: Suit.Spade,
     value: 5,
     type: CardType.Equipment,
-    effectType: EquipmentType.DefendHorse,
+    effectType: EquipmentType.DefenseHorse,
     isGiveable: false
   },
   {
@@ -395,7 +395,7 @@ export const BasicDeck = [
     suit: Suit.Heart,
     value: 13,
     type: CardType.Equipment,
-    effectType: EquipmentType.OffenseHorse,
+    effectType: EquipmentType.DefenseHorse,
     isGiveable: false
   },
   {
@@ -465,7 +465,7 @@ export const BasicDeck = [
     suit: Suit.Club,
     value: 5,
     type: CardType.Equipment,
-    effectType: EquipmentType.DefendHorse,
+    effectType: EquipmentType.DefenseHorse,
     isGiveable: false
   },
   {

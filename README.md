@@ -78,7 +78,7 @@ Whatever the store update, it should push the data into client with filters. Cur
       {
         hp: 3, // the hp of the player
         skills: [], // the skill
-        generals: [], // generals
+        generals: ["曹操", "許褚"], // generals
         gender: 'M', // gender: M, F, U
         maxHp: 3, // max hp
         region: -1 // enums of the region

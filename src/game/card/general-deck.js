@@ -396,7 +396,7 @@ export const GeneralDeck = [
     region: Region.Green
   },
   {
-    name: '陈武&董袭',
+    name: '陳武&董襲',
     skills: ['斷紲', '奮命'],
     partner: [],
     maxHp: 2,
@@ -419,7 +419,7 @@ export const GeneralDeck = [
   {
     name: '貂蟬',
     skills: ['離間', '閉月'],
-    partner: ['吕布'],
+    partner: ['呂布'],
     maxHp: 1.5,
     region: Region.Grey
   },

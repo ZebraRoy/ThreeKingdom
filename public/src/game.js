@@ -23,6 +23,12 @@ import {
   TextField
 } from './base-views/text-field';
 import {
+  Inject
+} from './base-views/inject';
+import {
+  NineSlicePlane
+} from './base-views/nine-slice-plane';
+import {
   ConnectMainScene
 } from './views/main-scene';
 import {
@@ -46,6 +52,8 @@ export class Game {
   start () {
     importPixiBaseView();
     registerBaseView('TextField', TextField);
+    registerBaseView('Inject', Inject);
+    registerBaseView('NineSlicePlane', NineSlicePlane);
     const store = this.store;
     const viewportController = ViewportController(store);
     viewportController.start(); // ensure the viewport has been initialize

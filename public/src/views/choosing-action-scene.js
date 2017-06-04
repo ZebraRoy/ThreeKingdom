@@ -24,14 +24,25 @@ export function ChoosingActionScene ({ gameList, onCreateGame, onJoinGame }) {
           return false;
         }
       },
+
+      createElement(
+        'input',
+        {
+          type: 'text',
+          name: 'gameId',
+          placeholder: 'Join Game ID',
+          defaultValue: name,
+          required: 'required',
+          className: 'helium-input'
+        }
+      ),
       createElement(
         'button',
         {
-          onClick: onCreateGame,
-          className: 'helium-button',
-          type: 'button'
+          type: 'submit',
+          className: 'helium-button'
         },
-        'Create Game'
+        'Join Game'
       ),
       createElement(
         'div',
@@ -59,23 +70,13 @@ export function ChoosingActionScene ({ gameList, onCreateGame, onJoinGame }) {
         )
       ),
       createElement(
-        'input',
-        {
-          type: 'text',
-          name: 'gameId',
-          placeholder: 'Join Game ID',
-          defaultValue: name,
-          required: 'required',
-          className: 'helium-input'
-        }
-      ),
-      createElement(
         'button',
         {
-          type: 'submit',
-          className: 'helium-button'
+          onClick: onCreateGame,
+          className: 'helium-button',
+          type: 'button'
         },
-        'Join Game'
+        'Create Game'
       )
     )
   );

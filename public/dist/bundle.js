@@ -63,14 +63,14 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 35);
+/******/ 	return __webpack_require__(__webpack_require__.s = 37);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(63);
+module.exports = __webpack_require__(69);
 module.exports.default = module.exports;
 
 
@@ -288,227 +288,6 @@ process.umask = function() { return 0; };
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
-Object.defineProperty(exports, "__esModule", { value: true });
-var inferno_shared_1 = __webpack_require__(0);
-var options_1 = __webpack_require__(4);
-var VNodes_1 = __webpack_require__(6);
-var constants_1 = __webpack_require__(14);
-var mounting_1 = __webpack_require__(15);
-var unmounting_1 = __webpack_require__(16);
-// We need EMPTY_OBJ defined in one place.
-// Its used for comparison so we cant inline it into shared
-exports.EMPTY_OBJ = {};
-if (process.env.NODE_ENV !== 'production') {
-    Object.freeze(exports.EMPTY_OBJ);
-}
-function createClassComponentInstance(vNode, Component, props, context, isSVG, lifecycle) {
-    if (inferno_shared_1.isUndefined(context)) {
-        context = exports.EMPTY_OBJ; // Context should not be mutable
-    }
-    var instance = new Component(props, context);
-    vNode.children = instance;
-    instance._blockSetState = false;
-    instance.context = context;
-    if (instance.props === exports.EMPTY_OBJ) {
-        instance.props = props;
-    }
-    // setState callbacks must fire after render is done when called from componentWillReceiveProps or componentWillMount
-    instance._lifecycle = lifecycle;
-    instance._unmounted = false;
-    instance._pendingSetState = true;
-    instance._isSVG = isSVG;
-    if (!inferno_shared_1.isUndefined(instance.componentWillMount)) {
-        instance._blockRender = true;
-        instance.componentWillMount();
-        instance._blockRender = false;
-    }
-    var childContext;
-    if (!inferno_shared_1.isUndefined(instance.getChildContext)) {
-        childContext = instance.getChildContext();
-    }
-    if (inferno_shared_1.isNullOrUndef(childContext)) {
-        instance._childContext = context;
-    }
-    else {
-        instance._childContext = inferno_shared_1.combineFrom(context, childContext);
-    }
-    if (!inferno_shared_1.isNull(options_1.options.beforeRender)) {
-        options_1.options.beforeRender(instance);
-    }
-    var input = instance.render(props, instance.state, context);
-    if (!inferno_shared_1.isNull(options_1.options.afterRender)) {
-        options_1.options.afterRender(instance);
-    }
-    if (inferno_shared_1.isArray(input)) {
-        if (process.env.NODE_ENV !== 'production') {
-            inferno_shared_1.throwError('a valid Inferno VNode (or null) must be returned from a component render. You may have returned an array or an invalid object.');
-        }
-        inferno_shared_1.throwError();
-    }
-    else if (inferno_shared_1.isInvalid(input)) {
-        input = VNodes_1.createVoidVNode();
-    }
-    else if (inferno_shared_1.isStringOrNumber(input)) {
-        input = VNodes_1.createTextVNode(input, null);
-    }
-    else {
-        if (input.dom) {
-            input = VNodes_1.directClone(input);
-        }
-        if (input.flags & 28 /* Component */) {
-            // if we have an input that is also a component, we run into a tricky situation
-            // where the root vNode needs to always have the correct DOM entry
-            // so we break monomorphism on our input and supply it our vNode as parentVNode
-            // we can optimise this in the future, but this gets us out of a lot of issues
-            input.parentVNode = vNode;
-        }
-    }
-    instance._pendingSetState = false;
-    instance._lastInput = input;
-    return instance;
-}
-exports.createClassComponentInstance = createClassComponentInstance;
-function replaceLastChildAndUnmount(lastInput, nextInput, parentDom, lifecycle, context, isSVG, isRecycling) {
-    replaceVNode(parentDom, mounting_1.mount(nextInput, null, lifecycle, context, isSVG), lastInput, lifecycle, isRecycling);
-}
-exports.replaceLastChildAndUnmount = replaceLastChildAndUnmount;
-function replaceVNode(parentDom, dom, vNode, lifecycle, isRecycling) {
-    unmounting_1.unmount(vNode, null, lifecycle, false, isRecycling);
-    replaceChild(parentDom, dom, vNode.dom);
-}
-exports.replaceVNode = replaceVNode;
-function createFunctionalComponentInput(vNode, component, props, context) {
-    var input = component(props, context);
-    if (inferno_shared_1.isArray(input)) {
-        if (process.env.NODE_ENV !== 'production') {
-            inferno_shared_1.throwError('a valid Inferno VNode (or null) must be returned from a component render. You may have returned an array or an invalid object.');
-        }
-        inferno_shared_1.throwError();
-    }
-    else if (inferno_shared_1.isInvalid(input)) {
-        input = VNodes_1.createVoidVNode();
-    }
-    else if (inferno_shared_1.isStringOrNumber(input)) {
-        input = VNodes_1.createTextVNode(input, null);
-    }
-    else {
-        if (input.dom) {
-            input = VNodes_1.directClone(input);
-        }
-        if (input.flags & 28 /* Component */) {
-            // if we have an input that is also a component, we run into a tricky situation
-            // where the root vNode needs to always have the correct DOM entry
-            // so we break monomorphism on our input and supply it our vNode as parentVNode
-            // we can optimise this in the future, but this gets us out of a lot of issues
-            input.parentVNode = vNode;
-        }
-    }
-    return input;
-}
-exports.createFunctionalComponentInput = createFunctionalComponentInput;
-function setTextContent(dom, text) {
-    if (text !== '') {
-        dom.textContent = text;
-    }
-    else {
-        dom.appendChild(document.createTextNode(''));
-    }
-}
-exports.setTextContent = setTextContent;
-function updateTextContent(dom, text) {
-    dom.firstChild.nodeValue = text;
-}
-exports.updateTextContent = updateTextContent;
-function appendChild(parentDom, dom) {
-    parentDom.appendChild(dom);
-}
-exports.appendChild = appendChild;
-function insertOrAppend(parentDom, newNode, nextNode) {
-    if (inferno_shared_1.isNullOrUndef(nextNode)) {
-        appendChild(parentDom, newNode);
-    }
-    else {
-        parentDom.insertBefore(newNode, nextNode);
-    }
-}
-exports.insertOrAppend = insertOrAppend;
-function documentCreateElement(tag, isSVG) {
-    if (isSVG === true) {
-        return document.createElementNS(constants_1.svgNS, tag);
-    }
-    else {
-        return document.createElement(tag);
-    }
-}
-exports.documentCreateElement = documentCreateElement;
-function replaceWithNewNode(lastNode, nextNode, parentDom, lifecycle, context, isSVG, isRecycling) {
-    unmounting_1.unmount(lastNode, null, lifecycle, false, isRecycling);
-    var dom = mounting_1.mount(nextNode, null, lifecycle, context, isSVG);
-    nextNode.dom = dom;
-    replaceChild(parentDom, dom, lastNode.dom);
-}
-exports.replaceWithNewNode = replaceWithNewNode;
-function replaceChild(parentDom, nextDom, lastDom) {
-    if (!parentDom) {
-        parentDom = lastDom.parentNode;
-    }
-    parentDom.replaceChild(nextDom, lastDom);
-}
-exports.replaceChild = replaceChild;
-function removeChild(parentDom, dom) {
-    parentDom.removeChild(dom);
-}
-exports.removeChild = removeChild;
-function removeAllChildren(dom, children, lifecycle, isRecycling) {
-    if (!options_1.options.recyclingEnabled || (options_1.options.recyclingEnabled && !isRecycling)) {
-        removeChildren(null, children, lifecycle, isRecycling);
-    }
-    dom.textContent = '';
-}
-exports.removeAllChildren = removeAllChildren;
-function removeChildren(dom, children, lifecycle, isRecycling) {
-    for (var i = 0, len = children.length; i < len; i++) {
-        var child = children[i];
-        if (!inferno_shared_1.isInvalid(child)) {
-            unmounting_1.unmount(child, dom, lifecycle, true, isRecycling);
-        }
-    }
-}
-exports.removeChildren = removeChildren;
-function isKeyed(lastChildren, nextChildren) {
-    return nextChildren.length > 0 && !inferno_shared_1.isNullOrUndef(nextChildren[0]) && !inferno_shared_1.isNullOrUndef(nextChildren[0].key)
-        && lastChildren.length > 0 && !inferno_shared_1.isNullOrUndef(lastChildren[0]) && !inferno_shared_1.isNullOrUndef(lastChildren[0].key);
-}
-exports.isKeyed = isKeyed;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.options = {
-    afterMount: null,
-    afterRender: null,
-    afterUpdate: null,
-    beforeRender: null,
-    beforeUnmount: null,
-    createVNode: null,
-    findDOMNodeEnabled: false,
-    recyclingEnabled: false,
-    roots: []
-};
-
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1783,9 +1562,9 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 				return _dom;
 			}
 		}
-		var dom = documentCreateElement(vNode.type);
-		var children = vNode.children;
 		var props = vNode.props;
+		var dom = documentCreateElement(vNode.type, props);
+		var children = vNode.children;
 		var ref = vNode.ref;
 
 		vNode.dom = dom;
@@ -2026,14 +1805,14 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 	}
 
 	var HOM = function () {
-		function HOM(tagName) {
+		function HOM(tagName, props) {
 			classCallCheck(this, HOM);
 
 			this.parentNode = null;
 			this.tagName = tagName;
 			if (baseView.has(tagName)) {
 				var View = baseView.get(tagName);
-				this.tagInstance = new View();
+				this.tagInstance = new View(props);
 			} else {
 				throwError(tagName + ' is not a base view');
 			}
@@ -2238,8 +2017,8 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 		}
 	}
 
-	function documentCreateElement(tag) {
-		return new HOM(tag);
+	function documentCreateElement(tag, props) {
+		return new HOM(tag, props);
 	}
 
 	function replaceWithNewNode(lastNode, nextNode, parentDom, lifecycle, context, isRecycling) {
@@ -3498,16 +3277,290 @@ var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbo
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+Object.defineProperty(exports, "__esModule", { value: true });
+var inferno_shared_1 = __webpack_require__(0);
+var options_1 = __webpack_require__(6);
+var VNodes_1 = __webpack_require__(7);
+var constants_1 = __webpack_require__(15);
+var mounting_1 = __webpack_require__(16);
+var unmounting_1 = __webpack_require__(17);
+// We need EMPTY_OBJ defined in one place.
+// Its used for comparison so we cant inline it into shared
+exports.EMPTY_OBJ = {};
+if (process.env.NODE_ENV !== 'production') {
+    Object.freeze(exports.EMPTY_OBJ);
+}
+function createClassComponentInstance(vNode, Component, props, context, isSVG, lifecycle) {
+    if (inferno_shared_1.isUndefined(context)) {
+        context = exports.EMPTY_OBJ; // Context should not be mutable
+    }
+    var instance = new Component(props, context);
+    vNode.children = instance;
+    instance._blockSetState = false;
+    instance.context = context;
+    if (instance.props === exports.EMPTY_OBJ) {
+        instance.props = props;
+    }
+    // setState callbacks must fire after render is done when called from componentWillReceiveProps or componentWillMount
+    instance._lifecycle = lifecycle;
+    instance._unmounted = false;
+    instance._pendingSetState = true;
+    instance._isSVG = isSVG;
+    if (!inferno_shared_1.isUndefined(instance.componentWillMount)) {
+        instance._blockRender = true;
+        instance.componentWillMount();
+        instance._blockRender = false;
+    }
+    var childContext;
+    if (!inferno_shared_1.isUndefined(instance.getChildContext)) {
+        childContext = instance.getChildContext();
+    }
+    if (inferno_shared_1.isNullOrUndef(childContext)) {
+        instance._childContext = context;
+    }
+    else {
+        instance._childContext = inferno_shared_1.combineFrom(context, childContext);
+    }
+    if (!inferno_shared_1.isNull(options_1.options.beforeRender)) {
+        options_1.options.beforeRender(instance);
+    }
+    var input = instance.render(props, instance.state, context);
+    if (!inferno_shared_1.isNull(options_1.options.afterRender)) {
+        options_1.options.afterRender(instance);
+    }
+    if (inferno_shared_1.isArray(input)) {
+        if (process.env.NODE_ENV !== 'production') {
+            inferno_shared_1.throwError('a valid Inferno VNode (or null) must be returned from a component render. You may have returned an array or an invalid object.');
+        }
+        inferno_shared_1.throwError();
+    }
+    else if (inferno_shared_1.isInvalid(input)) {
+        input = VNodes_1.createVoidVNode();
+    }
+    else if (inferno_shared_1.isStringOrNumber(input)) {
+        input = VNodes_1.createTextVNode(input, null);
+    }
+    else {
+        if (input.dom) {
+            input = VNodes_1.directClone(input);
+        }
+        if (input.flags & 28 /* Component */) {
+            // if we have an input that is also a component, we run into a tricky situation
+            // where the root vNode needs to always have the correct DOM entry
+            // so we break monomorphism on our input and supply it our vNode as parentVNode
+            // we can optimise this in the future, but this gets us out of a lot of issues
+            input.parentVNode = vNode;
+        }
+    }
+    instance._pendingSetState = false;
+    instance._lastInput = input;
+    return instance;
+}
+exports.createClassComponentInstance = createClassComponentInstance;
+function replaceLastChildAndUnmount(lastInput, nextInput, parentDom, lifecycle, context, isSVG, isRecycling) {
+    replaceVNode(parentDom, mounting_1.mount(nextInput, null, lifecycle, context, isSVG), lastInput, lifecycle, isRecycling);
+}
+exports.replaceLastChildAndUnmount = replaceLastChildAndUnmount;
+function replaceVNode(parentDom, dom, vNode, lifecycle, isRecycling) {
+    unmounting_1.unmount(vNode, null, lifecycle, false, isRecycling);
+    replaceChild(parentDom, dom, vNode.dom);
+}
+exports.replaceVNode = replaceVNode;
+function createFunctionalComponentInput(vNode, component, props, context) {
+    var input = component(props, context);
+    if (inferno_shared_1.isArray(input)) {
+        if (process.env.NODE_ENV !== 'production') {
+            inferno_shared_1.throwError('a valid Inferno VNode (or null) must be returned from a component render. You may have returned an array or an invalid object.');
+        }
+        inferno_shared_1.throwError();
+    }
+    else if (inferno_shared_1.isInvalid(input)) {
+        input = VNodes_1.createVoidVNode();
+    }
+    else if (inferno_shared_1.isStringOrNumber(input)) {
+        input = VNodes_1.createTextVNode(input, null);
+    }
+    else {
+        if (input.dom) {
+            input = VNodes_1.directClone(input);
+        }
+        if (input.flags & 28 /* Component */) {
+            // if we have an input that is also a component, we run into a tricky situation
+            // where the root vNode needs to always have the correct DOM entry
+            // so we break monomorphism on our input and supply it our vNode as parentVNode
+            // we can optimise this in the future, but this gets us out of a lot of issues
+            input.parentVNode = vNode;
+        }
+    }
+    return input;
+}
+exports.createFunctionalComponentInput = createFunctionalComponentInput;
+function setTextContent(dom, text) {
+    if (text !== '') {
+        dom.textContent = text;
+    }
+    else {
+        dom.appendChild(document.createTextNode(''));
+    }
+}
+exports.setTextContent = setTextContent;
+function updateTextContent(dom, text) {
+    dom.firstChild.nodeValue = text;
+}
+exports.updateTextContent = updateTextContent;
+function appendChild(parentDom, dom) {
+    parentDom.appendChild(dom);
+}
+exports.appendChild = appendChild;
+function insertOrAppend(parentDom, newNode, nextNode) {
+    if (inferno_shared_1.isNullOrUndef(nextNode)) {
+        appendChild(parentDom, newNode);
+    }
+    else {
+        parentDom.insertBefore(newNode, nextNode);
+    }
+}
+exports.insertOrAppend = insertOrAppend;
+function documentCreateElement(tag, isSVG) {
+    if (isSVG === true) {
+        return document.createElementNS(constants_1.svgNS, tag);
+    }
+    else {
+        return document.createElement(tag);
+    }
+}
+exports.documentCreateElement = documentCreateElement;
+function replaceWithNewNode(lastNode, nextNode, parentDom, lifecycle, context, isSVG, isRecycling) {
+    unmounting_1.unmount(lastNode, null, lifecycle, false, isRecycling);
+    var dom = mounting_1.mount(nextNode, null, lifecycle, context, isSVG);
+    nextNode.dom = dom;
+    replaceChild(parentDom, dom, lastNode.dom);
+}
+exports.replaceWithNewNode = replaceWithNewNode;
+function replaceChild(parentDom, nextDom, lastDom) {
+    if (!parentDom) {
+        parentDom = lastDom.parentNode;
+    }
+    parentDom.replaceChild(nextDom, lastDom);
+}
+exports.replaceChild = replaceChild;
+function removeChild(parentDom, dom) {
+    parentDom.removeChild(dom);
+}
+exports.removeChild = removeChild;
+function removeAllChildren(dom, children, lifecycle, isRecycling) {
+    if (!options_1.options.recyclingEnabled || (options_1.options.recyclingEnabled && !isRecycling)) {
+        removeChildren(null, children, lifecycle, isRecycling);
+    }
+    dom.textContent = '';
+}
+exports.removeAllChildren = removeAllChildren;
+function removeChildren(dom, children, lifecycle, isRecycling) {
+    for (var i = 0, len = children.length; i < len; i++) {
+        var child = children[i];
+        if (!inferno_shared_1.isInvalid(child)) {
+            unmounting_1.unmount(child, dom, lifecycle, true, isRecycling);
+        }
+    }
+}
+exports.removeChildren = removeChildren;
+function isKeyed(lastChildren, nextChildren) {
+    return nextChildren.length > 0 && !inferno_shared_1.isNullOrUndef(nextChildren[0]) && !inferno_shared_1.isNullOrUndef(nextChildren[0].key)
+        && lastChildren.length > 0 && !inferno_shared_1.isNullOrUndef(lastChildren[0]) && !inferno_shared_1.isNullOrUndef(lastChildren[0].key);
+}
+exports.isKeyed = isKeyed;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getValue = getValue;
+exports.getTextWidth = getTextWidth;
+exports.getValueText = getValueText;
+exports.getSuitImagePath = getSuitImagePath;
+
+var _constants = __webpack_require__(9);
+
+var SuitMap = new Map();
+SuitMap.set(_constants.Suit.Spade, 'assets/image/sym-spade.png');
+SuitMap.set(_constants.Suit.Heart, 'assets/image/sym-heart.png');
+SuitMap.set(_constants.Suit.Club, 'assets/image/sym-club.png');
+SuitMap.set(_constants.Suit.Diamond, 'assets/image/sym-diamond.png');
+
+function getValue(valueInDefault, currentValue, defaultValue) {
+  var ratio = currentValue / defaultValue;
+  return Math.floor(valueInDefault * ratio);
+}
+
+var textEl = new PIXI.Text();
+
+function getTextWidth(text, style) {
+  textEl.style = style;
+  textEl.text = text;
+  return textEl.width;
+}
+
+function getValueText(value) {
+  if (value === 1) {
+    return 'A';
+  } else if (value === 11) {
+    return 'J';
+  } else if (value === 12) {
+    return 'Q';
+  } else if (value === 13) {
+    return 'K';
+  }
+  return value;
+}
+
+function getSuitImagePath(suit) {
+  return SuitMap.get(suit);
+}
+
+/***/ }),
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.options = {
+    afterMount: null,
+    afterRender: null,
+    afterUpdate: null,
+    beforeRender: null,
+    beforeUnmount: null,
+    createVNode: null,
+    findDOMNodeEnabled: false,
+    recyclingEnabled: false,
+    roots: []
+};
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var utils_1 = __webpack_require__(3);
+var utils_1 = __webpack_require__(4);
 var normalization_1 = __webpack_require__(23);
-var options_1 = __webpack_require__(4);
+var options_1 = __webpack_require__(6);
 function VNode(children, className, flags, key, props, ref, type) {
     this.children = children;
     this.className = className;
@@ -3710,22 +3763,22 @@ exports.isVNode = isVNode;
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var options_1 = __webpack_require__(4);
-var VNodes_1 = __webpack_require__(6);
-var constants_1 = __webpack_require__(14);
-var delegation_1 = __webpack_require__(64);
-var mounting_1 = __webpack_require__(15);
-var rendering_1 = __webpack_require__(9);
-var unmounting_1 = __webpack_require__(16);
-var utils_1 = __webpack_require__(3);
-var processElement_1 = __webpack_require__(17);
+var options_1 = __webpack_require__(6);
+var VNodes_1 = __webpack_require__(7);
+var constants_1 = __webpack_require__(15);
+var delegation_1 = __webpack_require__(70);
+var mounting_1 = __webpack_require__(16);
+var rendering_1 = __webpack_require__(12);
+var unmounting_1 = __webpack_require__(17);
+var utils_1 = __webpack_require__(4);
+var processElement_1 = __webpack_require__(18);
 function patch(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling) {
     if (lastVNode !== nextVNode) {
         var lastFlags = lastVNode.flags;
@@ -4540,220 +4593,7 @@ function removeProp(prop, lastValue, dom) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(58).default;
-module.exports.default = module.exports;
-
-
-
-/***/ }),
 /* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
-Object.defineProperty(exports, "__esModule", { value: true });
-var inferno_shared_1 = __webpack_require__(0);
-var options_1 = __webpack_require__(4);
-var VNodes_1 = __webpack_require__(6);
-var hydration_1 = __webpack_require__(66);
-var mounting_1 = __webpack_require__(15);
-var patching_1 = __webpack_require__(7);
-var unmounting_1 = __webpack_require__(16);
-var utils_1 = __webpack_require__(3);
-// rather than use a Map, like we did before, we can use an array here
-// given there shouldn't be THAT many roots on the page, the difference
-// in performance is huge: https://esbench.com/bench/5802a691330ab09900a1a2da
-exports.componentToDOMNodeMap = new Map();
-var roots = options_1.options.roots;
-/**
- * When inferno.options.findDOMNOdeEnabled is true, this function will return DOM Node by component instance
- * @param ref Component instance
- * @returns {*|null} returns dom node
- */
-function findDOMNode(ref) {
-    if (!options_1.options.findDOMNodeEnabled) {
-        if (process.env.NODE_ENV !== 'production') {
-            inferno_shared_1.throwError('findDOMNode() has been disabled, use Inferno.options.findDOMNodeEnabled = true; enabled findDOMNode(). Warning this can significantly impact performance!');
-        }
-        inferno_shared_1.throwError();
-    }
-    var dom = ref && ref.nodeType ? ref : null;
-    return exports.componentToDOMNodeMap.get(ref) || dom;
-}
-exports.findDOMNode = findDOMNode;
-function getRoot(dom) {
-    for (var i = 0, len = roots.length; i < len; i++) {
-        var root = roots[i];
-        if (root.dom === dom) {
-            return root;
-        }
-    }
-    return null;
-}
-function setRoot(dom, input, lifecycle) {
-    var root = {
-        dom: dom,
-        input: input,
-        lifecycle: lifecycle
-    };
-    roots.push(root);
-    return root;
-}
-function removeRoot(root) {
-    for (var i = 0, len = roots.length; i < len; i++) {
-        if (roots[i] === root) {
-            roots.splice(i, 1);
-            return;
-        }
-    }
-}
-if (process.env.NODE_ENV !== 'production') {
-    if (inferno_shared_1.isBrowser && document.body === null) {
-        inferno_shared_1.warning('Inferno warning: you cannot initialize inferno without "document.body". Wait on "DOMContentLoaded" event, add script to bottom of body, or use async/defer attributes on script tag.');
-    }
-}
-var documentBody = inferno_shared_1.isBrowser ? document.body : null;
-/**
- * Renders virtual node tree into parent node.
- * @param {VNode | null | string | number} input vNode to be rendered
- * @param parentDom DOM node which content will be replaced by virtual node
- * @returns {InfernoChildren} rendered virtual node
- */
-function render(input, parentDom) {
-    if (documentBody === parentDom) {
-        if (process.env.NODE_ENV !== 'production') {
-            inferno_shared_1.throwError('you cannot render() to the "document.body". Use an empty element as a container instead.');
-        }
-        inferno_shared_1.throwError();
-    }
-    if (input === inferno_shared_1.NO_OP) {
-        return;
-    }
-    var root = getRoot(parentDom);
-    if (inferno_shared_1.isNull(root)) {
-        var lifecycle = new inferno_shared_1.Lifecycle();
-        if (!inferno_shared_1.isInvalid(input)) {
-            if (input.dom) {
-                input = VNodes_1.directClone(input);
-            }
-            if (!hydration_1.hydrateRoot(input, parentDom, lifecycle)) {
-                mounting_1.mount(input, parentDom, lifecycle, utils_1.EMPTY_OBJ, false);
-            }
-            root = setRoot(parentDom, input, lifecycle);
-            lifecycle.trigger();
-        }
-    }
-    else {
-        var lifecycle = root.lifecycle;
-        lifecycle.listeners = [];
-        if (inferno_shared_1.isNullOrUndef(input)) {
-            unmounting_1.unmount(root.input, parentDom, lifecycle, false, false);
-            removeRoot(root);
-        }
-        else {
-            if (input.dom) {
-                input = VNodes_1.directClone(input);
-            }
-            patching_1.patch(root.input, input, parentDom, lifecycle, utils_1.EMPTY_OBJ, false, false);
-        }
-        root.input = input;
-        lifecycle.trigger();
-    }
-    if (root) {
-        var rootInput = root.input;
-        if (rootInput && (rootInput.flags & 28 /* Component */)) {
-            return rootInput.children;
-        }
-    }
-}
-exports.render = render;
-function createRenderer(parentDom) {
-    return function renderer(lastInput, nextInput) {
-        if (!parentDom) {
-            parentDom = lastInput;
-        }
-        render(nextInput, parentDom);
-    };
-}
-exports.createRenderer = createRenderer;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var GameScene = exports.GameScene = {
-  Naming: 0,
-  ChoosingAction: 1,
-  Room: 2,
-  Gaming: 3
-};
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.getValue = getValue;
-exports.getTextWidth = getTextWidth;
-exports.getValueText = getValueText;
-exports.getSuitImagePath = getSuitImagePath;
-
-var _constants = __webpack_require__(12);
-
-var SuitMap = new Map();
-SuitMap.set(_constants.Suit.Spade, 'assets/image/sym-spade.png');
-SuitMap.set(_constants.Suit.Heart, 'assets/image/sym-heart.png');
-SuitMap.set(_constants.Suit.Club, 'assets/image/sym-club.png');
-SuitMap.set(_constants.Suit.Diamond, 'assets/image/sym-diamond.png');
-
-function getValue(valueInDefault, currentValue, defaultValue) {
-  var ratio = currentValue / defaultValue;
-  return Math.floor(valueInDefault * ratio);
-}
-
-var textEl = new PIXI.Text();
-
-function getTextWidth(text, style) {
-  textEl.style = style;
-  textEl.text = text;
-  return textEl.width;
-}
-
-function getValueText(value) {
-  if (value === 1) {
-    return 'A';
-  } else if (value === 11) {
-    return 'J';
-  } else if (value === 12) {
-    return 'Q';
-  } else if (value === 13) {
-    return 'K';
-  }
-  return value;
-}
-
-function getSuitImagePath(suit) {
-  return SuitMap.get(suit);
-}
-
-/***/ }),
-/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4834,538 +4674,12 @@ var EquipmentType = exports.EquipmentType = {
   HeartShield: 17, // 護心
   WoodHorse: 18, // 木牛
   JadeSeal: 19, // 玉璽
-  DefendHorse: 20,
+  DefenseHorse: 20,
   OffenseHorse: 21
 };
 
 /***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(62).default;
-module.exports.default = module.exports;
-
-
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.xlinkNS = 'http://www.w3.org/1999/xlink';
-exports.xmlNS = 'http://www.w3.org/XML/1998/namespace';
-exports.svgNS = 'http://www.w3.org/2000/svg';
-exports.strictProps = new Set();
-exports.strictProps.add('volume');
-exports.strictProps.add('defaultChecked');
-exports.booleanProps = new Set();
-exports.booleanProps.add('muted');
-exports.booleanProps.add('scoped');
-exports.booleanProps.add('loop');
-exports.booleanProps.add('open');
-exports.booleanProps.add('checked');
-exports.booleanProps.add('default');
-exports.booleanProps.add('capture');
-exports.booleanProps.add('disabled');
-exports.booleanProps.add('readOnly');
-exports.booleanProps.add('required');
-exports.booleanProps.add('autoplay');
-exports.booleanProps.add('controls');
-exports.booleanProps.add('seamless');
-exports.booleanProps.add('reversed');
-exports.booleanProps.add('allowfullscreen');
-exports.booleanProps.add('novalidate');
-exports.booleanProps.add('hidden');
-exports.booleanProps.add('autoFocus');
-exports.booleanProps.add('selected');
-exports.namespaces = new Map();
-exports.namespaces.set('xlink:href', exports.xlinkNS);
-exports.namespaces.set('xlink:arcrole', exports.xlinkNS);
-exports.namespaces.set('xlink:actuate', exports.xlinkNS);
-exports.namespaces.set('xlink:show', exports.xlinkNS);
-exports.namespaces.set('xlink:role', exports.xlinkNS);
-exports.namespaces.set('xlink:title', exports.xlinkNS);
-exports.namespaces.set('xlink:type', exports.xlinkNS);
-exports.namespaces.set('xml:base', exports.xmlNS);
-exports.namespaces.set('xml:lang', exports.xmlNS);
-exports.namespaces.set('xml:space', exports.xmlNS);
-exports.isUnitlessNumber = new Set();
-exports.isUnitlessNumber.add('animationIterationCount');
-exports.isUnitlessNumber.add('borderImageOutset');
-exports.isUnitlessNumber.add('borderImageSlice');
-exports.isUnitlessNumber.add('borderImageWidth');
-exports.isUnitlessNumber.add('boxFlex');
-exports.isUnitlessNumber.add('boxFlexGroup');
-exports.isUnitlessNumber.add('boxOrdinalGroup');
-exports.isUnitlessNumber.add('columnCount');
-exports.isUnitlessNumber.add('flex');
-exports.isUnitlessNumber.add('flexGrow');
-exports.isUnitlessNumber.add('flexPositive');
-exports.isUnitlessNumber.add('flexShrink');
-exports.isUnitlessNumber.add('flexNegative');
-exports.isUnitlessNumber.add('flexOrder');
-exports.isUnitlessNumber.add('gridRow');
-exports.isUnitlessNumber.add('gridColumn');
-exports.isUnitlessNumber.add('fontWeight');
-exports.isUnitlessNumber.add('lineClamp');
-exports.isUnitlessNumber.add('lineHeight');
-exports.isUnitlessNumber.add('opacity');
-exports.isUnitlessNumber.add('order');
-exports.isUnitlessNumber.add('orphans');
-exports.isUnitlessNumber.add('tabSize');
-exports.isUnitlessNumber.add('widows');
-exports.isUnitlessNumber.add('zIndex');
-exports.isUnitlessNumber.add('zoom');
-exports.isUnitlessNumber.add('fillOpacity');
-exports.isUnitlessNumber.add('floodOpacity');
-exports.isUnitlessNumber.add('stopOpacity');
-exports.isUnitlessNumber.add('strokeDasharray');
-exports.isUnitlessNumber.add('strokeDashoffset');
-exports.isUnitlessNumber.add('strokeMiterlimit');
-exports.isUnitlessNumber.add('strokeOpacity');
-exports.isUnitlessNumber.add('strokeWidth');
-exports.skipProps = new Set();
-exports.skipProps.add('children');
-exports.skipProps.add('childrenType');
-exports.skipProps.add('defaultValue');
-exports.skipProps.add('ref');
-exports.skipProps.add('key');
-exports.skipProps.add('checked');
-exports.skipProps.add('multiple');
-exports.delegatedEvents = new Set();
-exports.delegatedEvents.add('onClick');
-exports.delegatedEvents.add('onMouseDown');
-exports.delegatedEvents.add('onMouseUp');
-exports.delegatedEvents.add('onMouseMove');
-exports.delegatedEvents.add('onSubmit');
-exports.delegatedEvents.add('onDblClick');
-exports.delegatedEvents.add('onKeyDown');
-exports.delegatedEvents.add('onKeyUp');
-exports.delegatedEvents.add('onKeyPress');
-
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
-Object.defineProperty(exports, "__esModule", { value: true });
-var inferno_shared_1 = __webpack_require__(0);
-var options_1 = __webpack_require__(4);
-var VNodes_1 = __webpack_require__(6);
-var patching_1 = __webpack_require__(7);
-var recycling_1 = __webpack_require__(22);
-var rendering_1 = __webpack_require__(9);
-var utils_1 = __webpack_require__(3);
-var processElement_1 = __webpack_require__(17);
-function mount(vNode, parentDom, lifecycle, context, isSVG) {
-    var flags = vNode.flags;
-    if (flags & 3970 /* Element */) {
-        return mountElement(vNode, parentDom, lifecycle, context, isSVG);
-    }
-    else if (flags & 28 /* Component */) {
-        return mountComponent(vNode, parentDom, lifecycle, context, isSVG, (flags & 4 /* ComponentClass */) > 0);
-    }
-    else if (flags & 4096 /* Void */) {
-        return mountVoid(vNode, parentDom);
-    }
-    else if (flags & 1 /* Text */) {
-        return mountText(vNode, parentDom);
-    }
-    else {
-        if (process.env.NODE_ENV !== 'production') {
-            if (typeof vNode === 'object') {
-                inferno_shared_1.throwError("mount() received an object that's not a valid VNode, you should stringify it first. Object: \"" + JSON.stringify(vNode) + "\".");
-            }
-            else {
-                inferno_shared_1.throwError("mount() expects a valid VNode, instead it received an object with the type \"" + typeof vNode + "\".");
-            }
-        }
-        inferno_shared_1.throwError();
-    }
-}
-exports.mount = mount;
-function mountText(vNode, parentDom) {
-    var dom = document.createTextNode(vNode.children);
-    vNode.dom = dom;
-    if (!inferno_shared_1.isNull(parentDom)) {
-        utils_1.appendChild(parentDom, dom);
-    }
-    return dom;
-}
-exports.mountText = mountText;
-function mountVoid(vNode, parentDom) {
-    var dom = document.createTextNode('');
-    vNode.dom = dom;
-    if (!inferno_shared_1.isNull(parentDom)) {
-        utils_1.appendChild(parentDom, dom);
-    }
-    return dom;
-}
-exports.mountVoid = mountVoid;
-function mountElement(vNode, parentDom, lifecycle, context, isSVG) {
-    if (options_1.options.recyclingEnabled) {
-        var dom_1 = recycling_1.recycleElement(vNode, lifecycle, context, isSVG);
-        if (!inferno_shared_1.isNull(dom_1)) {
-            if (!inferno_shared_1.isNull(parentDom)) {
-                utils_1.appendChild(parentDom, dom_1);
-            }
-            return dom_1;
-        }
-    }
-    var flags = vNode.flags;
-    isSVG = isSVG || (flags & 128 /* SvgElement */) > 0;
-    var dom = utils_1.documentCreateElement(vNode.type, isSVG);
-    var children = vNode.children;
-    var props = vNode.props;
-    var className = vNode.className;
-    var ref = vNode.ref;
-    vNode.dom = dom;
-    if (!inferno_shared_1.isInvalid(children)) {
-        if (inferno_shared_1.isStringOrNumber(children)) {
-            utils_1.setTextContent(dom, children);
-        }
-        else if (inferno_shared_1.isArray(children)) {
-            mountArrayChildren(children, dom, lifecycle, context, isSVG);
-        }
-        else if (VNodes_1.isVNode(children)) {
-            mount(children, dom, lifecycle, context, isSVG);
-        }
-    }
-    if (!inferno_shared_1.isNull(props)) {
-        var hasControlledValue = false;
-        var isFormElement = (flags & 3584 /* FormElement */) > 0;
-        if (isFormElement) {
-            hasControlledValue = processElement_1.isControlledFormElement(props);
-        }
-        for (var prop in props) {
-            // do not add a hasOwnProperty check here, it affects performance
-            patching_1.patchProp(prop, null, props[prop], dom, isSVG, hasControlledValue);
-        }
-        if (isFormElement) {
-            processElement_1.processElement(flags, vNode, dom, props, true, hasControlledValue);
-        }
-    }
-    if (className !== null) {
-        if (isSVG) {
-            dom.setAttribute('class', className);
-        }
-        else {
-            dom.className = className;
-        }
-    }
-    if (!inferno_shared_1.isNull(ref)) {
-        mountRef(dom, ref, lifecycle);
-    }
-    if (!inferno_shared_1.isNull(parentDom)) {
-        utils_1.appendChild(parentDom, dom);
-    }
-    return dom;
-}
-exports.mountElement = mountElement;
-function mountArrayChildren(children, dom, lifecycle, context, isSVG) {
-    for (var i = 0, len = children.length; i < len; i++) {
-        var child = children[i];
-        // Verify can string/number be here. might cause de-opt. - Normalization takes care of it.
-        if (!inferno_shared_1.isInvalid(child)) {
-            if (child.dom) {
-                children[i] = child = VNodes_1.directClone(child);
-            }
-            mount(children[i], dom, lifecycle, context, isSVG);
-        }
-    }
-}
-exports.mountArrayChildren = mountArrayChildren;
-function mountComponent(vNode, parentDom, lifecycle, context, isSVG, isClass) {
-    if (options_1.options.recyclingEnabled) {
-        var dom_2 = recycling_1.recycleComponent(vNode, lifecycle, context, isSVG);
-        if (!inferno_shared_1.isNull(dom_2)) {
-            if (!inferno_shared_1.isNull(parentDom)) {
-                utils_1.appendChild(parentDom, dom_2);
-            }
-            return dom_2;
-        }
-    }
-    var type = vNode.type;
-    var props = vNode.props || utils_1.EMPTY_OBJ;
-    var ref = vNode.ref;
-    var dom;
-    if (isClass) {
-        var instance = utils_1.createClassComponentInstance(vNode, type, props, context, isSVG, lifecycle);
-        var input = instance._lastInput;
-        instance._vNode = vNode;
-        vNode.dom = dom = mount(input, null, lifecycle, instance._childContext, isSVG);
-        if (!inferno_shared_1.isNull(parentDom)) {
-            utils_1.appendChild(parentDom, dom);
-        }
-        mountClassComponentCallbacks(vNode, ref, instance, lifecycle);
-        instance._updating = false;
-        if (options_1.options.findDOMNodeEnabled) {
-            rendering_1.componentToDOMNodeMap.set(instance, dom);
-        }
-    }
-    else {
-        var input = utils_1.createFunctionalComponentInput(vNode, type, props, context);
-        vNode.dom = dom = mount(input, null, lifecycle, context, isSVG);
-        vNode.children = input;
-        mountFunctionalComponentCallbacks(ref, dom, lifecycle);
-        if (!inferno_shared_1.isNull(parentDom)) {
-            utils_1.appendChild(parentDom, dom);
-        }
-    }
-    return dom;
-}
-exports.mountComponent = mountComponent;
-function mountClassComponentCallbacks(vNode, ref, instance, lifecycle) {
-    if (ref) {
-        if (inferno_shared_1.isFunction(ref)) {
-            ref(instance);
-        }
-        else {
-            if (process.env.NODE_ENV !== 'production') {
-                if (inferno_shared_1.isStringOrNumber(ref)) {
-                    inferno_shared_1.throwError('string "refs" are not supported in Inferno 1.0. Use callback "refs" instead.');
-                }
-                else if (inferno_shared_1.isObject(ref) && (vNode.flags & 4 /* ComponentClass */)) {
-                    inferno_shared_1.throwError('functional component lifecycle events are not supported on ES2015 class components.');
-                }
-                else {
-                    inferno_shared_1.throwError("a bad value for \"ref\" was used on component: \"" + JSON.stringify(ref) + "\"");
-                }
-            }
-            inferno_shared_1.throwError();
-        }
-    }
-    var hasDidMount = !inferno_shared_1.isUndefined(instance.componentDidMount);
-    var afterMount = options_1.options.afterMount;
-    if (hasDidMount || !inferno_shared_1.isNull(afterMount)) {
-        lifecycle.addListener(function () {
-            instance._updating = true;
-            if (afterMount) {
-                afterMount(vNode);
-            }
-            if (hasDidMount) {
-                instance.componentDidMount();
-            }
-            instance._updating = false;
-        });
-    }
-}
-exports.mountClassComponentCallbacks = mountClassComponentCallbacks;
-function mountFunctionalComponentCallbacks(ref, dom, lifecycle) {
-    if (ref) {
-        if (!inferno_shared_1.isNullOrUndef(ref.onComponentWillMount)) {
-            ref.onComponentWillMount();
-        }
-        if (!inferno_shared_1.isNullOrUndef(ref.onComponentDidMount)) {
-            lifecycle.addListener(function () { return ref.onComponentDidMount(dom); });
-        }
-    }
-}
-exports.mountFunctionalComponentCallbacks = mountFunctionalComponentCallbacks;
-function mountRef(dom, value, lifecycle) {
-    if (inferno_shared_1.isFunction(value)) {
-        lifecycle.addListener(function () { return value(dom); });
-    }
-    else {
-        if (inferno_shared_1.isInvalid(value)) {
-            return;
-        }
-        if (process.env.NODE_ENV !== 'production') {
-            inferno_shared_1.throwError('string "refs" are not supported in Inferno 1.0. Use callback "refs" instead.');
-        }
-        inferno_shared_1.throwError();
-    }
-}
-exports.mountRef = mountRef;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
-Object.defineProperty(exports, "__esModule", { value: true });
-var inferno_shared_1 = __webpack_require__(0);
-var options_1 = __webpack_require__(4);
-var patching_1 = __webpack_require__(7);
-var recycling_1 = __webpack_require__(22);
-var rendering_1 = __webpack_require__(9);
-var utils_1 = __webpack_require__(3);
-function unmount(vNode, parentDom, lifecycle, canRecycle, isRecycling) {
-    var flags = vNode.flags;
-    if (flags & 28 /* Component */) {
-        unmountComponent(vNode, parentDom, lifecycle, canRecycle, isRecycling);
-    }
-    else if (flags & 3970 /* Element */) {
-        unmountElement(vNode, parentDom, lifecycle, canRecycle, isRecycling);
-    }
-    else if (flags & (1 /* Text */ | 4096 /* Void */)) {
-        unmountVoidOrText(vNode, parentDom);
-    }
-}
-exports.unmount = unmount;
-function unmountVoidOrText(vNode, parentDom) {
-    if (!inferno_shared_1.isNull(parentDom)) {
-        utils_1.removeChild(parentDom, vNode.dom);
-    }
-}
-function unmountComponent(vNode, parentDom, lifecycle, canRecycle, isRecycling) {
-    var instance = vNode.children;
-    var flags = vNode.flags;
-    var isStatefulComponent = flags & 4 /* ComponentClass */;
-    var ref = vNode.ref;
-    var dom = vNode.dom;
-    if (!isRecycling) {
-        if (isStatefulComponent) {
-            if (!instance._unmounted) {
-                instance._blockSetState = true;
-                if (!inferno_shared_1.isNull(options_1.options.beforeUnmount)) {
-                    options_1.options.beforeUnmount(vNode);
-                }
-                if (!inferno_shared_1.isUndefined(instance.componentWillUnmount)) {
-                    instance.componentWillUnmount();
-                }
-                if (ref && !isRecycling) {
-                    ref(null);
-                }
-                instance._unmounted = true;
-                if (options_1.options.findDOMNodeEnabled) {
-                    rendering_1.componentToDOMNodeMap.delete(instance);
-                }
-                unmount(instance._lastInput, null, instance._lifecycle, false, isRecycling);
-            }
-        }
-        else {
-            if (!inferno_shared_1.isNullOrUndef(ref)) {
-                if (!inferno_shared_1.isNullOrUndef(ref.onComponentWillUnmount)) {
-                    ref.onComponentWillUnmount(dom);
-                }
-            }
-            unmount(instance, null, lifecycle, false, isRecycling);
-        }
-    }
-    if (parentDom) {
-        var lastInput = instance._lastInput;
-        if (inferno_shared_1.isNullOrUndef(lastInput)) {
-            lastInput = instance;
-        }
-        utils_1.removeChild(parentDom, dom);
-    }
-    if (options_1.options.recyclingEnabled && !isStatefulComponent && (parentDom || canRecycle)) {
-        recycling_1.poolComponent(vNode);
-    }
-}
-exports.unmountComponent = unmountComponent;
-function unmountElement(vNode, parentDom, lifecycle, canRecycle, isRecycling) {
-    var dom = vNode.dom;
-    var ref = vNode.ref;
-    var props = vNode.props;
-    if (ref && !isRecycling) {
-        unmountRef(ref);
-    }
-    var children = vNode.children;
-    if (!inferno_shared_1.isNullOrUndef(children)) {
-        unmountChildren(children, lifecycle, isRecycling);
-    }
-    if (!inferno_shared_1.isNull(props)) {
-        for (var name_1 in props) {
-            // do not add a hasOwnProperty check here, it affects performance
-            if (props[name_1] !== null && patching_1.isAttrAnEvent(name_1)) {
-                patching_1.patchEvent(name_1, props[name_1], null, dom);
-                // We need to set this null, because same props otherwise come back if SCU returns false and we are recyling
-                props[name_1] = null;
-            }
-        }
-    }
-    if (!inferno_shared_1.isNull(parentDom)) {
-        utils_1.removeChild(parentDom, dom);
-    }
-    if (options_1.options.recyclingEnabled && (parentDom || canRecycle)) {
-        recycling_1.poolElement(vNode);
-    }
-}
-exports.unmountElement = unmountElement;
-function unmountChildren(children, lifecycle, isRecycling) {
-    if (inferno_shared_1.isArray(children)) {
-        for (var i = 0, len = children.length; i < len; i++) {
-            var child = children[i];
-            if (!inferno_shared_1.isInvalid(child) && inferno_shared_1.isObject(child)) {
-                unmount(child, null, lifecycle, false, isRecycling);
-            }
-        }
-    }
-    else if (inferno_shared_1.isObject(children)) {
-        unmount(children, null, lifecycle, false, isRecycling);
-    }
-}
-function unmountRef(ref) {
-    if (inferno_shared_1.isFunction(ref)) {
-        ref(null);
-    }
-    else {
-        if (inferno_shared_1.isInvalid(ref)) {
-            return;
-        }
-        if (process.env.NODE_ENV !== 'production') {
-            inferno_shared_1.throwError('string "refs" are not supported in Inferno 1.0. Use callback "refs" instead.');
-        }
-        inferno_shared_1.throwError();
-    }
-}
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var inferno_shared_1 = __webpack_require__(0);
-var InputWrapper_1 = __webpack_require__(67);
-var SelectWrapper_1 = __webpack_require__(68);
-var TextareaWrapper_1 = __webpack_require__(69);
-/**
- * There is currently no support for switching same input between controlled and nonControlled
- * If that ever becomes a real issue, then re design controlled elements
- * Currently user must choose either controlled or non-controlled and stick with that
- */
-function processElement(flags, vNode, dom, nextPropsOrEmpty, mounting, isControlled) {
-    if (flags & 512 /* InputElement */) {
-        InputWrapper_1.processInput(vNode, dom, nextPropsOrEmpty, mounting, isControlled);
-    }
-    if (flags & 2048 /* SelectElement */) {
-        SelectWrapper_1.processSelect(vNode, dom, nextPropsOrEmpty, mounting, isControlled);
-    }
-    if (flags & 1024 /* TextareaElement */) {
-        TextareaWrapper_1.processTextarea(vNode, dom, nextPropsOrEmpty, mounting, isControlled);
-    }
-}
-exports.processElement = processElement;
-function isControlledFormElement(nextPropsOrEmpty) {
-    return (nextPropsOrEmpty.type && InputWrapper_1.isCheckedType(nextPropsOrEmpty.type)) ? !inferno_shared_1.isNullOrUndef(nextPropsOrEmpty.checked) : !inferno_shared_1.isNullOrUndef(nextPropsOrEmpty.value);
-}
-exports.isControlledFormElement = isControlledFormElement;
-
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(70).default;
-module.exports.default = module.exports;
-
-
-
-/***/ }),
-/* 19 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5376,7 +4690,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.FullDeck = exports.PotentialExpansionDeck = exports.BasicDeck = undefined;
 
-var _constants = __webpack_require__(12);
+var _constants = __webpack_require__(9);
 
 var id = 0;
 
@@ -5461,7 +4775,7 @@ var BasicDeck = exports.BasicDeck = [{
   suit: _constants.Suit.Spade,
   value: 5,
   type: _constants.CardType.Equipment,
-  effectType: _constants.EquipmentType.DefendHorse,
+  effectType: _constants.EquipmentType.DefenseHorse,
   isGiveable: false
 }, {
   suit: _constants.Suit.Spade,
@@ -5719,7 +5033,7 @@ var BasicDeck = exports.BasicDeck = [{
   suit: _constants.Suit.Heart,
   value: 13,
   type: _constants.CardType.Equipment,
-  effectType: _constants.EquipmentType.OffenseHorse,
+  effectType: _constants.EquipmentType.DefenseHorse,
   isGiveable: false
 }, {
   suit: _constants.Suit.Club,
@@ -5779,7 +5093,7 @@ var BasicDeck = exports.BasicDeck = [{
   suit: _constants.Suit.Club,
   value: 5,
   type: _constants.CardType.Equipment,
-  effectType: _constants.EquipmentType.DefendHorse,
+  effectType: _constants.EquipmentType.DefenseHorse,
   isGiveable: false
 }, {
   suit: _constants.Suit.Club,
@@ -6364,10 +5678,696 @@ var PotentialExpansionDeck = exports.PotentialExpansionDeck = [{
 var FullDeck = exports.FullDeck = BasicDeck.concat(PotentialExpansionDeck);
 
 /***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(64).default;
+module.exports.default = module.exports;
+
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+Object.defineProperty(exports, "__esModule", { value: true });
+var inferno_shared_1 = __webpack_require__(0);
+var options_1 = __webpack_require__(6);
+var VNodes_1 = __webpack_require__(7);
+var hydration_1 = __webpack_require__(72);
+var mounting_1 = __webpack_require__(16);
+var patching_1 = __webpack_require__(8);
+var unmounting_1 = __webpack_require__(17);
+var utils_1 = __webpack_require__(4);
+// rather than use a Map, like we did before, we can use an array here
+// given there shouldn't be THAT many roots on the page, the difference
+// in performance is huge: https://esbench.com/bench/5802a691330ab09900a1a2da
+exports.componentToDOMNodeMap = new Map();
+var roots = options_1.options.roots;
+/**
+ * When inferno.options.findDOMNOdeEnabled is true, this function will return DOM Node by component instance
+ * @param ref Component instance
+ * @returns {*|null} returns dom node
+ */
+function findDOMNode(ref) {
+    if (!options_1.options.findDOMNodeEnabled) {
+        if (process.env.NODE_ENV !== 'production') {
+            inferno_shared_1.throwError('findDOMNode() has been disabled, use Inferno.options.findDOMNodeEnabled = true; enabled findDOMNode(). Warning this can significantly impact performance!');
+        }
+        inferno_shared_1.throwError();
+    }
+    var dom = ref && ref.nodeType ? ref : null;
+    return exports.componentToDOMNodeMap.get(ref) || dom;
+}
+exports.findDOMNode = findDOMNode;
+function getRoot(dom) {
+    for (var i = 0, len = roots.length; i < len; i++) {
+        var root = roots[i];
+        if (root.dom === dom) {
+            return root;
+        }
+    }
+    return null;
+}
+function setRoot(dom, input, lifecycle) {
+    var root = {
+        dom: dom,
+        input: input,
+        lifecycle: lifecycle
+    };
+    roots.push(root);
+    return root;
+}
+function removeRoot(root) {
+    for (var i = 0, len = roots.length; i < len; i++) {
+        if (roots[i] === root) {
+            roots.splice(i, 1);
+            return;
+        }
+    }
+}
+if (process.env.NODE_ENV !== 'production') {
+    if (inferno_shared_1.isBrowser && document.body === null) {
+        inferno_shared_1.warning('Inferno warning: you cannot initialize inferno without "document.body". Wait on "DOMContentLoaded" event, add script to bottom of body, or use async/defer attributes on script tag.');
+    }
+}
+var documentBody = inferno_shared_1.isBrowser ? document.body : null;
+/**
+ * Renders virtual node tree into parent node.
+ * @param {VNode | null | string | number} input vNode to be rendered
+ * @param parentDom DOM node which content will be replaced by virtual node
+ * @returns {InfernoChildren} rendered virtual node
+ */
+function render(input, parentDom) {
+    if (documentBody === parentDom) {
+        if (process.env.NODE_ENV !== 'production') {
+            inferno_shared_1.throwError('you cannot render() to the "document.body". Use an empty element as a container instead.');
+        }
+        inferno_shared_1.throwError();
+    }
+    if (input === inferno_shared_1.NO_OP) {
+        return;
+    }
+    var root = getRoot(parentDom);
+    if (inferno_shared_1.isNull(root)) {
+        var lifecycle = new inferno_shared_1.Lifecycle();
+        if (!inferno_shared_1.isInvalid(input)) {
+            if (input.dom) {
+                input = VNodes_1.directClone(input);
+            }
+            if (!hydration_1.hydrateRoot(input, parentDom, lifecycle)) {
+                mounting_1.mount(input, parentDom, lifecycle, utils_1.EMPTY_OBJ, false);
+            }
+            root = setRoot(parentDom, input, lifecycle);
+            lifecycle.trigger();
+        }
+    }
+    else {
+        var lifecycle = root.lifecycle;
+        lifecycle.listeners = [];
+        if (inferno_shared_1.isNullOrUndef(input)) {
+            unmounting_1.unmount(root.input, parentDom, lifecycle, false, false);
+            removeRoot(root);
+        }
+        else {
+            if (input.dom) {
+                input = VNodes_1.directClone(input);
+            }
+            patching_1.patch(root.input, input, parentDom, lifecycle, utils_1.EMPTY_OBJ, false, false);
+        }
+        root.input = input;
+        lifecycle.trigger();
+    }
+    if (root) {
+        var rootInput = root.input;
+        if (rootInput && (rootInput.flags & 28 /* Component */)) {
+            return rootInput.children;
+        }
+    }
+}
+exports.render = render;
+function createRenderer(parentDom) {
+    return function renderer(lastInput, nextInput) {
+        if (!parentDom) {
+            parentDom = lastInput;
+        }
+        render(nextInput, parentDom);
+    };
+}
+exports.createRenderer = createRenderer;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var GameScene = exports.GameScene = {
+  Naming: 0,
+  ChoosingAction: 1,
+  Room: 2,
+  Gaming: 3
+};
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(68).default;
+module.exports.default = module.exports;
+
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.xlinkNS = 'http://www.w3.org/1999/xlink';
+exports.xmlNS = 'http://www.w3.org/XML/1998/namespace';
+exports.svgNS = 'http://www.w3.org/2000/svg';
+exports.strictProps = new Set();
+exports.strictProps.add('volume');
+exports.strictProps.add('defaultChecked');
+exports.booleanProps = new Set();
+exports.booleanProps.add('muted');
+exports.booleanProps.add('scoped');
+exports.booleanProps.add('loop');
+exports.booleanProps.add('open');
+exports.booleanProps.add('checked');
+exports.booleanProps.add('default');
+exports.booleanProps.add('capture');
+exports.booleanProps.add('disabled');
+exports.booleanProps.add('readOnly');
+exports.booleanProps.add('required');
+exports.booleanProps.add('autoplay');
+exports.booleanProps.add('controls');
+exports.booleanProps.add('seamless');
+exports.booleanProps.add('reversed');
+exports.booleanProps.add('allowfullscreen');
+exports.booleanProps.add('novalidate');
+exports.booleanProps.add('hidden');
+exports.booleanProps.add('autoFocus');
+exports.booleanProps.add('selected');
+exports.namespaces = new Map();
+exports.namespaces.set('xlink:href', exports.xlinkNS);
+exports.namespaces.set('xlink:arcrole', exports.xlinkNS);
+exports.namespaces.set('xlink:actuate', exports.xlinkNS);
+exports.namespaces.set('xlink:show', exports.xlinkNS);
+exports.namespaces.set('xlink:role', exports.xlinkNS);
+exports.namespaces.set('xlink:title', exports.xlinkNS);
+exports.namespaces.set('xlink:type', exports.xlinkNS);
+exports.namespaces.set('xml:base', exports.xmlNS);
+exports.namespaces.set('xml:lang', exports.xmlNS);
+exports.namespaces.set('xml:space', exports.xmlNS);
+exports.isUnitlessNumber = new Set();
+exports.isUnitlessNumber.add('animationIterationCount');
+exports.isUnitlessNumber.add('borderImageOutset');
+exports.isUnitlessNumber.add('borderImageSlice');
+exports.isUnitlessNumber.add('borderImageWidth');
+exports.isUnitlessNumber.add('boxFlex');
+exports.isUnitlessNumber.add('boxFlexGroup');
+exports.isUnitlessNumber.add('boxOrdinalGroup');
+exports.isUnitlessNumber.add('columnCount');
+exports.isUnitlessNumber.add('flex');
+exports.isUnitlessNumber.add('flexGrow');
+exports.isUnitlessNumber.add('flexPositive');
+exports.isUnitlessNumber.add('flexShrink');
+exports.isUnitlessNumber.add('flexNegative');
+exports.isUnitlessNumber.add('flexOrder');
+exports.isUnitlessNumber.add('gridRow');
+exports.isUnitlessNumber.add('gridColumn');
+exports.isUnitlessNumber.add('fontWeight');
+exports.isUnitlessNumber.add('lineClamp');
+exports.isUnitlessNumber.add('lineHeight');
+exports.isUnitlessNumber.add('opacity');
+exports.isUnitlessNumber.add('order');
+exports.isUnitlessNumber.add('orphans');
+exports.isUnitlessNumber.add('tabSize');
+exports.isUnitlessNumber.add('widows');
+exports.isUnitlessNumber.add('zIndex');
+exports.isUnitlessNumber.add('zoom');
+exports.isUnitlessNumber.add('fillOpacity');
+exports.isUnitlessNumber.add('floodOpacity');
+exports.isUnitlessNumber.add('stopOpacity');
+exports.isUnitlessNumber.add('strokeDasharray');
+exports.isUnitlessNumber.add('strokeDashoffset');
+exports.isUnitlessNumber.add('strokeMiterlimit');
+exports.isUnitlessNumber.add('strokeOpacity');
+exports.isUnitlessNumber.add('strokeWidth');
+exports.skipProps = new Set();
+exports.skipProps.add('children');
+exports.skipProps.add('childrenType');
+exports.skipProps.add('defaultValue');
+exports.skipProps.add('ref');
+exports.skipProps.add('key');
+exports.skipProps.add('checked');
+exports.skipProps.add('multiple');
+exports.delegatedEvents = new Set();
+exports.delegatedEvents.add('onClick');
+exports.delegatedEvents.add('onMouseDown');
+exports.delegatedEvents.add('onMouseUp');
+exports.delegatedEvents.add('onMouseMove');
+exports.delegatedEvents.add('onSubmit');
+exports.delegatedEvents.add('onDblClick');
+exports.delegatedEvents.add('onKeyDown');
+exports.delegatedEvents.add('onKeyUp');
+exports.delegatedEvents.add('onKeyPress');
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+Object.defineProperty(exports, "__esModule", { value: true });
+var inferno_shared_1 = __webpack_require__(0);
+var options_1 = __webpack_require__(6);
+var VNodes_1 = __webpack_require__(7);
+var patching_1 = __webpack_require__(8);
+var recycling_1 = __webpack_require__(22);
+var rendering_1 = __webpack_require__(12);
+var utils_1 = __webpack_require__(4);
+var processElement_1 = __webpack_require__(18);
+function mount(vNode, parentDom, lifecycle, context, isSVG) {
+    var flags = vNode.flags;
+    if (flags & 3970 /* Element */) {
+        return mountElement(vNode, parentDom, lifecycle, context, isSVG);
+    }
+    else if (flags & 28 /* Component */) {
+        return mountComponent(vNode, parentDom, lifecycle, context, isSVG, (flags & 4 /* ComponentClass */) > 0);
+    }
+    else if (flags & 4096 /* Void */) {
+        return mountVoid(vNode, parentDom);
+    }
+    else if (flags & 1 /* Text */) {
+        return mountText(vNode, parentDom);
+    }
+    else {
+        if (process.env.NODE_ENV !== 'production') {
+            if (typeof vNode === 'object') {
+                inferno_shared_1.throwError("mount() received an object that's not a valid VNode, you should stringify it first. Object: \"" + JSON.stringify(vNode) + "\".");
+            }
+            else {
+                inferno_shared_1.throwError("mount() expects a valid VNode, instead it received an object with the type \"" + typeof vNode + "\".");
+            }
+        }
+        inferno_shared_1.throwError();
+    }
+}
+exports.mount = mount;
+function mountText(vNode, parentDom) {
+    var dom = document.createTextNode(vNode.children);
+    vNode.dom = dom;
+    if (!inferno_shared_1.isNull(parentDom)) {
+        utils_1.appendChild(parentDom, dom);
+    }
+    return dom;
+}
+exports.mountText = mountText;
+function mountVoid(vNode, parentDom) {
+    var dom = document.createTextNode('');
+    vNode.dom = dom;
+    if (!inferno_shared_1.isNull(parentDom)) {
+        utils_1.appendChild(parentDom, dom);
+    }
+    return dom;
+}
+exports.mountVoid = mountVoid;
+function mountElement(vNode, parentDom, lifecycle, context, isSVG) {
+    if (options_1.options.recyclingEnabled) {
+        var dom_1 = recycling_1.recycleElement(vNode, lifecycle, context, isSVG);
+        if (!inferno_shared_1.isNull(dom_1)) {
+            if (!inferno_shared_1.isNull(parentDom)) {
+                utils_1.appendChild(parentDom, dom_1);
+            }
+            return dom_1;
+        }
+    }
+    var flags = vNode.flags;
+    isSVG = isSVG || (flags & 128 /* SvgElement */) > 0;
+    var dom = utils_1.documentCreateElement(vNode.type, isSVG);
+    var children = vNode.children;
+    var props = vNode.props;
+    var className = vNode.className;
+    var ref = vNode.ref;
+    vNode.dom = dom;
+    if (!inferno_shared_1.isInvalid(children)) {
+        if (inferno_shared_1.isStringOrNumber(children)) {
+            utils_1.setTextContent(dom, children);
+        }
+        else if (inferno_shared_1.isArray(children)) {
+            mountArrayChildren(children, dom, lifecycle, context, isSVG);
+        }
+        else if (VNodes_1.isVNode(children)) {
+            mount(children, dom, lifecycle, context, isSVG);
+        }
+    }
+    if (!inferno_shared_1.isNull(props)) {
+        var hasControlledValue = false;
+        var isFormElement = (flags & 3584 /* FormElement */) > 0;
+        if (isFormElement) {
+            hasControlledValue = processElement_1.isControlledFormElement(props);
+        }
+        for (var prop in props) {
+            // do not add a hasOwnProperty check here, it affects performance
+            patching_1.patchProp(prop, null, props[prop], dom, isSVG, hasControlledValue);
+        }
+        if (isFormElement) {
+            processElement_1.processElement(flags, vNode, dom, props, true, hasControlledValue);
+        }
+    }
+    if (className !== null) {
+        if (isSVG) {
+            dom.setAttribute('class', className);
+        }
+        else {
+            dom.className = className;
+        }
+    }
+    if (!inferno_shared_1.isNull(ref)) {
+        mountRef(dom, ref, lifecycle);
+    }
+    if (!inferno_shared_1.isNull(parentDom)) {
+        utils_1.appendChild(parentDom, dom);
+    }
+    return dom;
+}
+exports.mountElement = mountElement;
+function mountArrayChildren(children, dom, lifecycle, context, isSVG) {
+    for (var i = 0, len = children.length; i < len; i++) {
+        var child = children[i];
+        // Verify can string/number be here. might cause de-opt. - Normalization takes care of it.
+        if (!inferno_shared_1.isInvalid(child)) {
+            if (child.dom) {
+                children[i] = child = VNodes_1.directClone(child);
+            }
+            mount(children[i], dom, lifecycle, context, isSVG);
+        }
+    }
+}
+exports.mountArrayChildren = mountArrayChildren;
+function mountComponent(vNode, parentDom, lifecycle, context, isSVG, isClass) {
+    if (options_1.options.recyclingEnabled) {
+        var dom_2 = recycling_1.recycleComponent(vNode, lifecycle, context, isSVG);
+        if (!inferno_shared_1.isNull(dom_2)) {
+            if (!inferno_shared_1.isNull(parentDom)) {
+                utils_1.appendChild(parentDom, dom_2);
+            }
+            return dom_2;
+        }
+    }
+    var type = vNode.type;
+    var props = vNode.props || utils_1.EMPTY_OBJ;
+    var ref = vNode.ref;
+    var dom;
+    if (isClass) {
+        var instance = utils_1.createClassComponentInstance(vNode, type, props, context, isSVG, lifecycle);
+        var input = instance._lastInput;
+        instance._vNode = vNode;
+        vNode.dom = dom = mount(input, null, lifecycle, instance._childContext, isSVG);
+        if (!inferno_shared_1.isNull(parentDom)) {
+            utils_1.appendChild(parentDom, dom);
+        }
+        mountClassComponentCallbacks(vNode, ref, instance, lifecycle);
+        instance._updating = false;
+        if (options_1.options.findDOMNodeEnabled) {
+            rendering_1.componentToDOMNodeMap.set(instance, dom);
+        }
+    }
+    else {
+        var input = utils_1.createFunctionalComponentInput(vNode, type, props, context);
+        vNode.dom = dom = mount(input, null, lifecycle, context, isSVG);
+        vNode.children = input;
+        mountFunctionalComponentCallbacks(ref, dom, lifecycle);
+        if (!inferno_shared_1.isNull(parentDom)) {
+            utils_1.appendChild(parentDom, dom);
+        }
+    }
+    return dom;
+}
+exports.mountComponent = mountComponent;
+function mountClassComponentCallbacks(vNode, ref, instance, lifecycle) {
+    if (ref) {
+        if (inferno_shared_1.isFunction(ref)) {
+            ref(instance);
+        }
+        else {
+            if (process.env.NODE_ENV !== 'production') {
+                if (inferno_shared_1.isStringOrNumber(ref)) {
+                    inferno_shared_1.throwError('string "refs" are not supported in Inferno 1.0. Use callback "refs" instead.');
+                }
+                else if (inferno_shared_1.isObject(ref) && (vNode.flags & 4 /* ComponentClass */)) {
+                    inferno_shared_1.throwError('functional component lifecycle events are not supported on ES2015 class components.');
+                }
+                else {
+                    inferno_shared_1.throwError("a bad value for \"ref\" was used on component: \"" + JSON.stringify(ref) + "\"");
+                }
+            }
+            inferno_shared_1.throwError();
+        }
+    }
+    var hasDidMount = !inferno_shared_1.isUndefined(instance.componentDidMount);
+    var afterMount = options_1.options.afterMount;
+    if (hasDidMount || !inferno_shared_1.isNull(afterMount)) {
+        lifecycle.addListener(function () {
+            instance._updating = true;
+            if (afterMount) {
+                afterMount(vNode);
+            }
+            if (hasDidMount) {
+                instance.componentDidMount();
+            }
+            instance._updating = false;
+        });
+    }
+}
+exports.mountClassComponentCallbacks = mountClassComponentCallbacks;
+function mountFunctionalComponentCallbacks(ref, dom, lifecycle) {
+    if (ref) {
+        if (!inferno_shared_1.isNullOrUndef(ref.onComponentWillMount)) {
+            ref.onComponentWillMount();
+        }
+        if (!inferno_shared_1.isNullOrUndef(ref.onComponentDidMount)) {
+            lifecycle.addListener(function () { return ref.onComponentDidMount(dom); });
+        }
+    }
+}
+exports.mountFunctionalComponentCallbacks = mountFunctionalComponentCallbacks;
+function mountRef(dom, value, lifecycle) {
+    if (inferno_shared_1.isFunction(value)) {
+        lifecycle.addListener(function () { return value(dom); });
+    }
+    else {
+        if (inferno_shared_1.isInvalid(value)) {
+            return;
+        }
+        if (process.env.NODE_ENV !== 'production') {
+            inferno_shared_1.throwError('string "refs" are not supported in Inferno 1.0. Use callback "refs" instead.');
+        }
+        inferno_shared_1.throwError();
+    }
+}
+exports.mountRef = mountRef;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+Object.defineProperty(exports, "__esModule", { value: true });
+var inferno_shared_1 = __webpack_require__(0);
+var options_1 = __webpack_require__(6);
+var patching_1 = __webpack_require__(8);
+var recycling_1 = __webpack_require__(22);
+var rendering_1 = __webpack_require__(12);
+var utils_1 = __webpack_require__(4);
+function unmount(vNode, parentDom, lifecycle, canRecycle, isRecycling) {
+    var flags = vNode.flags;
+    if (flags & 28 /* Component */) {
+        unmountComponent(vNode, parentDom, lifecycle, canRecycle, isRecycling);
+    }
+    else if (flags & 3970 /* Element */) {
+        unmountElement(vNode, parentDom, lifecycle, canRecycle, isRecycling);
+    }
+    else if (flags & (1 /* Text */ | 4096 /* Void */)) {
+        unmountVoidOrText(vNode, parentDom);
+    }
+}
+exports.unmount = unmount;
+function unmountVoidOrText(vNode, parentDom) {
+    if (!inferno_shared_1.isNull(parentDom)) {
+        utils_1.removeChild(parentDom, vNode.dom);
+    }
+}
+function unmountComponent(vNode, parentDom, lifecycle, canRecycle, isRecycling) {
+    var instance = vNode.children;
+    var flags = vNode.flags;
+    var isStatefulComponent = flags & 4 /* ComponentClass */;
+    var ref = vNode.ref;
+    var dom = vNode.dom;
+    if (!isRecycling) {
+        if (isStatefulComponent) {
+            if (!instance._unmounted) {
+                instance._blockSetState = true;
+                if (!inferno_shared_1.isNull(options_1.options.beforeUnmount)) {
+                    options_1.options.beforeUnmount(vNode);
+                }
+                if (!inferno_shared_1.isUndefined(instance.componentWillUnmount)) {
+                    instance.componentWillUnmount();
+                }
+                if (ref && !isRecycling) {
+                    ref(null);
+                }
+                instance._unmounted = true;
+                if (options_1.options.findDOMNodeEnabled) {
+                    rendering_1.componentToDOMNodeMap.delete(instance);
+                }
+                unmount(instance._lastInput, null, instance._lifecycle, false, isRecycling);
+            }
+        }
+        else {
+            if (!inferno_shared_1.isNullOrUndef(ref)) {
+                if (!inferno_shared_1.isNullOrUndef(ref.onComponentWillUnmount)) {
+                    ref.onComponentWillUnmount(dom);
+                }
+            }
+            unmount(instance, null, lifecycle, false, isRecycling);
+        }
+    }
+    if (parentDom) {
+        var lastInput = instance._lastInput;
+        if (inferno_shared_1.isNullOrUndef(lastInput)) {
+            lastInput = instance;
+        }
+        utils_1.removeChild(parentDom, dom);
+    }
+    if (options_1.options.recyclingEnabled && !isStatefulComponent && (parentDom || canRecycle)) {
+        recycling_1.poolComponent(vNode);
+    }
+}
+exports.unmountComponent = unmountComponent;
+function unmountElement(vNode, parentDom, lifecycle, canRecycle, isRecycling) {
+    var dom = vNode.dom;
+    var ref = vNode.ref;
+    var props = vNode.props;
+    if (ref && !isRecycling) {
+        unmountRef(ref);
+    }
+    var children = vNode.children;
+    if (!inferno_shared_1.isNullOrUndef(children)) {
+        unmountChildren(children, lifecycle, isRecycling);
+    }
+    if (!inferno_shared_1.isNull(props)) {
+        for (var name_1 in props) {
+            // do not add a hasOwnProperty check here, it affects performance
+            if (props[name_1] !== null && patching_1.isAttrAnEvent(name_1)) {
+                patching_1.patchEvent(name_1, props[name_1], null, dom);
+                // We need to set this null, because same props otherwise come back if SCU returns false and we are recyling
+                props[name_1] = null;
+            }
+        }
+    }
+    if (!inferno_shared_1.isNull(parentDom)) {
+        utils_1.removeChild(parentDom, dom);
+    }
+    if (options_1.options.recyclingEnabled && (parentDom || canRecycle)) {
+        recycling_1.poolElement(vNode);
+    }
+}
+exports.unmountElement = unmountElement;
+function unmountChildren(children, lifecycle, isRecycling) {
+    if (inferno_shared_1.isArray(children)) {
+        for (var i = 0, len = children.length; i < len; i++) {
+            var child = children[i];
+            if (!inferno_shared_1.isInvalid(child) && inferno_shared_1.isObject(child)) {
+                unmount(child, null, lifecycle, false, isRecycling);
+            }
+        }
+    }
+    else if (inferno_shared_1.isObject(children)) {
+        unmount(children, null, lifecycle, false, isRecycling);
+    }
+}
+function unmountRef(ref) {
+    if (inferno_shared_1.isFunction(ref)) {
+        ref(null);
+    }
+    else {
+        if (inferno_shared_1.isInvalid(ref)) {
+            return;
+        }
+        if (process.env.NODE_ENV !== 'production') {
+            inferno_shared_1.throwError('string "refs" are not supported in Inferno 1.0. Use callback "refs" instead.');
+        }
+        inferno_shared_1.throwError();
+    }
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var inferno_shared_1 = __webpack_require__(0);
+var InputWrapper_1 = __webpack_require__(73);
+var SelectWrapper_1 = __webpack_require__(74);
+var TextareaWrapper_1 = __webpack_require__(75);
+/**
+ * There is currently no support for switching same input between controlled and nonControlled
+ * If that ever becomes a real issue, then re design controlled elements
+ * Currently user must choose either controlled or non-controlled and stick with that
+ */
+function processElement(flags, vNode, dom, nextPropsOrEmpty, mounting, isControlled) {
+    if (flags & 512 /* InputElement */) {
+        InputWrapper_1.processInput(vNode, dom, nextPropsOrEmpty, mounting, isControlled);
+    }
+    if (flags & 2048 /* SelectElement */) {
+        SelectWrapper_1.processSelect(vNode, dom, nextPropsOrEmpty, mounting, isControlled);
+    }
+    if (flags & 1024 /* TextareaElement */) {
+        TextareaWrapper_1.processTextarea(vNode, dom, nextPropsOrEmpty, mounting, isControlled);
+    }
+}
+exports.processElement = processElement;
+function isControlledFormElement(nextPropsOrEmpty) {
+    return (nextPropsOrEmpty.type && InputWrapper_1.isCheckedType(nextPropsOrEmpty.type)) ? !inferno_shared_1.isNullOrUndef(nextPropsOrEmpty.checked) : !inferno_shared_1.isNullOrUndef(nextPropsOrEmpty.value);
+}
+exports.isControlledFormElement = isControlledFormElement;
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(76).default;
+module.exports.default = module.exports;
+
+
+
+/***/ }),
 /* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(57).default;
+module.exports = __webpack_require__(63).default;
 module.exports.default = module.exports;
 
 
@@ -6379,7 +6379,7 @@ module.exports.default = module.exports;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var redux_1 = __webpack_require__(82);
+var redux_1 = __webpack_require__(88);
 /**
  * Prints a warning in the console if it exists.
  *
@@ -6437,7 +6437,7 @@ exports.wrapActionCreators = wrapActionCreators;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var patching_1 = __webpack_require__(7);
+var patching_1 = __webpack_require__(8);
 var componentPools = new Map();
 var elementPools = new Map();
 function recycleElement(vNode, lifecycle, context, isSVG) {
@@ -6544,7 +6544,7 @@ exports.poolComponent = poolComponent;
 /* WEBPACK VAR INJECTION */(function(process) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var VNodes_1 = __webpack_require__(6);
+var VNodes_1 = __webpack_require__(7);
 function applyKey(key, vNode) {
     vNode.key = key;
     return vNode;
@@ -6741,7 +6741,7 @@ exports.normalize = normalize;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__root_js__ = __webpack_require__(77);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__root_js__ = __webpack_require__(83);
 
 
 /** Built-in value references. */
@@ -6755,9 +6755,9 @@ var Symbol = __WEBPACK_IMPORTED_MODULE_0__root_js__["a" /* default */].Symbol;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__baseGetTag_js__ = __webpack_require__(71);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getPrototype_js__ = __webpack_require__(73);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__isObjectLike_js__ = __webpack_require__(78);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__baseGetTag_js__ = __webpack_require__(77);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getPrototype_js__ = __webpack_require__(79);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__isObjectLike_js__ = __webpack_require__(84);
 
 
 
@@ -6871,7 +6871,7 @@ function compose() {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ActionTypes; });
 /* harmony export (immutable) */ __webpack_exports__["a"] = createStore;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_es_isPlainObject__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_symbol_observable__ = __webpack_require__(83);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_symbol_observable__ = __webpack_require__(89);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_symbol_observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_symbol_observable__);
 
 
@@ -7191,29 +7191,33 @@ exports.Game = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _index = __webpack_require__(39);
+var _index = __webpack_require__(41);
 
-var _viewportController = __webpack_require__(34);
+var _viewportController = __webpack_require__(36);
 
-var _rendererController = __webpack_require__(32);
+var _rendererController = __webpack_require__(34);
 
-var _socketController = __webpack_require__(33);
+var _socketController = __webpack_require__(35);
 
-var _helium = __webpack_require__(5);
+var _helium = __webpack_require__(3);
 
-var _textField = __webpack_require__(31);
+var _textField = __webpack_require__(33);
 
-var _mainScene = __webpack_require__(50);
+var _inject = __webpack_require__(31);
 
-var _infernoMainScene = __webpack_require__(48);
+var _nineSlicePlane = __webpack_require__(32);
 
-var _inferno = __webpack_require__(18);
+var _mainScene = __webpack_require__(54);
 
-var _infernoCreateElement = __webpack_require__(8);
+var _infernoMainScene = __webpack_require__(52);
+
+var _inferno = __webpack_require__(19);
+
+var _infernoCreateElement = __webpack_require__(11);
 
 var _infernoCreateElement2 = _interopRequireDefault(_infernoCreateElement);
 
-var _infernoRedux = __webpack_require__(13);
+var _infernoRedux = __webpack_require__(14);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7233,6 +7237,8 @@ var Game = exports.Game = function () {
     value: function start() {
       (0, _helium.importPixiBaseView)();
       (0, _helium.registerBaseView)('TextField', _textField.TextField);
+      (0, _helium.registerBaseView)('Inject', _inject.Inject);
+      (0, _helium.registerBaseView)('NineSlicePlane', _nineSlicePlane.NineSlicePlane);
       var store = this.store;
       var viewportController = (0, _viewportController.ViewportController)(store);
       viewportController.start(); // ensure the viewport has been initialize
@@ -7277,6 +7283,98 @@ var Game = exports.Game = function () {
 
 /***/ }),
 /* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Inject = exports.Inject = function () {
+  function Inject() {
+    _classCallCheck(this, Inject);
+
+    var el = new PIXI.Container();
+    this.el = el;
+  }
+
+  _createClass(Inject, [{
+    key: 'setAttribute',
+    value: function setAttribute(key, value) {
+      if (key === 'el') {
+        this.el.addChild(value);
+      }
+    }
+  }, {
+    key: 'removeAttribute',
+    value: function removeAttribute() {}
+  }, {
+    key: 'updateChildren',
+    value: function updateChildren() {}
+  }]);
+
+  return Inject;
+}();
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var NineSlicePlane = exports.NineSlicePlane = function () {
+  function NineSlicePlane(_ref) {
+    var texture = _ref.texture,
+        leftWidth = _ref.leftWidth,
+        topHeight = _ref.topHeight,
+        rightWidth = _ref.rightWidth,
+        bottomHeight = _ref.bottomHeight;
+
+    _classCallCheck(this, NineSlicePlane);
+
+    var el = new PIXI.mesh.NineSlicePlane(texture, leftWidth, topHeight, rightWidth, bottomHeight);
+
+    this.el = el;
+  }
+
+  _createClass(NineSlicePlane, [{
+    key: "setAttribute",
+    value: function setAttribute(key, value) {
+      this.el[key] = value;
+    }
+  }, {
+    key: "removeAttribute",
+    value: function removeAttribute() {}
+  }, {
+    key: "updateChildren",
+    value: function updateChildren(children) {
+      this.el.children = [];
+      for (var i = 0, len = children.length; i < len; i++) {
+        this.el.addChild(children[i].tagInstance.el);
+      }
+    }
+  }]);
+
+  return NineSlicePlane;
+}();
+
+/***/ }),
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7371,7 +7469,7 @@ var TextField = exports.TextField = function () {
 }();
 
 /***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7411,7 +7509,7 @@ function RendererController(store, renderer) {
 }
 
 /***/ }),
-/* 33 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7422,7 +7520,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.SocketController = SocketController;
 
-var _constants = __webpack_require__(10);
+var _constants = __webpack_require__(13);
 
 var _actions = __webpack_require__(1);
 
@@ -7488,7 +7586,7 @@ function SocketController(store) {
 }
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7546,7 +7644,7 @@ function ViewportController(store) {
 }
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7558,7 +7656,7 @@ var game = new _game.Game();
 game.start();
 
 /***/ }),
-/* 36 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7584,7 +7682,7 @@ function gameId() {
 }
 
 /***/ }),
-/* 37 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7610,7 +7708,7 @@ function gameList() {
 }
 
 /***/ }),
-/* 38 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7621,7 +7719,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.gameScene = gameScene;
 
-var _constants = __webpack_require__(10);
+var _constants = __webpack_require__(13);
 
 var _actions = __webpack_require__(1);
 
@@ -7644,7 +7742,7 @@ function gameScene() {
 }
 
 /***/ }),
-/* 39 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7655,23 +7753,23 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.game = undefined;
 
-var _gameScene = __webpack_require__(38);
+var _gameScene = __webpack_require__(40);
 
-var _viewport = __webpack_require__(45);
+var _viewport = __webpack_require__(47);
 
-var _name = __webpack_require__(42);
+var _name = __webpack_require__(44);
 
-var _isEnteredRoom = __webpack_require__(40);
+var _isEnteredRoom = __webpack_require__(42);
 
-var _gameId = __webpack_require__(36);
+var _gameId = __webpack_require__(38);
 
-var _isHost = __webpack_require__(41);
+var _isHost = __webpack_require__(43);
 
-var _gameList = __webpack_require__(37);
+var _gameList = __webpack_require__(39);
 
-var _users = __webpack_require__(44);
+var _users = __webpack_require__(46);
 
-var _players = __webpack_require__(43);
+var _players = __webpack_require__(45);
 
 var game = Redux.combineReducers({
   gameScene: _gameScene.gameScene,
@@ -7688,7 +7786,7 @@ var game = Redux.combineReducers({
 exports.game = game;
 
 /***/ }),
-/* 40 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7714,7 +7812,7 @@ function isEnteredRoom() {
 }
 
 /***/ }),
-/* 41 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7753,7 +7851,7 @@ function isHost() {
 }
 
 /***/ }),
-/* 42 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7779,7 +7877,7 @@ function name() {
 }
 
 /***/ }),
-/* 43 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7808,7 +7906,7 @@ function players() {
 }
 
 /***/ }),
-/* 44 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7837,7 +7935,7 @@ function users() {
 }
 
 /***/ }),
-/* 45 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7880,7 +7978,7 @@ function viewport() {
 }
 
 /***/ }),
-/* 46 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7891,13 +7989,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Armor = Armor;
 
-var _helium = __webpack_require__(5);
+var _helium = __webpack_require__(3);
 
-var _helpers = __webpack_require__(11);
+var _helpers = __webpack_require__(5);
 
-var _constants = __webpack_require__(12);
+var _constants = __webpack_require__(9);
 
-var _deck = __webpack_require__(19);
+var _deck = __webpack_require__(10);
 
 var DefaultHeight = 24;
 var ArmorName = new Map();
@@ -7926,7 +8024,8 @@ function Armor(_ref) {
   var style = {
     fontSize: fontSize,
     fontFamily: fontFamily,
-    fill: 'white'
+    fill: 'white',
+    fontWeight: 'bold'
   };
   var children = [];
   if (cardId !== -1) {
@@ -7987,7 +8086,7 @@ function Armor(_ref) {
 }
 
 /***/ }),
-/* 47 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7999,9 +8098,9 @@ Object.defineProperty(exports, "__esModule", {
 exports.ConnectChoosingActionScene = undefined;
 exports.ChoosingActionScene = ChoosingActionScene;
 
-var _infernoRedux = __webpack_require__(13);
+var _infernoRedux = __webpack_require__(14);
 
-var _infernoCreateElement = __webpack_require__(8);
+var _infernoCreateElement = __webpack_require__(11);
 
 var _infernoCreateElement2 = _interopRequireDefault(_infernoCreateElement);
 
@@ -8025,19 +8124,7 @@ function ChoosingActionScene(_ref) {
       }
       return false;
     }
-  }, (0, _infernoCreateElement2.default)('button', {
-    onClick: onCreateGame,
-    className: 'helium-button',
-    type: 'button'
-  }, 'Create Game'), (0, _infernoCreateElement2.default)('div', {
-    className: 'split-line-container'
-  }, (0, _infernoCreateElement2.default)('span', {
-    className: 'split-line'
-  }), (0, _infernoCreateElement2.default)('span', {
-    className: 'or'
-  }, 'OR'), (0, _infernoCreateElement2.default)('span', {
-    className: 'split-line'
-  })), (0, _infernoCreateElement2.default)('input', {
+  }, (0, _infernoCreateElement2.default)('input', {
     type: 'text',
     name: 'gameId',
     placeholder: 'Join Game ID',
@@ -8047,7 +8134,19 @@ function ChoosingActionScene(_ref) {
   }), (0, _infernoCreateElement2.default)('button', {
     type: 'submit',
     className: 'helium-button'
-  }, 'Join Game')));
+  }, 'Join Game'), (0, _infernoCreateElement2.default)('div', {
+    className: 'split-line-container'
+  }, (0, _infernoCreateElement2.default)('span', {
+    className: 'split-line'
+  }), (0, _infernoCreateElement2.default)('span', {
+    className: 'or'
+  }, 'OR'), (0, _infernoCreateElement2.default)('span', {
+    className: 'split-line'
+  })), (0, _infernoCreateElement2.default)('button', {
+    onClick: onCreateGame,
+    className: 'helium-button',
+    type: 'button'
+  }, 'Create Game')));
 }
 
 var ConnectChoosingActionScene = (0, _infernoRedux.connect)(function mapStateToProps(state) {
@@ -8074,7 +8173,189 @@ var ConnectChoosingActionScene = (0, _infernoRedux.connect)(function mapStateToP
 exports.ConnectChoosingActionScene = ConnectChoosingActionScene;
 
 /***/ }),
-/* 48 */
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.DefenseHorse = DefenseHorse;
+
+var _helium = __webpack_require__(3);
+
+var _helpers = __webpack_require__(5);
+
+var _deck = __webpack_require__(10);
+
+var DefaultHeight = 24;
+
+function DefenseHorse(_ref) {
+  var _ref$width = _ref.width,
+      width = _ref$width === undefined ? 0 : _ref$width,
+      _ref$height = _ref.height,
+      height = _ref$height === undefined ? 0 : _ref$height,
+      _ref$x = _ref.x,
+      x = _ref$x === undefined ? 0 : _ref$x,
+      _ref$y = _ref.y,
+      y = _ref$y === undefined ? 0 : _ref$y,
+      _ref$cardId = _ref.cardId,
+      cardId = _ref$cardId === undefined ? -1 : _ref$cardId;
+
+  var fontFamily = '\"微軟正黑體\", Arial, Helvetica, sans-serif';
+  var fontSize = (0, _helpers.getValue)(9, height, DefaultHeight);
+  var textY = (0, _helpers.getValue)(5, height, DefaultHeight);
+  var style = {
+    fontSize: fontSize,
+    fontFamily: fontFamily,
+    fill: 'white',
+    fontWeight: 'bold'
+  };
+  var children = [];
+  if (cardId !== -1) {
+    var card = _deck.FullDeck.find(function (cardInDeck) {
+      return cardInDeck.id === cardId;
+    });
+    if (card) {
+      var suitWidth = (0, _helpers.getValue)(14.4, height, DefaultHeight);
+      var imageWidth = (0, _helpers.getValue)(16.2, height, DefaultHeight);
+      var numberText = (0, _helpers.getValueText)(card.value);
+      var numberWidth = (0, _helpers.getTextWidth)(numberText, style);
+      var iconY = (0, _helpers.getValue)(3, height, DefaultHeight);
+      var imageY = (0, _helpers.getValue)(3, height, DefaultHeight);
+      var numberPadding = (0, _helpers.getValue)(2, height, DefaultHeight);
+      var imagePadding = (0, _helpers.getValue)(4, height, DefaultHeight);
+      var wholeWidth = suitWidth + numberWidth + numberPadding + imageWidth + imagePadding;
+      var margin = (width - wholeWidth) / 2 - (0, _helpers.getValue)(3, height, DefaultHeight);
+      children.push((0, _helium.createElement)('Sprite', {
+        width: suitWidth,
+        height: suitWidth,
+        y: iconY,
+        x: margin,
+        texture: PIXI.Texture.fromImage((0, _helpers.getSuitImagePath)(card.suit))
+      }), (0, _helium.createElement)('Text', {
+        text: numberText,
+        style: style,
+        y: textY,
+        x: margin + suitWidth + numberPadding
+      }), (0, _helium.createElement)('Sprite', {
+        x: margin + suitWidth + numberPadding + numberWidth + imagePadding,
+        y: imageY,
+        width: imageWidth,
+        height: imageWidth,
+        texture: PIXI.Texture.fromImage('assets/image/horse-plus-one.png')
+      }));
+    }
+  } else {
+    children.push((0, _helium.createElement)('Text', {
+      text: '坐騎',
+      style: {
+        fill: '#BF5C19',
+        fontWeight: 'bold',
+        fontSize: fontSize
+      },
+      anchor: {
+        x: 0.5,
+        y: 0
+      },
+      x: width / 2,
+      y: textY
+    }));
+  }
+  return (0, _helium.createElement)('Container', {
+    x: x,
+    y: y
+  }, children);
+}
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.General = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _helium = __webpack_require__(3);
+
+var _helpers = __webpack_require__(5);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var DefaultWidth = 81;
+
+var General = exports.General = function (_Component) {
+  _inherits(General, _Component);
+
+  function General() {
+    _classCallCheck(this, General);
+
+    return _possibleConstructorReturn(this, (General.__proto__ || Object.getPrototypeOf(General)).apply(this, arguments));
+  }
+
+  _createClass(General, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      this.graphics = new PIXI.Graphics();
+    }
+  }, {
+    key: 'render',
+    value: function render(_ref) {
+      var _ref$x = _ref.x,
+          x = _ref$x === undefined ? 0 : _ref$x,
+          _ref$y = _ref.y,
+          y = _ref$y === undefined ? 0 : _ref$y,
+          _ref$width = _ref.width,
+          width = _ref$width === undefined ? 0 : _ref$width,
+          _ref$name = _ref.name,
+          name = _ref$name === undefined ? '暗將' : _ref$name;
+
+      var graphics = this.graphics;
+      graphics.clear();
+      graphics.beginFill();
+      graphics.drawRect(0, 0, (0, _helpers.getValue)(81, width, DefaultWidth), (0, _helpers.getValue)(108, width, DefaultWidth));
+      graphics.endFill();
+      var texture = void 0;
+      if (name !== '') {
+        texture = PIXI.Texture.fromImage('assets/image/generals/' + name + '.jpg');
+      }
+      return (0, _helium.createElement)('Container', {
+        x: x,
+        y: y,
+        mask: graphics
+      }, [(0, _helium.createElement)('Inject', {
+        el: graphics
+      }), (0, _helium.createElement)('Sprite', {
+        x: (0, _helpers.getValue)(40.5, width, DefaultWidth),
+        y: (0, _helpers.getValue)(-10, width, DefaultWidth),
+        anchor: {
+          x: 0.5,
+          y: 0
+        },
+        width: (0, _helpers.getValue)(131, width, DefaultWidth),
+        height: (0, _helpers.getValue)(190, width, DefaultWidth),
+        texture: texture
+      })]);
+    }
+  }]);
+
+  return General;
+}(_helium.Component);
+
+/***/ }),
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8086,17 +8367,17 @@ Object.defineProperty(exports, "__esModule", {
 exports.ConnectInfernoMainScene = undefined;
 exports.InfernoMainScene = InfernoMainScene;
 
-var _infernoRedux = __webpack_require__(13);
+var _infernoRedux = __webpack_require__(14);
 
-var _infernoCreateElement = __webpack_require__(8);
+var _infernoCreateElement = __webpack_require__(11);
 
 var _infernoCreateElement2 = _interopRequireDefault(_infernoCreateElement);
 
-var _constants = __webpack_require__(10);
+var _constants = __webpack_require__(13);
 
-var _namingScene = __webpack_require__(51);
+var _namingScene = __webpack_require__(55);
 
-var _choosingActionScene = __webpack_require__(47);
+var _choosingActionScene = __webpack_require__(49);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8138,7 +8419,7 @@ var ConnectInfernoMainScene = (0, _infernoRedux.connect)(function mapStateToProp
 exports.ConnectInfernoMainScene = ConnectInfernoMainScene;
 
 /***/ }),
-/* 49 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8150,21 +8431,44 @@ Object.defineProperty(exports, "__esModule", {
 exports.ConnectLobbyScene = undefined;
 exports.LobbyScene = LobbyScene;
 
-var _helium = __webpack_require__(5);
+var _helium = __webpack_require__(3);
 
 var _actions = __webpack_require__(1);
 
-var _playerPanel = __webpack_require__(52);
+var _playerPanel = __webpack_require__(57);
 
-var _helpers = __webpack_require__(11);
+var _helpers = __webpack_require__(5);
 
 var DefaultWidth = 1152;
+var PanelPosition = [{
+  x: 927,
+  y: 308
+}, {
+  x: 927,
+  y: 55
+}, {
+  x: 694,
+  y: 5
+}, {
+  x: 463,
+  y: 5
+}, {
+  x: 234,
+  y: 5
+}, {
+  x: 2,
+  y: 55
+}, {
+  x: 2,
+  y: 308
+}];
 
 function LobbyScene(_ref) {
   var width = _ref.width,
       x = _ref.x,
       y = _ref.y,
       users = _ref.users,
+      userName = _ref.userName,
       isHost = _ref.isHost,
       onStartGame = _ref.onStartGame;
 
@@ -8172,15 +8476,30 @@ function LobbyScene(_ref) {
   var children = [];
   var playerPanelWidth = (0, _helpers.getValue)(234, width, DefaultWidth);
   var playerPanelHeight = (0, _helpers.getValue)(259.976, width, DefaultWidth);
-  for (var i = 0; i < maxUser; i++) {
-    var name = '';
-    if (i < users.length) {
-      name = users[i].name;
+  var currentUser = users.find(function (user) {
+    return user.name === userName;
+  });
+  var selfIndex = 0;
+  if (currentUser) {
+    selfIndex = users.indexOf(currentUser);
+  }
+  for (var i = selfIndex + 1; i <= selfIndex + maxUser; i++) {
+    var index = i % (maxUser + 1);
+    var seatIndex = i - selfIndex - 1;
+    if (selfIndex < 0) {
+      selfIndex += maxUser;
     }
-    var _x = playerPanelWidth * i;
+    var _x = (0, _helpers.getValue)(PanelPosition[seatIndex].x, width, DefaultWidth);
+    var _y = (0, _helpers.getValue)(PanelPosition[seatIndex].y, width, DefaultWidth);
+    var name = '';
+    if (users[index]) {
+      name = users[index].name;
+    }
     children.push((0, _helium.createElement)(_playerPanel.ConnectPlayerPanel, {
       name: name,
       x: _x,
+      y: _y,
+      position: index + 1,
       width: playerPanelWidth,
       height: playerPanelHeight
     }));
@@ -8194,7 +8513,8 @@ function LobbyScene(_ref) {
 var ConnectLobbyScene = (0, _helium.connect)(function mapStateToProps(state) {
   return {
     isHost: state.isHost,
-    users: state.users
+    users: state.users,
+    userName: state.name
   };
 }, function mapDispatchToProp(dispatch) {
   return {
@@ -8209,7 +8529,7 @@ var ConnectLobbyScene = (0, _helium.connect)(function mapStateToProps(state) {
 exports.ConnectLobbyScene = ConnectLobbyScene;
 
 /***/ }),
-/* 50 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8221,11 +8541,11 @@ Object.defineProperty(exports, "__esModule", {
 exports.ConnectMainScene = undefined;
 exports.MainScene = MainScene;
 
-var _helium = __webpack_require__(5);
+var _helium = __webpack_require__(3);
 
-var _constants = __webpack_require__(10);
+var _constants = __webpack_require__(13);
 
-var _lobbyScene = __webpack_require__(49);
+var _lobbyScene = __webpack_require__(53);
 
 var DefaultWidth = 1152;
 var DefaultHeight = 768;
@@ -8286,7 +8606,7 @@ var ConnectMainScene = (0, _helium.connect)(function mapStateToProps(state) {
 exports.ConnectMainScene = ConnectMainScene;
 
 /***/ }),
-/* 51 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8298,9 +8618,9 @@ Object.defineProperty(exports, "__esModule", {
 exports.ConnectNamingScene = undefined;
 exports.NamingScene = NamingScene;
 
-var _infernoRedux = __webpack_require__(13);
+var _infernoRedux = __webpack_require__(14);
 
-var _infernoCreateElement = __webpack_require__(8);
+var _infernoCreateElement = __webpack_require__(11);
 
 var _infernoCreateElement2 = _interopRequireDefault(_infernoCreateElement);
 
@@ -8350,7 +8670,105 @@ var ConnectNamingScene = (0, _infernoRedux.connect)(function mapStateToProps(sta
 exports.ConnectNamingScene = ConnectNamingScene;
 
 /***/ }),
-/* 52 */
+/* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.OffenseHorse = OffenseHorse;
+
+var _helium = __webpack_require__(3);
+
+var _helpers = __webpack_require__(5);
+
+var _deck = __webpack_require__(10);
+
+var DefaultHeight = 24;
+
+function OffenseHorse(_ref) {
+  var _ref$width = _ref.width,
+      width = _ref$width === undefined ? 0 : _ref$width,
+      _ref$height = _ref.height,
+      height = _ref$height === undefined ? 0 : _ref$height,
+      _ref$x = _ref.x,
+      x = _ref$x === undefined ? 0 : _ref$x,
+      _ref$y = _ref.y,
+      y = _ref$y === undefined ? 0 : _ref$y,
+      _ref$cardId = _ref.cardId,
+      cardId = _ref$cardId === undefined ? -1 : _ref$cardId;
+
+  var fontFamily = '\"微軟正黑體\", Arial, Helvetica, sans-serif';
+  var fontSize = (0, _helpers.getValue)(9, height, DefaultHeight);
+  var textY = (0, _helpers.getValue)(5, height, DefaultHeight);
+  var style = {
+    fontSize: fontSize,
+    fontFamily: fontFamily,
+    fill: 'white',
+    fontWeight: 'bold'
+  };
+  var children = [];
+  if (cardId !== -1) {
+    var card = _deck.FullDeck.find(function (cardInDeck) {
+      return cardInDeck.id === cardId;
+    });
+    if (card) {
+      var suitWidth = (0, _helpers.getValue)(14.4, height, DefaultHeight);
+      var imageWidth = (0, _helpers.getValue)(16.2, height, DefaultHeight);
+      var numberText = (0, _helpers.getValueText)(card.value);
+      var numberWidth = (0, _helpers.getTextWidth)(numberText, style);
+      var iconY = (0, _helpers.getValue)(3, height, DefaultHeight);
+      var imageY = (0, _helpers.getValue)(3, height, DefaultHeight);
+      var numberPadding = (0, _helpers.getValue)(2, height, DefaultHeight);
+      var imagePadding = (0, _helpers.getValue)(4, height, DefaultHeight);
+      var wholeWidth = suitWidth + numberWidth + numberPadding + imageWidth + imagePadding;
+      var margin = (width - wholeWidth) / 2 - (0, _helpers.getValue)(2, height, DefaultHeight);
+      children.push((0, _helium.createElement)('Sprite', {
+        width: suitWidth,
+        height: suitWidth,
+        y: iconY,
+        x: margin,
+        texture: PIXI.Texture.fromImage((0, _helpers.getSuitImagePath)(card.suit))
+      }), (0, _helium.createElement)('Text', {
+        text: numberText,
+        style: style,
+        y: textY,
+        x: margin + suitWidth + numberPadding
+      }), (0, _helium.createElement)('Sprite', {
+        x: margin + suitWidth + numberPadding + numberWidth + imagePadding,
+        y: imageY,
+        width: imageWidth,
+        height: imageWidth,
+        texture: PIXI.Texture.fromImage('assets/image/horse-minus-one.png')
+      }));
+    }
+  } else {
+    children.push((0, _helium.createElement)('Text', {
+      text: '坐騎',
+      style: {
+        fill: '#BF5C19',
+        fontWeight: 'bold',
+        fontSize: fontSize
+      },
+      anchor: {
+        x: 0.5,
+        y: 0
+      },
+      x: width / 2,
+      y: textY
+    }));
+  }
+  return (0, _helium.createElement)('Container', {
+    x: x,
+    y: y
+  }, children);
+}
+
+/***/ }),
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8362,17 +8780,25 @@ Object.defineProperty(exports, "__esModule", {
 exports.ConnectPlayerPanel = undefined;
 exports.PlayerPanel = PlayerPanel;
 
-var _helium = __webpack_require__(5);
+var _helium = __webpack_require__(3);
 
-var _constants = __webpack_require__(55);
+var _constants = __webpack_require__(61);
 
-var _helpers = __webpack_require__(11);
+var _helpers = __webpack_require__(5);
 
-var _rectangle = __webpack_require__(53);
+var _rectangle = __webpack_require__(58);
 
-var _weapon = __webpack_require__(54);
+var _weapon = __webpack_require__(60);
 
-var _armor = __webpack_require__(46);
+var _armor = __webpack_require__(48);
+
+var _defenseHorse = __webpack_require__(50);
+
+var _offenseHorse = __webpack_require__(56);
+
+var _general = __webpack_require__(51);
+
+var _treasure = __webpack_require__(59);
 
 var DefaultWidth = 234;
 
@@ -8390,17 +8816,20 @@ function PlayerPanel(_ref) {
       _ref$hp = _ref.hp,
       hp = _ref$hp === undefined ? 0 : _ref$hp,
       _ref$position = _ref.position,
-      position = _ref$position === undefined ? 1 : _ref$position;
+      position = _ref$position === undefined ? 1 : _ref$position,
+      _ref$generals = _ref.generals,
+      generals = _ref$generals === undefined ? ['暗將', '暗將'] : _ref$generals;
 
   var fontFamily = '\"微軟正黑體\", Arial, Helvetica, sans-serif';
-  var mainGeneralText = '主 | SP Vincent';
-  var viceGeneralText = '副 | SP Vincent';
+  var mainGeneralText = '主 | ' + (generals[0] !== '暗將' ? generals[0] : '');
+  var viceGeneralText = '副 | ' + (generals[1] !== '暗將' ? generals[0] : '');
   var generalTextStyle = {
     fill: 'white',
     fontFamily: fontFamily,
     fontWeight: 'bold',
     fontSize: (0, _helpers.getValue)(8, width, DefaultWidth)
   };
+
   return (0, _helium.createElement)('Container', {
     x: x,
     y: y
@@ -8412,6 +8841,14 @@ function PlayerPanel(_ref) {
     texture: PIXI.Texture.fromImage('assets/image/region-purple.png'),
     width: (0, _helpers.getValue)(54, width, DefaultWidth),
     height: (0, _helpers.getValue)(54, width, DefaultWidth)
+  }), (0, _helium.createElement)(_general.General, {
+    x: (0, _helpers.getValue)(36.5, width, DefaultWidth),
+    y: (0, _helpers.getValue)(51, width, DefaultWidth),
+    width: (0, _helpers.getValue)(80, width, DefaultWidth)
+  }), (0, _helium.createElement)(_general.General, {
+    x: (0, _helpers.getValue)(119.5, width, DefaultWidth),
+    y: (0, _helpers.getValue)(51, width, DefaultWidth),
+    width: (0, _helpers.getValue)(80, width, DefaultWidth)
   }), (0, _helium.createElement)('Sprite', {
     texture: PIXI.Texture.fromImage('assets/image/chain.png'),
     anchor: {
@@ -8445,12 +8882,12 @@ function PlayerPanel(_ref) {
       x: 0,
       y: 1
     },
-    width: (0, _helpers.getValue)(80.5, width, DefaultWidth),
+    width: (0, _helpers.getValue)(80, width, DefaultWidth),
     height: (0, _helpers.getValue)(16, width, DefaultWidth)
   }), (0, _helium.createElement)(_rectangle.Rectangle, {
     color: 0xffffff,
     alpha: 0.5,
-    x: (0, _helpers.getValue)(120, width, DefaultWidth),
+    x: (0, _helpers.getValue)(119.5, width, DefaultWidth),
     y: (0, _helpers.getValue)(140, width, DefaultWidth),
     anchor: {
       x: 0,
@@ -8479,7 +8916,7 @@ function PlayerPanel(_ref) {
     y: (0, _helpers.getValue)(57, width, DefaultWidth),
     style: generalTextStyle
   }), (0, _helium.createElement)('Text', {
-    text: '12',
+    text: '0',
     x: (0, _helpers.getValue)(151, width, DefaultWidth),
     y: (0, _helpers.getValue)(32, width, DefaultWidth),
     anchor: {
@@ -8516,6 +8953,21 @@ function PlayerPanel(_ref) {
     y: (0, _helpers.getValue)(158.5, width, DefaultWidth),
     width: (0, _helpers.getValue)(80.5, width, DefaultWidth),
     height: (0, _helpers.getValue)(24, width, DefaultWidth)
+  }), (0, _helium.createElement)(_defenseHorse.DefenseHorse, {
+    x: (0, _helpers.getValue)(36.5, width, DefaultWidth),
+    y: (0, _helpers.getValue)(184.5, width, DefaultWidth),
+    width: (0, _helpers.getValue)(49.5, width, DefaultWidth),
+    height: (0, _helpers.getValue)(24, width, DefaultWidth)
+  }), (0, _helium.createElement)(_offenseHorse.OffenseHorse, {
+    x: (0, _helpers.getValue)(87.5, width, DefaultWidth),
+    y: (0, _helpers.getValue)(184.5, width, DefaultWidth),
+    width: (0, _helpers.getValue)(49.5, width, DefaultWidth),
+    height: (0, _helpers.getValue)(24, width, DefaultWidth)
+  }), (0, _helium.createElement)(_treasure.Treasure, {
+    x: (0, _helpers.getValue)(137.5, width, DefaultWidth),
+    y: (0, _helpers.getValue)(184.5, width, DefaultWidth),
+    width: (0, _helpers.getValue)(63.5, width, DefaultWidth),
+    height: (0, _helpers.getValue)(24, width, DefaultWidth)
   })]);
 }
 
@@ -8532,20 +8984,18 @@ var ConnectPlayerPanel = (0, _helium.connect)(function mapStateToProps(state, _r
         _player$maxHp = player.maxHp,
         maxHp = _player$maxHp === undefined ? 0 : _player$maxHp,
         _player$generals = player.generals,
-        generals = _player$generals === undefined ? [] : _player$generals,
+        generals = _player$generals === undefined ? ['暗將', '暗將'] : _player$generals,
         _player$gender = player.gender,
         gender = _player$gender === undefined ? _constants.Gender.Undef : _player$gender,
         _player$region = player.region,
         region = _player$region === undefined ? _constants.Region.Undef : _player$region;
 
-    var position = state.players.indexOf(player) + 1;
     return {
       hp: hp,
       maxHp: maxHp,
       generals: generals,
       gender: gender,
-      region: region,
-      position: position
+      region: region
     };
   }
   return null;
@@ -8554,7 +9004,7 @@ var ConnectPlayerPanel = (0, _helium.connect)(function mapStateToProps(state, _r
 exports.ConnectPlayerPanel = ConnectPlayerPanel;
 
 /***/ }),
-/* 53 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8565,7 +9015,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Rectangle = Rectangle;
 
-var _helium = __webpack_require__(5);
+var _helium = __webpack_require__(3);
 
 var canvas = document.createElement('canvas');
 canvas.width = 8;
@@ -8602,7 +9052,155 @@ function Rectangle(_ref) {
 }
 
 /***/ }),
-/* 54 */
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Treasure = Treasure;
+
+var _helium = __webpack_require__(3);
+
+var _helpers = __webpack_require__(5);
+
+var _deck = __webpack_require__(10);
+
+var _constants = __webpack_require__(9);
+
+var DefaultHeight = 24;
+var TreasureName = new Map();
+TreasureName.set(_constants.EquipmentType.WoodHorse, '木牛');
+TreasureName.set(_constants.EquipmentType.JadeSeal, '玉璽');
+
+function Treasure(_ref) {
+  var _ref$width = _ref.width,
+      width = _ref$width === undefined ? 0 : _ref$width,
+      _ref$height = _ref.height,
+      height = _ref$height === undefined ? 0 : _ref$height,
+      _ref$x = _ref.x,
+      x = _ref$x === undefined ? 0 : _ref$x,
+      _ref$y = _ref.y,
+      y = _ref$y === undefined ? 0 : _ref$y,
+      _ref$cardId = _ref.cardId,
+      cardId = _ref$cardId === undefined ? -1 : _ref$cardId,
+      _ref$cardInTreasure = _ref.cardInTreasure,
+      cardInTreasure = _ref$cardInTreasure === undefined ? [] : _ref$cardInTreasure;
+
+  var fontFamily = '\"微軟正黑體\", Arial, Helvetica, sans-serif';
+  var fontSize = (0, _helpers.getValue)(9, height, DefaultHeight);
+  var textY = (0, _helpers.getValue)(5, height, DefaultHeight);
+  var style = {
+    fontSize: fontSize,
+    fontFamily: fontFamily,
+    fill: 'white',
+    fontWeight: 'bold'
+  };
+  var children = [];
+  var cardInTreasureLength = cardInTreasure.length;
+  var isHasCard = cardInTreasure.length > 0;
+  if (cardId !== -1) {
+    var card = _deck.FullDeck.find(function (cardInDeck) {
+      return cardInDeck.id === cardId;
+    });
+    if (card) {
+      var suitWidth = (0, _helpers.getValue)(14.4, height, DefaultHeight);
+      var imageWidth = isHasCard ? 45 : 31.25;
+      var imageHeight = (0, _helpers.getValue)(14.4, height, DefaultHeight);
+      var realImageWidth = imageWidth * imageHeight / 18;
+      var numberText = (0, _helpers.getValueText)(card.value);
+      var numberWidth = (0, _helpers.getTextWidth)(numberText, style);
+      var iconY = (0, _helpers.getValue)(3, height, DefaultHeight);
+      var imageY = (0, _helpers.getValue)(4, height, DefaultHeight);
+      var numberPadding = (0, _helpers.getValue)(2, height, DefaultHeight);
+      var imagePadding = (0, _helpers.getValue)(4, height, DefaultHeight);
+      var wholeWidth = suitWidth + numberWidth + numberPadding + realImageWidth + imagePadding;
+      var margin = (width - wholeWidth) / 2 - (0, _helpers.getValue)(2, height, DefaultHeight);
+      var treasureName = TreasureName.get(card.effectType);
+      var _textY = (0, _helpers.getValue)(5, height, DefaultHeight);
+      var textX = margin + suitWidth + numberPadding + numberWidth + imagePadding + (0, _helpers.getValue)(3, height, DefaultHeight);
+      var circleWidth = (0, _helpers.getValue)(10.8, height, DefaultHeight);
+      children.push((0, _helium.createElement)('Sprite', {
+        width: suitWidth,
+        height: suitWidth,
+        y: iconY,
+        x: margin,
+        texture: PIXI.Texture.fromImage((0, _helpers.getSuitImagePath)(card.suit))
+      }), (0, _helium.createElement)('Text', {
+        text: numberText,
+        style: style,
+        y: _textY,
+        x: margin + suitWidth + numberPadding
+      }), (0, _helium.createElement)('NineSlicePlane', {
+        x: margin + suitWidth + numberPadding + numberWidth + imagePadding,
+        y: imageY,
+        width: imageWidth,
+        height: 18,
+        scale: {
+          x: imageHeight / 18,
+          y: imageHeight / 18
+        },
+        texture: PIXI.Texture.fromImage('assets/image/treasure-bg.png'),
+        leftWidth: 9,
+        rightWidth: 9,
+        topHeight: 9,
+        bottomHeight: 9
+      }), (0, _helium.createElement)('Text', {
+        text: treasureName,
+        y: _textY,
+        x: textX,
+        style: style
+      }), (0, _helium.createElement)('Sprite', {
+        width: circleWidth,
+        height: circleWidth,
+        visible: isHasCard,
+        y: (0, _helpers.getValue)(6, height, DefaultHeight),
+        x: margin + suitWidth + numberPadding + numberWidth + imagePadding + (0, _helpers.getValue)(22, height, DefaultHeight),
+        texture: PIXI.Texture.fromImage('assets/image/treasure-card-no.png')
+      }), (0, _helium.createElement)('Text', {
+        text: cardInTreasureLength,
+        visible: isHasCard,
+        style: {
+          fill: 'black',
+          fontSize: fontSize,
+          fontFamily: fontFamily,
+          fontWeight: 'bold'
+        },
+        y: (0, _helpers.getValue)(5, height, DefaultHeight),
+        x: margin + suitWidth + numberPadding + numberWidth + imagePadding + (0, _helpers.getValue)(22, height, DefaultHeight) + circleWidth / 2,
+        anchor: {
+          x: 0.5,
+          y: 0
+        }
+      }));
+    }
+  } else {
+    children.push((0, _helium.createElement)('Text', {
+      text: '寶物',
+      style: {
+        fill: '#BF5C19',
+        fontWeight: 'bold',
+        fontSize: fontSize
+      },
+      anchor: {
+        x: 0.5,
+        y: 0
+      },
+      x: width / 2,
+      y: textY
+    }));
+  }
+  return (0, _helium.createElement)('Container', {
+    x: x,
+    y: y
+  }, children);
+}
+
+/***/ }),
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8613,13 +9211,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Weapon = Weapon;
 
-var _helium = __webpack_require__(5);
+var _helium = __webpack_require__(3);
 
-var _helpers = __webpack_require__(11);
+var _helpers = __webpack_require__(5);
 
-var _constants = __webpack_require__(12);
+var _constants = __webpack_require__(9);
 
-var _deck = __webpack_require__(19);
+var _deck = __webpack_require__(10);
 
 var DefaultHeight = 24;
 var WeaponName = new Map();
@@ -8656,7 +9254,8 @@ function Weapon(_ref) {
   var style = {
     fontSize: fontSize,
     fontFamily: fontFamily,
-    fill: 'white'
+    fill: 'white',
+    fontWeight: 'bold'
   };
   var children = [];
   if (cardId !== -1) {
@@ -8717,7 +9316,7 @@ function Weapon(_ref) {
 }
 
 /***/ }),
-/* 55 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8759,7 +9358,7 @@ var FlowState = exports.FlowState = {
 };
 
 /***/ }),
-/* 56 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8814,14 +9413,14 @@ module.exports.default = module.exports;
 
 
 /***/ }),
-/* 57 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // Make sure u use EMPTY_OBJ from 'inferno', otherwise it'll be a different reference
-var inferno_1 = __webpack_require__(18);
+var inferno_1 = __webpack_require__(19);
 var inferno_shared_1 = __webpack_require__(0);
 var noOp = inferno_shared_1.ERROR_MSG;
 if (process.env.NODE_ENV !== 'production') {
@@ -9085,13 +9684,13 @@ exports.default = Component;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 58 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var inferno_1 = __webpack_require__(18);
+var inferno_1 = __webpack_require__(19);
 var inferno_shared_1 = __webpack_require__(0);
 var componentHooks = new Set();
 componentHooks.add('onComponentWillMount');
@@ -9185,7 +9784,7 @@ exports.default = createElement;
 
 
 /***/ }),
-/* 59 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9244,7 +9843,7 @@ if (process.env.NODE_ENV !== 'production') {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 60 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9260,11 +9859,11 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var hoist_non_inferno_statics_1 = __webpack_require__(56);
+var hoist_non_inferno_statics_1 = __webpack_require__(62);
 var inferno_component_1 = __webpack_require__(20);
-var inferno_create_element_1 = __webpack_require__(8);
+var inferno_create_element_1 = __webpack_require__(11);
 var inferno_shared_1 = __webpack_require__(0);
-var helpers_1 = __webpack_require__(61);
+var helpers_1 = __webpack_require__(67);
 var utils_1 = __webpack_require__(21);
 var errorObject = { value: null };
 var defaultMapStateToProps = function (state) { return ({}); }; // eslint-disable-line no-unused-vars
@@ -9555,7 +10154,7 @@ exports.default = connect;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 61 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9594,15 +10193,15 @@ exports.isPlainObject = isPlainObject;
 
 
 /***/ }),
-/* 62 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var connect_1 = __webpack_require__(60);
+var connect_1 = __webpack_require__(66);
 exports.connect = connect_1.default;
-var Provider_1 = __webpack_require__(59);
+var Provider_1 = __webpack_require__(65);
 exports.Provider = Provider_1.default;
 exports.default = {
     Provider: Provider_1.default,
@@ -9611,7 +10210,7 @@ exports.default = {
 
 
 /***/ }),
-/* 63 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9718,7 +10317,7 @@ Lifecycle.prototype.trigger = function trigger() {
 
 
 /***/ }),
-/* 64 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9829,7 +10428,7 @@ function trapClickOnNonInteractiveElement(dom) {
 
 
 /***/ }),
-/* 65 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9852,20 +10451,20 @@ exports.linkEvent = linkEvent;
 
 
 /***/ }),
-/* 66 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var options_1 = __webpack_require__(4);
-var constants_1 = __webpack_require__(14);
-var mounting_1 = __webpack_require__(15);
-var patching_1 = __webpack_require__(7);
-var rendering_1 = __webpack_require__(9);
-var utils_1 = __webpack_require__(3);
-var processElement_1 = __webpack_require__(17);
+var options_1 = __webpack_require__(6);
+var constants_1 = __webpack_require__(15);
+var mounting_1 = __webpack_require__(16);
+var patching_1 = __webpack_require__(8);
+var rendering_1 = __webpack_require__(12);
+var utils_1 = __webpack_require__(4);
+var processElement_1 = __webpack_require__(18);
 function normalizeChildNodes(parentDom) {
     var dom = parentDom.firstChild;
     while (dom) {
@@ -10057,14 +10656,14 @@ exports.hydrateRoot = hydrateRoot;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 67 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var utils_1 = __webpack_require__(3);
+var utils_1 = __webpack_require__(4);
 function isCheckedType(type) {
     return type === 'checkbox' || type === 'radio';
 }
@@ -10192,15 +10791,15 @@ exports.applyValue = applyValue;
 
 
 /***/ }),
-/* 68 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var VNodes_1 = __webpack_require__(6);
-var utils_1 = __webpack_require__(3);
+var VNodes_1 = __webpack_require__(7);
+var utils_1 = __webpack_require__(4);
 function updateChildOptionGroup(vNode, value) {
     var type = vNode.type;
     if (type === 'optgroup') {
@@ -10292,14 +10891,14 @@ exports.applyValue = applyValue;
 
 
 /***/ }),
-/* 69 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var inferno_shared_1 = __webpack_require__(0);
-var utils_1 = __webpack_require__(3);
+var utils_1 = __webpack_require__(4);
 function wrappedOnChange(e) {
     var props = this.vNode.props || utils_1.EMPTY_OBJ;
     var event = props.onChange;
@@ -10378,7 +10977,7 @@ exports.applyValue = applyValue;
 
 
 /***/ }),
-/* 70 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10390,23 +10989,23 @@ exports.NO_OP = inferno_shared_1.NO_OP;
 var normalization_1 = __webpack_require__(23);
 exports.getFlagsForElementVnode = normalization_1.getFlagsForElementVnode;
 exports.internal_normalize = normalization_1.normalize;
-var options_1 = __webpack_require__(4);
+var options_1 = __webpack_require__(6);
 exports.options = options_1.options;
-var VNodes_1 = __webpack_require__(6);
+var VNodes_1 = __webpack_require__(7);
 exports.cloneVNode = VNodes_1.cloneVNode;
 exports.createVNode = VNodes_1.createVNode;
-var constants_1 = __webpack_require__(14);
+var constants_1 = __webpack_require__(15);
 exports.internal_isUnitlessNumber = constants_1.isUnitlessNumber;
-var linkEvent_1 = __webpack_require__(65);
+var linkEvent_1 = __webpack_require__(71);
 exports.linkEvent = linkEvent_1.linkEvent;
-var patching_1 = __webpack_require__(7);
+var patching_1 = __webpack_require__(8);
 exports.internal_patch = patching_1.patch;
-var rendering_1 = __webpack_require__(9);
+var rendering_1 = __webpack_require__(12);
 exports.internal_DOMNodeMap = rendering_1.componentToDOMNodeMap;
 exports.createRenderer = rendering_1.createRenderer;
 exports.findDOMNode = rendering_1.findDOMNode;
 exports.render = rendering_1.render;
-var utils_1 = __webpack_require__(3);
+var utils_1 = __webpack_require__(4);
 exports.EMPTY_OBJ = utils_1.EMPTY_OBJ;
 if (process.env.NODE_ENV !== 'production') {
     /* tslint:disable-next-line:no-empty */
@@ -10442,13 +11041,13 @@ exports.default = {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 71 */
+/* 77 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Symbol_js__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getRawTag_js__ = __webpack_require__(74);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__objectToString_js__ = __webpack_require__(75);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getRawTag_js__ = __webpack_require__(80);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__objectToString_js__ = __webpack_require__(81);
 
 
 
@@ -10480,7 +11079,7 @@ function baseGetTag(value) {
 
 
 /***/ }),
-/* 72 */
+/* 78 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10492,11 +11091,11 @@ var freeGlobal = typeof global == 'object' && global && global.Object === Object
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(29)))
 
 /***/ }),
-/* 73 */
+/* 79 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__overArg_js__ = __webpack_require__(76);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__overArg_js__ = __webpack_require__(82);
 
 
 /** Built-in value references. */
@@ -10506,7 +11105,7 @@ var getPrototype = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__overArg_js
 
 
 /***/ }),
-/* 74 */
+/* 80 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10560,7 +11159,7 @@ function getRawTag(value) {
 
 
 /***/ }),
-/* 75 */
+/* 81 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10589,7 +11188,7 @@ function objectToString(value) {
 
 
 /***/ }),
-/* 76 */
+/* 82 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10611,11 +11210,11 @@ function overArg(func, transform) {
 
 
 /***/ }),
-/* 77 */
+/* 83 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__freeGlobal_js__ = __webpack_require__(72);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__freeGlobal_js__ = __webpack_require__(78);
 
 
 /** Detect free variable `self`. */
@@ -10628,7 +11227,7 @@ var root = __WEBPACK_IMPORTED_MODULE_0__freeGlobal_js__["a" /* default */] || fr
 
 
 /***/ }),
-/* 78 */
+/* 84 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10664,7 +11263,7 @@ function isObjectLike(value) {
 
 
 /***/ }),
-/* 79 */
+/* 85 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10720,7 +11319,7 @@ function applyMiddleware() {
 }
 
 /***/ }),
-/* 80 */
+/* 86 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10774,7 +11373,7 @@ function bindActionCreators(actionCreators, dispatch) {
 }
 
 /***/ }),
-/* 81 */
+/* 87 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10914,15 +11513,15 @@ function combineReducers(reducers) {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
 
 /***/ }),
-/* 82 */
+/* 88 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createStore__ = __webpack_require__(27);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__combineReducers__ = __webpack_require__(81);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bindActionCreators__ = __webpack_require__(80);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__applyMiddleware__ = __webpack_require__(79);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__combineReducers__ = __webpack_require__(87);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bindActionCreators__ = __webpack_require__(86);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__applyMiddleware__ = __webpack_require__(85);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__compose__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_warning__ = __webpack_require__(28);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "createStore", function() { return __WEBPACK_IMPORTED_MODULE_0__createStore__["a"]; });
@@ -10951,14 +11550,14 @@ if (process.env.NODE_ENV !== 'production' && typeof isCrushed.name === 'string' 
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
 
 /***/ }),
-/* 83 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(84);
+module.exports = __webpack_require__(90);
 
 
 /***/ }),
-/* 84 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10968,7 +11567,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _ponyfill = __webpack_require__(85);
+var _ponyfill = __webpack_require__(91);
 
 var _ponyfill2 = _interopRequireDefault(_ponyfill);
 
@@ -10991,10 +11590,10 @@ if (typeof self !== 'undefined') {
 
 var result = (0, _ponyfill2['default'])(root);
 exports['default'] = result;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(29), __webpack_require__(86)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(29), __webpack_require__(92)(module)))
 
 /***/ }),
-/* 85 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11023,7 +11622,7 @@ function symbolObservablePonyfill(root) {
 };
 
 /***/ }),
-/* 86 */
+/* 92 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {

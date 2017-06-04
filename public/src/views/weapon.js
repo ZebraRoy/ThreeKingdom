@@ -44,7 +44,8 @@ export function Weapon ({
   const style = {
     fontSize,
     fontFamily,
-    fill: 'white'
+    fill: 'white',
+    fontWeight: 'bold'
   };
   const children = [];
   if (cardId !== -1) {

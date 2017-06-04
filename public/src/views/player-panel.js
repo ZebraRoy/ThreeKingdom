@@ -18,19 +18,32 @@ import {
 import {
   Armor
 } from './armor';
+import {
+  DefenseHorse
+} from './defense-horse';
+import {
+  OffenseHorse
+} from './offense-horse';
+import {
+  General
+} from './general';
+import {
+  Treasure
+} from './treasure';
 
 const DefaultWidth = 234;
 
-export function PlayerPanel ({ width = 0, x = 0, y = 0, name = '', maxHp = 0, hp = 0, position = 1 }) {
+export function PlayerPanel ({ width = 0, x = 0, y = 0, name = '', maxHp = 0, hp = 0, position = 1, generals = ['暗將', '暗將'] }) {
   const fontFamily = '\"微軟正黑體\", Arial, Helvetica, sans-serif';
-  const mainGeneralText = '主 | SP Vincent';
-  const viceGeneralText = '副 | SP Vincent';
+  const mainGeneralText = '主 | ' + (generals[0] !== '暗將' ? generals[0] : '');
+  const viceGeneralText = '副 | ' + (generals[1] !== '暗將' ? generals[0] : '');
   const generalTextStyle = {
     fill: 'white',
     fontFamily,
     fontWeight: 'bold',
     fontSize: getValue(8, width, DefaultWidth)
   };
+
   return createElement(
     'Container',
     {
@@ -52,6 +65,22 @@ export function PlayerPanel ({ width = 0, x = 0, y = 0, name = '', maxHp = 0, hp
           texture: PIXI.Texture.fromImage('assets/image/region-purple.png'),
           width: getValue(54, width, DefaultWidth),
           height: getValue(54, width, DefaultWidth)
+        }
+      ),
+      createElement(
+        General,
+        {
+          x: getValue(36.5, width, DefaultWidth),
+          y: getValue(51, width, DefaultWidth),
+          width: getValue(80, width, DefaultWidth)
+        }
+      ),
+      createElement(
+        General,
+        {
+          x: getValue(119.5, width, DefaultWidth),
+          y: getValue(51, width, DefaultWidth),
+          width: getValue(80, width, DefaultWidth)
         }
       ),
       createElement(
@@ -101,7 +130,7 @@ export function PlayerPanel ({ width = 0, x = 0, y = 0, name = '', maxHp = 0, hp
             x: 0,
             y: 1
           },
-          width: getValue(80.5, width, DefaultWidth),
+          width: getValue(80, width, DefaultWidth),
           height: getValue(16, width, DefaultWidth)
         }
       ),
@@ -110,7 +139,7 @@ export function PlayerPanel ({ width = 0, x = 0, y = 0, name = '', maxHp = 0, hp
         {
           color: 0xffffff,
           alpha: 0.5,
-          x: getValue(120, width, DefaultWidth),
+          x: getValue(119.5, width, DefaultWidth),
           y: getValue(140, width, DefaultWidth),
           anchor: {
             x: 0,
@@ -155,7 +184,7 @@ export function PlayerPanel ({ width = 0, x = 0, y = 0, name = '', maxHp = 0, hp
       createElement(
         'Text',
         {
-          text: '12',
+          text: '0',
           x: getValue(151, width, DefaultWidth),
           y: getValue(32, width, DefaultWidth),
           anchor: {
@@ -205,6 +234,33 @@ export function PlayerPanel ({ width = 0, x = 0, y = 0, name = '', maxHp = 0, hp
           width: getValue(80.5, width, DefaultWidth),
           height: getValue(24, width, DefaultWidth)
         }
+      ),
+      createElement(
+        DefenseHorse,
+        {
+          x: getValue(36.5, width, DefaultWidth),
+          y: getValue(184.5, width, DefaultWidth),
+          width: getValue(49.5, width, DefaultWidth),
+          height: getValue(24, width, DefaultWidth)
+        }
+      ),
+      createElement(
+        OffenseHorse,
+        {
+          x: getValue(87.5, width, DefaultWidth),
+          y: getValue(184.5, width, DefaultWidth),
+          width: getValue(49.5, width, DefaultWidth),
+          height: getValue(24, width, DefaultWidth)
+        }
+      ),
+      createElement(
+        Treasure,
+        {
+          x: getValue(137.5, width, DefaultWidth),
+          y: getValue(184.5, width, DefaultWidth),
+          width: getValue(63.5, width, DefaultWidth),
+          height: getValue(24, width, DefaultWidth)
+        }
       )
     ]
   );
@@ -217,18 +273,16 @@ const ConnectPlayerPanel = connect(
       const {
         hp = 0,
         maxHp = 0,
-        generals = [],
+        generals = ['暗將', '暗將'],
         gender = Gender.Undef,
         region = Region.Undef
       } = player;
-      const position = state.players.indexOf(player) + 1;
       return {
         hp,
         maxHp,
         generals,
         gender,
-        region,
-        position
+        region
       };
     }
     return null;

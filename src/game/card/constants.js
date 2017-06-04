@@ -70,6 +70,6 @@ export const EquipmentType = {
   HeartShield: 17, // 護心
   WoodHorse: 18, // 木牛
   JadeSeal: 19, // 玉璽
-  DefendHorse: 20,
+  DefenseHorse: 20,
   OffenseHorse: 21
 };
