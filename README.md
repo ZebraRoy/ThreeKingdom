@@ -1,5 +1,5 @@
 # ThreeKingdom
-ThreeKingdom demo of helium
+ThreeKingdom demo of helium. For start, make sure you have installed node.js and run npm install. Open two cmd on the root, type: npm start on 1 and npm run dev on 2.
 
 # API
 Expected userName is unqiue user id
