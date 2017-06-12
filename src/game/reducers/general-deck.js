@@ -40,11 +40,11 @@ export function generalDeck (
     }
     case Actions.ChooseGenerals: {
       const discardPool = state.discardPool.slice();
-      const playerOrder = action.playerOrder;
+      const playerIndex = action.playerIndex;
       const generals = action.generals;
       const playerPool = state.playerPool.slice();
       playerPool.map((pool, index) => {
-        if(playerOrder === index) {
+        if(playerIndex === index) {
           discardPool.concat(pool.filter((p) => generals.indexOf(p) === -1));
           return generals.slice();
         }

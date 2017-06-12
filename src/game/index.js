@@ -28,6 +28,7 @@ export class Game {
       const currentSocketMap = this.socketMap;
       for (let i = 0, len = currentSocketMap.length; i < len; i++) {
         const playerSocket = currentSocketMap[i].socket;
+        //TODO: filter player information
         if (playerSocket) {
           playerSocket.emit('gameUpdate', state);
         }
@@ -91,20 +92,25 @@ export class Game {
       const userName = me.name;
       const state = store.getState();
       const players = state.players;
-      const playerOrder = players.findIndex((player) => (player.name === userName));
-      const generals = state.generalDeck.playerPool[playerOrder].filter((general) => generalNames.indexOf(general.name) !== -1);
-    //  const readyPlayer = state.generalDeck.playerPool.filter((pool) => pool.length <= state.gameSetting.maxGeneral);
+      const playerIndex = players.findIndex((player) => (player.name === userName));
+      const generals = state.generalDeck.playerPool[playerIndex].filter((general) => generalNames.indexOf(general.name) !== -1);
+      let readyPlayer = [];
       store.dispatch({
         type: Actions.ChooseGenerals,
-        playerOrder,
+        playerIndex,
         generals
       });
+      readyPlayer = state.generalDeck.playerPool.filter((pool) => pool.length <= state.gameSetting.maxGeneral);
       socket.emit('generalUpdate', true);
-    //   if (state.gameState === GameState.Prepare &&  readyPlayer.length === players.length - 1) {
-    //     store.dispatch({
-    //       type: Actions.InitPlayer
-    //     });
-    //   }
+      if (state.gameState === GameState.Prepare &&  readyPlayer.length === players.length) {
+        store.dispatch({
+          type: Actions.InitPlayer,
+          playerPool: state.generalDeck.playerPool
+        });
+      }
+    }
+    else {
+      socket.emit('generalUpdate', false);
     }
   }
   socketDisconnect (socket) {
