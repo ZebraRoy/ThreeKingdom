@@ -43,7 +43,7 @@ export function generalDeck (
       const playerOrder = action.playerOrder;
       const generals = action.generals;
       const playerPool = state.playerPool.slice();
-      playerPool.map(pool, index) => {
+      playerPool.map((pool, index) => {
         if(playerOrder === index) {
           discardPool.concat(pool.filter((p) => generals.indexOf(p) === -1));
           return generals.slice();
@@ -51,7 +51,7 @@ export function generalDeck (
         else {
           return pool;
         }
-      };
+      });
 
       return {
         remainingDeck: state.remainingDeck,

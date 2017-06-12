@@ -91,7 +91,7 @@ export class Game {
       const userName = me.name;
       const state = store.getState();
       const players = state.players;
-      const playerOrder = players.findIndex(player) => (player.name === userName);
+      const playerOrder = players.findIndex((player) => (player.name === userName));
       const generals = state.generalDeck.playerPool[playerOrder].filter((general) => generalNames.indexOf(general.name) !== -1);
     //  const readyPlayer = state.generalDeck.playerPool.filter((pool) => pool.length <= state.gameSetting.maxGeneral);
       store.dispatch({
