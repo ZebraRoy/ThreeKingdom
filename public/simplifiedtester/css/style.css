@@ -1,0 +1,34 @@
+
+
+table.clickable-table {
+  border-collapse: collapse;
+    width:100%;
+}
+table.clickable-table tr {
+    cursor:pointer; 
+}
+table.clickable-table .message {
+    width:10%;
+    max-width:50px;
+}
+table.clickable-table .content {
+    width:80%;
+}
+table.clickable-table .time {
+    width:10%;
+    max-width:30px;
+}
+
+table.clickable-table, th, td {
+  border: 1px solid black;
+  padding: 3px;
+}
+
+table.clickable-table tr.receive {
+  background: white;
+}
+
+table.clickable-table tr:hover {
+  background: cornflowerblue;
+}
+

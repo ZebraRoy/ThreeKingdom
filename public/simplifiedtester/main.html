@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>CLIENT</title>
+	
+    <!-- Bootstrap css -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- json-viewer css-->
+    <link href="css/jquery.json-viewer.css" type="text/css" rel="stylesheet" />
+
+    <!-- main css-->
+    <link href="css/style.css" rel="stylesheet">
+	
+</head>
+<body>
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-6">
+
+                <div class="panel panel-info">
+                    <div class="panel-heading">Send message to server</div>
+                    <div class="panel-body">
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <button type="button" class="btn btn-success" name="buttConnect">Connect</button>
+                                <span>→</span>
+                                <button type="button" class="btn btn-info" name="buttSyncGameList">syncGameList</button>
+                                <p>↓</p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12">
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title"> <u>Host</u> </h3>
+                                    </div>
+
+                                    <div class="panel-body">
+                                         
+
+                                        <form class="form-inline">
+                                            <label class="control-label ">createGame</label>
+                                            <input type="text" class="form-control" id="txtCreateGamePlayerName" placeholder="playerName">
+                                            <button type="button" class="btn btn-info" name="buttCreateGame">createGame</button>
+
+                                        </form>
+
+
+                                        <p>↓</p>
+                                        <form class="form-inline">
+                                            <label class="control-label  ">startGame</label>
+                                            <input type="text" class="form-control" id="txtStartGameGameId" placeholder="gameId">
+                                            <button type="button" class="btn btn-info" name="buttStartGame">startGame</button>
+
+                                        </form>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="col-xs-12">
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title"><u>Player</u></h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <form class="form-inline">
+                                            <label class="control-label ">joinGame</label>
+                                            <input type="text" class="form-control" id="txtJoinGamePlayerName" placeholder="playerName">
+                                            <input type="text" class="form-control" id="txtJoinGameGameId" placeholder="gameId">
+                                            <button type="button" class="btn btn-info" name="buttJoinGame">joinGame</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                 
+
+                                
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <p>↓</p>
+
+                                
+                                <form class="form-inline">
+                                    <label class="control-label ">chooseGenerals</label>
+                                    <input type="text" class="form-control" id="txtChooseGeneralsGameId" placeholder="gameId">
+                                    <input type="text" class="form-control" id="txtChooseGeneralsGenName" placeholder="generalNames">
+                                    <button type="button" class="btn btn-info" name="buttChooseGenerals">chooseGenerals</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-sm-6 ">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">Lastest game status (last 'gameUpdate' message received)</div>
+                    <div class="panel-body">
+                        <p><span id="labLastGameStatusTime"></span></p>
+                        <p>
+                            Options:
+                            <label><input type="checkbox" id="collapsed" />Collapse nodes</label>
+                            <label><input type="checkbox" id="with-quotes" />Keys with quotes</label>
+                        </p>
+                        <pre id="jviewlastGameStatus"></pre>
+                    </div> 
+                </div>  
+
+            </div>
+             
+        </div>
+
+ 
+
+        <div class="row">
+            <div class="col-xs-12">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading"><a data-toggle="collapse" href="#divMessagePanel">Message</a></div>
+                    <div class="panel-body panel-collapse collapse" id="divMessagePanel"  >
+
+                        <div id="divSc" style=" max-height:500px; overflow-y:scroll;">
+
+                            <table class="clickable-table" >
+                                <thead>
+                                    <tr>
+                                        <th class="message">Message</th>
+                                        <th class="content">Content</th>
+                                        <th class="time">Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+
+                        <br />
+
+                        <pre id="jviewRow"></pre>
+                    </div> <!--panel-body-->
+                </div> <!--panel-->
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- JQuery js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <!-- Bootstrap js -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+    <!-- json-viewer js -->
+    <script src="js/jquery.json-viewer.js"></script>
+
+    <!-- Socket.io js -->
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+
+    <!-- Main js -->
+    <script src="js/main.js"></script> 
+
+</body>
+</html>
