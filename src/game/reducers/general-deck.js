@@ -39,20 +39,19 @@ export function generalDeck (
       };
     }
     case Actions.ChooseGenerals: {
-      const discardPool = state.discardPool.slice();
+      let discardPool = state.discardPool.slice();
       const playerIndex = action.playerIndex;
       const generals = action.generals;
-      const playerPool = state.playerPool.slice();
-      playerPool.map((pool, index) => {
+      let playerPool = state.playerPool.slice();
+      playerPool = playerPool.map((pool, index) => {
         if(playerIndex === index) {
-          discardPool.concat(pool.filter((p) => generals.indexOf(p) === -1));
+          discardPool = discardPool.concat(pool.filter((p) => generals.indexOf(p) === -1));
           return generals.slice();
         }
         else {
           return pool;
         }
       });
-
       return {
         remainingDeck: state.remainingDeck,
         discardPool,

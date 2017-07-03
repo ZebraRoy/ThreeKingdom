@@ -13,7 +13,7 @@ var MAIN = MAIN || {};
 MAIN.Init = function () {
 
     with (MAIN) {
-         
+
         let socket;
 
         // [Connect] click
@@ -28,7 +28,7 @@ MAIN.Init = function () {
             for (let k in arr) {
                 socket.on(arr[k], function (data) { OnDataReceived(arr[k], data);  });
             }
-           
+
         });
 
 
@@ -73,9 +73,9 @@ MAIN.Init = function () {
 
             const strGameId = $("#txtChooseGeneralsGameId").val();
             const strGeneralName = $("#txtChooseGeneralsGenName").val();
-
-            console.log("buttChooseGenerals clicked. strGameId=" + strGameId + ", strGeneralName=" + strGeneralName);
-            socket.emit('chooseGenerals', strGameId, strGeneralName);
+            const generalArray = strGeneralName.split(',', 2);
+            console.log("buttChooseGenerals clicked. strGameId=" + strGameId + ", strGeneralName=" + strGeneralName, generalArray);
+            socket.emit('chooseGenerals', strGameId, generalArray);
         });
 
 
@@ -101,7 +101,7 @@ MAIN.OnDataReceived = function (message, data) {
 
     // Display latest gameStatus to JSON-Viewer for reading easily
     if (message == 'gameUpdate') {
-     
+
         var options = {
             collapsed: $('#collapsed').is(':checked'),
             withQuotes: $('#with-quotes').is(':checked')

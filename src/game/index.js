@@ -74,9 +74,11 @@ export class Game {
       const state = store.getState();
       const users = state.users;
       const host = users.find((user) => (user.isHost));
-      const readyUser = users.filter((user) => (user.isReady));
-      if (state.gameState === GameState.WaitingPlayer && host.name === userName && readyUser.length > 1 && readyUser.length === users.length) {
+      // const readyUser = users.filter((user) => (user.isReady));
+      // if (state.gameState === GameState.WaitingPlayer && host.name === userName && readyUser.length > 1 && readyUser.length === users.length) {
+      if (state.gameState === GameState.WaitingPlayer && host.name === userName) {
         const playerOrder = shuffle(users.map((user) => (user.name)));
+
         store.dispatch({
           type: Actions.StartGame,
           playerOrder
@@ -90,16 +92,17 @@ export class Game {
     const store = this.store;
     if (me) {
       const userName = me.name;
-      const state = store.getState();
+      let state = store.getState();
       const players = state.players;
       const playerIndex = players.findIndex((player) => (player.name === userName));
-      const generals = state.generalDeck.playerPool[playerIndex].filter((general) => generalNames.indexOf(general.name) !== -1);
+      const generals = state.generalDeck.playerPool[playerIndex].filter((general) => generalNames.indexOf(general) !== -1);
       let readyPlayer = [];
       store.dispatch({
         type: Actions.ChooseGenerals,
         playerIndex,
         generals
       });
+      state = store.getState()
       readyPlayer = state.generalDeck.playerPool.filter((pool) => pool.length <= state.gameSetting.maxGeneral);
       socket.emit('generalUpdate', true);
       if (state.gameState === GameState.Prepare &&  readyPlayer.length === players.length) {
