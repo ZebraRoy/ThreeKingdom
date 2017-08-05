@@ -29,3 +29,13 @@ export const FlowState = {
   Folding: 'folding',
   Ending: 'ending'
 };
+
+export const FlowStateSuffix = {
+  Start: 'start',
+  End: 'end'
+};
+
+export const EventType = {
+  Drawing: "drawing",
+  Dealing: 'dealing'
+}

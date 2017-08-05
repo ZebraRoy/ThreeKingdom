@@ -20,15 +20,28 @@ import {
   generalDeck
 } from './general-deck';
 import {
+  flowState
+} from './flow-state';
+import {
+  roundState
+} from './round-state';
+import {
+  decisionFlowStateReducer
+} from './decision-flow-state';
+import {
   combineReducers
 } from 'redux';
 
-export default combineReducers({
-  deck,
-  players,
-  users,
-  gameSetting,
-  gameState,
-  gameId,
-  generalDeck
-});
+export default combineReducers(
+  {
+      deck,
+      players,
+      users,
+      gameSetting,
+      gameState,
+      gameId,
+      generalDeck,
+      flowState,
+      roundState
+  }
+  );

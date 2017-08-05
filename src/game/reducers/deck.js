@@ -27,7 +27,7 @@ export function deck (
   switch (action.type) {
     case Actions.InitPlayer: {
       const playerPool = action.playerPool;
-      const remainingDeck = shuffle(DefaultDeck.map((card) => (card.id)));
+      const remainingDeck = shuffle(DefaultDeck);
       const playerHand = playerPool.map((generalsChosen, index) => {
         const hand = [];
         const startIndex = index * InitHandCount;
